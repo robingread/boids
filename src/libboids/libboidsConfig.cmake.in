@@ -1,0 +1,13 @@
+@PACKAGE_INIT@
+
+include(CMakeFindDependencyMacro)
+
+# Include the targets
+include("${CMAKE_CURRENT_LIST_DIR}/libboidsTargets.cmake")
+
+# Optionally, you can specify include directories or other properties
+# For example, if you have an `include` directory:
+set(libboids_INCLUDE_DIRS "${CMAKE_INSTALL_PREFIX}/include")
+
+# Export targets and include directories
+set(libboids_LIBRARIES libboids)
