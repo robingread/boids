@@ -41,5 +41,16 @@
             "type": "shell",
             "command": "./scripts/test.sh",
         },
+        {
+            "label": "Clean, Build, Run",
+            "detail": "Perform a clean build and then run",
+            "type": "shell",
+            "dependsOrder": "sequence",
+            "dependsOn": [
+                "Clean",
+                "Build"
+            ],
+            "command": "./scripts/install.sh && ./scripts/run.sh",
+        },
     ]
 }
