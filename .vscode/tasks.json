@@ -1,0 +1,45 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build",
+            "detail": "Compile the code",
+            "type": "shell",
+            "command": "./scripts/build.sh",
+        },
+        {
+            "label": "Clean",
+            "detail": "Clean the build directory",
+            "type": "shell",
+            "command": "./scripts/clean.sh",
+        },
+        {
+            "label": "Clean Build",
+            "detail": "Perform a clean build",
+            "type": "shell",
+            "dependsOrder": "sequence",
+            "dependsOn": [
+                "Clean",
+                "Build"
+            ]
+        },
+        {
+            "label": "Clean, Build, Test",
+            "type": "shell",
+            "dependsOrder": "sequence",
+            "dependsOn": [
+                "Clean",
+                "Build",
+                "Test"
+            ]
+        },
+        {
+            "label": "Test",
+            "detail": "Run unit-test suite",
+            "type": "shell",
+            "command": "./scripts/test.sh",
+        },
+    ]
+}
