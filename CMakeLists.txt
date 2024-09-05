@@ -7,6 +7,7 @@ set(CMAKE_PREFIX_PATH "${CMAKE_BINARY_DIR}/install" ${CMAKE_PREFIX_PATH})
 set(CMAKE_INSTALL_PREFIX ${CMAKE_BINARY_DIR}/install)
 
 add_subdirectory(src/libboids)
+add_subdirectory(src/gui)
 add_subdirectory(test)
 
 include(CTest)
