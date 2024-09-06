@@ -84,6 +84,21 @@ std::vector<Boid> getBoidNeighbourhood(
         const std::vector<Boid> &flock,
         const float &dist);
 
+/**
+ * @brief Get the Boids that are within the neighbourhood of a given Boid. This will 
+ * include checking for distance across scene wrappings and not purely the classical 
+ * Euclidean distance.
+ * @param boid Boids to get the neighbourhood for.
+ * @param flock Flock of all the boids.
+ * @param dist Neighbourhood distance.
+ * @param bounds Bounds of the scene.
+ * @return Vector of Boids that form the Neighbourhood. 
+ */
+std::vector<Boid> getBoidNeighbourhood(
+        const Boid &boid,
+        const std::vector<Boid> &flock,
+        const float &dist,
+        const QRectF &bounds);
 
 /**
  * @brief Get a QVector scaled by a given value.
