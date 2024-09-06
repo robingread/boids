@@ -1,0 +1,9 @@
+name: CI Testing Pipeline
+
+on:
+  push:
+    branches: ["**"]
+
+jobs:
+  build_and_test:
+    uses: ./github/workflows/build-test-workflow.yaml
