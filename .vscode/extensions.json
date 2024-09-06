@@ -1,12 +1,14 @@
 {
     "recommendations": [
       "DavidAnson.vscode-markdownlint",
+      "gruntfuggly.todo-tree",
       "ms-vscode.cpptools",
       "ms-vscode.cpptools-extension-pack",
       "ms-vscode.cpptools-themes",
       "ms-vscode.cmake-tools",
       "ms-vscode-remote.remote-containers",
       "njpwerner.autodocstring",
+      "wayou.vscode-todo-highlight",
       "xaver.clang-format"
     ]
   }
