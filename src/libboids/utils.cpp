@@ -80,7 +80,12 @@ float calculateRepulsionWeight(const float dist, const float minDist)
 
 float distanceBetweenBoids(const Boid &b1, const Boid &b2)
 {
-    return (b1.getPosition() - b2.getPosition()).manhattanLength();
+    const auto p1 = b1.getPosition();
+    const auto p2 = b2.getPosition();
+    const float dx = std::pow(p1.x() - p2.x(), 2);
+    const float dy = std::pow(p1.y() - p2.y(), 2);
+    const float dist = std::sqrt(dx + dy);
+    return dist;
 }
 
 
