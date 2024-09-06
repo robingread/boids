@@ -36,6 +36,12 @@
             ]
         },
         {
+            "label": "Run",
+            "detail": "Run boidsim",
+            "type": "shell",
+            "command": "./scripts/install.sh && ./scripts/run.sh",
+        },
+        {
             "label": "Test",
             "detail": "Run unit-test suite",
             "type": "shell",
