@@ -51,10 +51,26 @@ void Flock::update()
 {
     for (Boid &b : m_boids)
     {
+        const std::vector<boids::Boid> neighbours = boids::utils::getBoidNeighbourhood(b, m_boids, 100.0f);
+
+        const QVector2D alignVector = boids::utils::calculateAlignmentVector(b, neighbours).normalized();
+        const QVector2D cohesionVector = boids::utils::calculateCohesionVector(b, neighbours).normalized();
+        const QVector2D repelVec = boids::utils::calculateSeparationVector(b, neighbours, 75.0f).normalized();
+
         const QPointF &p = b.getPosition();
-        const QVector2D &v = b.getVelocity();
+
+        QVector2D v = b.getVelocity() + 
+                (alignVector * 0.05f) + 
+                (cohesionVector * 0.01f) + 
+                (repelVec * 0.01f) + 
+                boids::utils::generateRandomVelocityVector(0.0001f);
+
+        boids::utils::clipVectorMangitude(v, 2.0f);
+
         b.setPosition(QPointF(p.x() + v.x(), p.y() + v.y()));
         utils::wrapBoidPosition(b, m_sceneBounds);
+
+        b.setVelocity(v);
     }
 }
 
