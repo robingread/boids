@@ -97,15 +97,15 @@ QVector2D generateRandomVelocityVector(const float maxMagnitude)
     return scaleVector(QVector2D(dx, dy), w);
 }
 
-
 std::vector<Boid> getBoidNeighbourhood(const Boid &boid, const std::vector<boids::Boid> &flock, const float &dist)
 {
+    // TODO: This does not take into account the issue of wrap around with the sim space.
     std::vector<Boid> ret;
     for (const Boid &b : flock)
     {
+        if (boid.getId() == b.getId()) continue;
         const float d = distanceBetweenBoids(boid, b);
         if (d > dist) continue;
-        if (boid.getId() == b.getId()) continue;
         ret.push_back(b);
     }
     return ret;
