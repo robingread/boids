@@ -27,6 +27,14 @@ QVector2D calculateAlignmentVector(const Boid &boid, const std::vector<Boid> &ne
 QVector2D calculateCohesionVector(const Boid &boid, const std::vector<Boid> &neighbours);
 
 
+/**
+ * @brief Calculate the vector that repels a given Boids from the other boids wihtin 
+ * the neighbourhood to maintain a minimum distance between them.
+ * @param boid Boid to check calculate the cohesion vector for.
+ * @param neighbours Neighbourhood around the Boid
+ * @param minDist Minimum distance to retian between Boids.
+ * @return Repelling vector.
+ */
 QVector2D calculateSeparationVector(
     const Boid &boid,
     const std::vector<Boid> &neighbours,
