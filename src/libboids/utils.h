@@ -76,4 +76,12 @@ void wrapBoidPosition(Boid &boid, const QRectF &rect);
 
 float wrapValue(const float &value, const float &minValue, const float &maxValue);
 
+/**
+ * @brief Clip the length of a vector to a given value. This operation is performed 
+ * in place on the input vector.
+ * @param vec Vector to clip.
+ * @param maxMagnitude Maximum magdinute/length value of the vector.
+ */
+void clipVectorMangitude(QVector2D &vec, const float &maxMagnitude);
+
 }};

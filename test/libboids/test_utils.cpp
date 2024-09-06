@@ -497,3 +497,31 @@ TEST(libboids_utils, wrapValue_6)
 
     ASSERT_FLOAT_EQ(res, exp);
 }
+
+/**
+ * @brief Test that the clipVectorMagnitude() method correctly clips a vector
+ * whose length is greater than the maximum value.
+ */
+TEST(libboids_utils, clipVectorMangitude_OverMax)
+{
+    const float maxMag = 5.0f;
+    const QVector2D exp(5.0f, 0.0f);
+    QVector2D vec(10.0f, 0.0f);
+    boids::utils::clipVectorMangitude(vec, maxMag);
+    ASSERT_EQ(vec, exp);
+
+}
+
+/**
+ * @brief Test that the clipVectorMagnitude() method correctly clips a vector
+ * whose length is less than the maximum value.
+ */
+TEST(libboids_utils, clipVectorMangitude_UnderMax)
+{
+    const float maxMag = 50.0f;
+    const QVector2D exp(10.0f, 0.0f);
+    QVector2D vec(10.0f, 0.0f);
+    boids::utils::clipVectorMangitude(vec, maxMag);
+    ASSERT_EQ(vec, exp);
+
+}
