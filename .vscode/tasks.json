@@ -54,9 +54,9 @@
             "dependsOrder": "sequence",
             "dependsOn": [
                 "Clean",
-                "Build"
+                "Build",
+                "Run"
             ],
-            "command": "./scripts/install.sh && ./scripts/run.sh",
         },
     ]
 }
