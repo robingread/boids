@@ -7,8 +7,13 @@ namespace boids {
 namespace utils {
 
 
-QVector2D calculateAlignmentVector(const Boid &/*boid*/, std::vector<Boid> &neighbours)
+QVector2D calculateAlignmentVector(const Boid & boid, const std::vector<Boid> &neighbours)
 {
+    if (neighbours.size() == 0)
+    {
+        return QVector2D(0.0f, 0.0f);
+    }
+
     QVector2D vec(0.0, 0.0);
     for (const Boid &n : neighbours)
     {

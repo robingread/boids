@@ -9,7 +9,13 @@
 namespace boids {
 namespace utils {
 
-QVector2D calculateAlignmentVector(const Boid &boid, std::vector<Boid> &neighbours);
+/**
+ * @brief Calculate the average velocity vector for a neighbourhood of Boids.
+ * @param boid Not used.
+ * @param neighbours Neighbour
+ * @return QVector2D 
+ */
+QVector2D calculateAlignmentVector(const Boid &boid, const std::vector<Boid> &neighbours);
 
 
 QVector2D calculateCohesionVector(const Boid &boid, const std::vector<Boid> &neighbours);

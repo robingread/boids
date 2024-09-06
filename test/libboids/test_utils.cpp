@@ -55,6 +55,20 @@ TEST(libboids_utils, calculateCohesionVector_3)
     ASSERT_FLOAT_EQ(exp.y(), res.y());
 }
 
+/**
+ * @brief Test that when there is neighourhood of size zero, then the alignment 
+ * vector is also (0.0, 0.0).
+ */
+TEST(libboids_utils, calculateAlignmentVector_0)
+{
+    const boids::Boid boid(0, 0.0, 0.0);
+    const std::vector<boids::Boid> neighbours;
+    
+    const QVector2D exp(0.0, 0.0);
+    const QVector2D res = boids::utils::calculateAlignmentVector(boid, neighbours);
+
+    ASSERT_EQ(exp, res);
+}
 
 TEST(libboids_utils, calculateAlignmentVector_1)
 {
