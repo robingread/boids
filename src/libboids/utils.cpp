@@ -89,6 +89,22 @@ float distanceBetweenBoids(const Boid &b1, const Boid &b2)
     return dist;
 }
 
+float distanceBetweenBoids(const Boid &b1, const Boid &b2, const QRectF &bounds)
+{
+    const float dx1 = std::abs(b1.getPosition().x() - b2.getPosition().x());
+    const float dx2 = std::abs((bounds.right() - b1.getPosition().x()) + b2.getPosition().x());
+    const float dx3 = std::abs(b1.getPosition().x() + (bounds.right() - b2.getPosition().x()));
+
+    const float dy1 = std::abs(b1.getPosition().y() - b2.getPosition().y());
+    const float dy2 = std::abs((bounds.bottom() - b1.getPosition().y()) + b2.getPosition().y());
+    const float dy3 = std::abs(b1.getPosition().y() + (bounds.bottom() - b2.getPosition().y()));
+
+    const float dx = std::min(std::min(dx1, dx2), dx3);
+    const float dy = std::min(std::min(dy1, dy2), dy3);
+
+    return std::sqrt(std::pow(dx, 2) + std::pow(dy, 2));
+}
+
 
 QVector2D generateRandomVelocityVector(const float maxMagnitude)
 {

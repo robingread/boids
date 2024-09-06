@@ -52,6 +52,16 @@ float calculateRepulsionWeight(const float dist, const float minDist);
 float distanceBetweenBoids(const Boid &b1, const Boid &b2);
 
 
+/**
+ * @brief Calculate the alternative Euclidean distance between two boids, which looks at the 
+ * distance across the scene bounds (as the scene is wrapped).
+ * @param b1 First boid.
+ * @param b2 Second boid.
+ * @param bounds Bounds of the scene.
+ * @return Euclidean distance.
+ */
+float distanceBetweenBoids(const Boid &b1, const Boid &b2, const QRectF &bounds);
+
 template<typename T>
 T generateRandomValue(const T minValue, const T maxValue)
 {

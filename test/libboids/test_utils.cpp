@@ -299,6 +299,57 @@ TEST(libboids_utils, distanceBetweenBoids_2)
 }
 
 
+/**
+ * @brief Test that the boids::utils::distanceBetweenBoids() method handles the situation
+ * where the shortest distance between Boids is actually via the wrapping of the scene.
+ */
+TEST(libboids_utils, distanceBetweenBoids_Bounded_1)
+{
+    const QRectF bounds(0.0f, 0.0f, 20.0f, 10.0f);
+    const boids::Boid b1(0, 19.0f, 1.0f);
+    const boids::Boid b2(1, 1.0f, 1.0f);
+
+    const float exp = 2.0f;
+    const float res = boids::utils::distanceBetweenBoids(b1, b2, bounds);
+    
+    ASSERT_FLOAT_EQ(exp, res);
+}
+
+
+/**
+ * @brief Test that the boids::utils::distanceBetweenBoids() method handles the situation
+ * where the shortest distance between Boids is actually via the wrapping of the scene.
+ */
+TEST(libboids_utils, distanceBetweenBoids_Bounded_2)
+{
+    const QRectF bounds(0.0f, 0.0f, 20.0f, 10.0f);
+    const boids::Boid b1(0, 1.0f, 2.0f);
+    const boids::Boid b2(1, 1.0f, 9.0f);
+
+    const float exp = 3.0f;
+    const float res = boids::utils::distanceBetweenBoids(b1, b2, bounds);
+    
+    ASSERT_FLOAT_EQ(exp, res);
+}
+
+
+/**
+ * @brief Test that the boids::utils::distanceBetweenBoids() method handles the case where
+ * the euclidian distance is indeed the shortest distance between two Boids.
+ */
+TEST(libboids_utils, distanceBetweenBoids_Bounded_3)
+{
+    const QRectF bounds(0.0f, 0.0f, 20.0f, 10.0f);
+    const boids::Boid b1(0, 1.0f, 4.0f);
+    const boids::Boid b2(1, 1.0f, 5.0f);
+
+    const float exp = 1.0f;
+    const float res = boids::utils::distanceBetweenBoids(b1, b2, bounds);
+    
+    ASSERT_FLOAT_EQ(exp, res);
+}
+
+
 TEST(libboids_utils, generateRandomValue_float_1)
 {
     const float a = 0.0f;
