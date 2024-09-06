@@ -69,6 +69,12 @@ class Boid {
     QVector2D getVelocity() const;
 
     /**
+     * @brief Set the Color of the Boid.
+     * @param color New colour to set.
+     */
+    void setColor(const QColor& color);
+
+    /**
      * @brief Set the Position of the Boid.
      * @param pos Position in the format (x, y).
      */

@@ -43,6 +43,8 @@ QPointF Boid::getPosition() const { return m_position; }
 
 QVector2D Boid::getVelocity() const { return m_velocity; }
 
+void Boid::setColor(const QColor& colour) { m_color = colour; }
+
 void Boid::setPosition(const QPointF& pos) { m_position = pos; }
 
 void Boid::setVelocity(const QVector2D& vel) { m_velocity = vel; }

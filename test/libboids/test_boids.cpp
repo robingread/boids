@@ -48,6 +48,16 @@ TEST_F(BasicBoidInit, TestDefaultColorNotBlack) {
 }
 
 /**
+ * @brief Test that the setColour() method works as expected.
+ */
+TEST_F(BasicBoidInit, test_setColor) {
+    const QColor exp(1, 2, 3);
+    m_boid->setColor(exp);
+    const QColor res = m_boid->getColor();
+    ASSERT_EQ(exp, res);
+}
+
+/**
  * @brief Test that the setVelocity() method works as expected.
  */
 TEST_F(BasicBoidInit, test_setVelocity) {
