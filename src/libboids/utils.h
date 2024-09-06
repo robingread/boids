@@ -61,7 +61,11 @@ T generateRandomValue(const T minValue, const T maxValue)
     return distr(gen);
 }
 
-
+/**
+ * @brief Generate a random 2D vector with a maximum allowed madnitude.
+ * @param maxMagnitude Maximum allowed length/madnitude.
+ * @return Generated vector.
+ */
 QVector2D generateRandomVelocityVector(const float maxMagnitude);
 
 
