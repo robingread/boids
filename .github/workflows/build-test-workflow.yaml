@@ -18,4 +18,9 @@ jobs:
         run: docker build -t boids-dev-container -f .devcontainer/Dockerfile .
 
       - name: Run unit-tests
-        run: docker run --rm -v ${{ github.workspace }}:/workspaces/boids -w /workspaces/boids boids-dev-container bash -c "./scripts/build.sh && ./scripts/test.sh"
+        run: |
+          docker run --rm \
+            -v ${{ github.workspace }}:/workspaces/boids \
+            -w /workspaces/boids \
+            boids-dev-container \
+            bash -c "./scripts/build.sh && ./scripts/test.sh"
