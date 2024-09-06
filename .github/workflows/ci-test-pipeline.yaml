@@ -6,4 +6,4 @@ on:
 
 jobs:
   build_and_test:
-    uses: ./github/workflows/build-test-workflow.yaml
+    uses: ./.github/workflows/build-test-workflow.yaml
