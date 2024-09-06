@@ -43,6 +43,11 @@ QVector2D calculateCohesionVector(const Boid &boid, const std::vector<Boid> &nei
 
 QVector2D calculateSeparationVector(const Boid &boid, const std::vector<Boid> &neighbours, const float minDist)
 {
+    if (neighbours.size() == 0)
+    {
+        return QVector2D(0.0f, 0.0f);
+    }
+
     QVector2D vec(0.0, 0.0);
     for (const Boid &n : neighbours)
     {

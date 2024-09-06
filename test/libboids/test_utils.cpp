@@ -113,6 +113,22 @@ TEST(libboids_utils, calculateAlignmentVector_2)
 }
 
 
+/**
+ * @brief Test that a boid with a single neightbour, outside of the min distance
+ * has a force vector length that IS zero.
+ */
+TEST(libboids_utils, calculateSeparationVector_0)
+{
+    const float minDist = 0.5f;
+    const boids::Boid boid(0, 0.0f, 0.0f);
+    const std::vector<boids::Boid> neighbours;
+
+    const QVector2D res = boids::utils::calculateSeparationVector(boid, neighbours, minDist);
+    const QVector2D exp(0.0f, 0.0f);
+
+    ASSERT_EQ(exp, res);
+}
+
 /*
  * Test that a boid with a single neightbour, outside of the min distance
  * has a force vector length that IS zero.
