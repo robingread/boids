@@ -18,6 +18,12 @@ namespace utils {
 QVector2D calculateAlignmentVector(const Boid &boid, const std::vector<Boid> &neighbours);
 
 
+/**
+ * @brief Calculate the vector that pulls a Boid towards the center of the neighbourood.
+ * @param boid Boid to check calculate the cohesion vector for.
+ * @param neighbours Neighbourhood around the Boid
+ * @return Vector towards the center of the neighbourhood.
+ */
 QVector2D calculateCohesionVector(const Boid &boid, const std::vector<Boid> &neighbours);
 
 
