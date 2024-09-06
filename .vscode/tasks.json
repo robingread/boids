@@ -36,6 +36,12 @@
             ]
         },
         {
+            "label": "Format Code",
+            "detail": "Format all the C++ code in the project",
+            "type": "shell",
+            "command": "./scripts/format.sh",
+        },
+        {
             "label": "Run",
             "detail": "Run boidsim",
             "type": "shell",
