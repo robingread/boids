@@ -51,7 +51,7 @@ void Flock::update()
 {
     for (Boid &b : m_boids)
     {
-        const std::vector<boids::Boid> neighbours = boids::utils::getBoidNeighbourhood(b, m_boids, 100.0f);
+        const std::vector<boids::Boid> neighbours = boids::utils::getBoidNeighbourhood(b, m_boids, 100.0f, m_sceneBounds);
 
         const QVector2D alignVector = boids::utils::calculateAlignmentVector(b, neighbours).normalized();
         const QVector2D cohesionVector = boids::utils::calculateCohesionVector(b, neighbours).normalized();
