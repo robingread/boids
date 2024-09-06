@@ -1,0 +1,26 @@
+name: Build & Test Workflow
+
+on:
+  workflow_call:
+
+jobs:
+  build_and_test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Build Docker image
+        run: docker build -t boids-dev-container -f .devcontainer/Dockerfile .
+
+      - name: Run unit-tests
+        run: |
+          docker run --rm \
+            -v ${{ github.workspace }}:/workspaces/boids \
+            -w /workspaces/boids \
+            boids-dev-container \
+            bash -c "./scripts/build.sh && ./scripts/test.sh"

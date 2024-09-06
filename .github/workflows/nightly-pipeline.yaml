@@ -1,0 +1,9 @@
+name: Nightly CI Test Pipeline
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+
+jobs:
+  build_and_test:
+    uses: ./.github/workflows/build-test-workflow.yaml
