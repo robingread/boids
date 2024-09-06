@@ -75,6 +75,12 @@ public:
      */
     void setPosition(const QPointF &pos);
 
+    /**
+     * @brief Set the Velocity of the Boid.
+     * @param pos Velocity in the format (vx, vy).
+     */
+    void setVelocity(const QVector2D &vel);
+
 private:
     uint16_t m_id;
     QColor m_color;

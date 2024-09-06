@@ -60,6 +60,17 @@ TEST_F(BasicBoidInit, TestDefaultColorNotBlack)
     ASSERT_FALSE(color == m_boid->getColor());
 }
 
+/**
+ * @brief Test that the setVelocity() method works as expected.
+ */
+TEST_F(BasicBoidInit, test_setVelocity)
+{
+    const QVector2D exp(10.0, 20.0);
+    m_boid->setVelocity(exp);
+    const QVector2D res = m_boid->getVelocity();
+    ASSERT_EQ(exp, res);
+}
+
 /*
  * Test that a boid in a velocity vector of (1, 0) has a angle of 0 rad.
  */

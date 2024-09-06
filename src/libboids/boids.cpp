@@ -74,4 +74,9 @@ void Boid::setPosition(const QPointF &pos)
     m_position = pos;
 }
 
+void Boid::setVelocity(const QVector2D &vel)
+{
+    m_velocity = vel;
+}
+
 };
