@@ -25,6 +25,11 @@ QVector2D calculateAlignmentVector(const Boid & boid, const std::vector<Boid> &n
 
 QVector2D calculateCohesionVector(const Boid &boid, const std::vector<Boid> &neighbours)
 {
+    if (neighbours.size() == 0)
+    {
+        return QVector2D(0.0f, 0.0f);
+    }
+
     QPointF point(0.0, 0.0);
     for (const Boid &n : neighbours)
     {

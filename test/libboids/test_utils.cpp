@@ -2,8 +2,22 @@
 #include <boids.h>
 #include <utils.h>
 
-/*
- * Test the cohesion velocity vector calculation for a boid with only one neighbour.
+/**
+ * @brief Test the cohesion velocity vector calculation for a boid with no neighbours.
+ */
+TEST(libboids_utils, calculateCohesionVector_0)
+{
+    const boids::Boid boid(0, 0.0, 0.0);
+    const std::vector<boids::Boid> neighbours;
+
+    const QVector2D exp(0.0, 0.0);
+    const QVector2D res = boids::utils::calculateCohesionVector(boid, neighbours);
+
+    ASSERT_EQ(exp, res);
+}
+
+/**
+ * @brief Test the cohesion velocity vector calculation for a boid with only one neighbour.
  */
 TEST(libboids_utils, calculateCohesionVector_1)
 {
@@ -19,8 +33,8 @@ TEST(libboids_utils, calculateCohesionVector_1)
 }
 
 
-/*
- * Test the cohesion velocity vector calculation for a boid with two neighbours.
+/**
+ * @brief Test the cohesion velocity vector calculation for a boid with two neighbours.
  */
 TEST(libboids_utils, calculateCohesionVector_2)
 {
@@ -37,8 +51,8 @@ TEST(libboids_utils, calculateCohesionVector_2)
 }
 
 
-/*
- * Test the cohesion velocity vector calculation for a boid with three neighbours.
+/**
+ * @brief Test the cohesion velocity vector calculation for a boid with three neighbours.
  */
 TEST(libboids_utils, calculateCohesionVector_3)
 {
