@@ -1,5 +1,4 @@
-#ifndef FLOCK_H
-#define FLOCK_H
+#pragma once
 
 #include "boids.h"
 #include "config.h"
@@ -29,5 +28,3 @@ class Flock {
 };
 
 }; // namespace boids
-
-#endif // FLOCK_H
