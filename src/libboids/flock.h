@@ -2,6 +2,7 @@
 #define FLOCK_H
 
 #include "boids.h"
+#include "config.h"
 #include <QRectF>
 
 namespace boids {
@@ -21,6 +22,7 @@ class Flock {
     void update();
 
   private:
+    Config            m_config;
     std::size_t       m_idCount;
     std::vector<Boid> m_boids;
     QRectF            m_sceneBounds;
