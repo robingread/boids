@@ -2,10 +2,9 @@
 
 #include <QApplication>
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char* argv[]) {
     QApplication a(argc, argv);
-    Dialog w;
+    Dialog       w;
     w.show();
     w.run();
     return a.exec();

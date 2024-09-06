@@ -1,13 +1,12 @@
-#include <gtest/gtest.h>
 #include <boids.h>
+#include <gtest/gtest.h>
 #include <utils.h>
 
 /**
  * @brief Test the cohesion velocity vector calculation for a boid with no neighbours.
  */
-TEST(libboids_utils, calculateCohesionVector_0)
-{
-    const boids::Boid boid(0, 0.0, 0.0);
+TEST(libboids_utils, calculateCohesionVector_0) {
+    const boids::Boid              boid(0, 0.0, 0.0);
     const std::vector<boids::Boid> neighbours;
 
     const QVector2D exp(0.0, 0.0);
@@ -19,9 +18,8 @@ TEST(libboids_utils, calculateCohesionVector_0)
 /**
  * @brief Test the cohesion velocity vector calculation for a boid with only one neighbour.
  */
-TEST(libboids_utils, calculateCohesionVector_1)
-{
-    const boids::Boid boid(0, 0.0, 0.0);
+TEST(libboids_utils, calculateCohesionVector_1) {
+    const boids::Boid        boid(0, 0.0, 0.0);
     std::vector<boids::Boid> neighbours;
     neighbours.push_back(boids::Boid(1, 1.0, 0.0));
 
@@ -32,13 +30,11 @@ TEST(libboids_utils, calculateCohesionVector_1)
     ASSERT_FLOAT_EQ(exp.y(), res.y());
 }
 
-
 /**
  * @brief Test the cohesion velocity vector calculation for a boid with two neighbours.
  */
-TEST(libboids_utils, calculateCohesionVector_2)
-{
-    const boids::Boid boid(0, 0.0, 0.0);
+TEST(libboids_utils, calculateCohesionVector_2) {
+    const boids::Boid        boid(0, 0.0, 0.0);
     std::vector<boids::Boid> neighbours;
     neighbours.push_back(boids::Boid(1, 1.0, 0.0));
     neighbours.push_back(boids::Boid(2, -1.0, 0.0));
@@ -50,13 +46,11 @@ TEST(libboids_utils, calculateCohesionVector_2)
     ASSERT_FLOAT_EQ(exp.y(), res.y());
 }
 
-
 /**
  * @brief Test the cohesion velocity vector calculation for a boid with three neighbours.
  */
-TEST(libboids_utils, calculateCohesionVector_3)
-{
-    const boids::Boid boid(0, 0.0, 0.0);
+TEST(libboids_utils, calculateCohesionVector_3) {
+    const boids::Boid        boid(0, 0.0, 0.0);
     std::vector<boids::Boid> neighbours;
     neighbours.push_back(boids::Boid(1, 1.0, 1.0));
     neighbours.push_back(boids::Boid(2, 2.0, 1.0));
@@ -70,23 +64,21 @@ TEST(libboids_utils, calculateCohesionVector_3)
 }
 
 /**
- * @brief Test that when there is neighourhood of size zero, then the alignment 
+ * @brief Test that when there is neighourhood of size zero, then the alignment
  * vector is also (0.0, 0.0).
  */
-TEST(libboids_utils, calculateAlignmentVector_0)
-{
-    const boids::Boid boid(0, 0.0, 0.0);
+TEST(libboids_utils, calculateAlignmentVector_0) {
+    const boids::Boid              boid(0, 0.0, 0.0);
     const std::vector<boids::Boid> neighbours;
-    
+
     const QVector2D exp(0.0, 0.0);
     const QVector2D res = boids::utils::calculateAlignmentVector(boid, neighbours);
 
     ASSERT_EQ(exp, res);
 }
 
-TEST(libboids_utils, calculateAlignmentVector_1)
-{
-    const boids::Boid boid(0, 0.0, 0.0);
+TEST(libboids_utils, calculateAlignmentVector_1) {
+    const boids::Boid        boid(0, 0.0, 0.0);
     std::vector<boids::Boid> neighbours;
     neighbours.push_back(boids::Boid(1, 1.0, 1.0, 1.0, 0.0));
 
@@ -97,10 +89,8 @@ TEST(libboids_utils, calculateAlignmentVector_1)
     ASSERT_FLOAT_EQ(exp.y(), res.y());
 }
 
-
-TEST(libboids_utils, calculateAlignmentVector_2)
-{
-    const boids::Boid boid(0, 0.0, 0.0);
+TEST(libboids_utils, calculateAlignmentVector_2) {
+    const boids::Boid        boid(0, 0.0, 0.0);
     std::vector<boids::Boid> neighbours;
     neighbours.push_back(boids::Boid(1, 1.0, 1.0, 1.0, 1.0));
     neighbours.push_back(boids::Boid(2, 1.0, 1.0, -1.0, 1.0));
@@ -112,15 +102,13 @@ TEST(libboids_utils, calculateAlignmentVector_2)
     ASSERT_FLOAT_EQ(exp.y(), res.y());
 }
 
-
 /**
  * @brief Test that a boid with a single neightbour, outside of the min distance
  * has a force vector length that IS zero.
  */
-TEST(libboids_utils, calculateSeparationVector_0)
-{
-    const float minDist = 0.5f;
-    const boids::Boid boid(0, 0.0f, 0.0f);
+TEST(libboids_utils, calculateSeparationVector_0) {
+    const float                    minDist = 0.5f;
+    const boids::Boid              boid(0, 0.0f, 0.0f);
     const std::vector<boids::Boid> neighbours;
 
     const QVector2D res = boids::utils::calculateSeparationVector(boid, neighbours, minDist);
@@ -133,10 +121,9 @@ TEST(libboids_utils, calculateSeparationVector_0)
  * Test that a boid with a single neightbour, outside of the min distance
  * has a force vector length that IS zero.
  */
-TEST(libboids_utils, calculateSeparationVector_1)
-{
-    const float minDist = 0.5f;
-    const boids::Boid boid(0, 0.0f, 0.0f);
+TEST(libboids_utils, calculateSeparationVector_1) {
+    const float              minDist = 0.5f;
+    const boids::Boid        boid(0, 0.0f, 0.0f);
     std::vector<boids::Boid> neighbours;
     neighbours.push_back(boids::Boid(1, 1.0f, 0.0f));
 
@@ -147,15 +134,13 @@ TEST(libboids_utils, calculateSeparationVector_1)
     ASSERT_FLOAT_EQ(exp.y(), res.y());
 }
 
-
 /*
  * Test that a boid with a single neightbour, within of the min distance
  * has a force vector length that IS NOT zero.
  */
-TEST(libboids_utils, calculateSeparationVector_2)
-{
-    const float minDist = 1.0f;
-    const boids::Boid boid(0, 1.0f, 0.0f);
+TEST(libboids_utils, calculateSeparationVector_2) {
+    const float              minDist = 1.0f;
+    const boids::Boid        boid(0, 1.0f, 0.0f);
     std::vector<boids::Boid> neighbours;
     neighbours.push_back(boids::Boid(1, 1.0f, 0.1f));
 
@@ -164,15 +149,13 @@ TEST(libboids_utils, calculateSeparationVector_2)
     ASSERT_TRUE(res.length() > 0.0f);
 }
 
-
 /*
  * Test that a boid with a single neightbour, at exactly the same point
  * has a force vector magnitude equal to 1.0.
  */
-TEST(libboids_utils, calculateSeparationVector_3)
-{
-    const float minDist = 1.0f;
-    const boids::Boid boid(0, 0.0f, 0.0f);
+TEST(libboids_utils, calculateSeparationVector_3) {
+    const float              minDist = 1.0f;
+    const boids::Boid        boid(0, 0.0f, 0.0f);
     std::vector<boids::Boid> neighbours;
     neighbours.push_back(boids::Boid(1, 0.0f, 0.0f));
 
@@ -182,15 +165,13 @@ TEST(libboids_utils, calculateSeparationVector_3)
     ASSERT_TRUE(res.length() >= 0.95f);
 }
 
-
 /*
  * Test that a boid with a neighbour either side results in a separation vector of
  * length zero because the forces from the neighbours cancel each other out.
  */
-TEST(libboids_utils, calculateSeparationVector_4)
-{
-    const float minDist = 1.0f;
-    const boids::Boid boid(0, 0.0f, 0.0f);
+TEST(libboids_utils, calculateSeparationVector_4) {
+    const float              minDist = 1.0f;
+    const boids::Boid        boid(0, 0.0f, 0.0f);
     std::vector<boids::Boid> neighbours;
     neighbours.push_back(boids::Boid(1, 0.5f, 0.0f));
     neighbours.push_back(boids::Boid(2, -0.5f, 0.0f));
@@ -201,15 +182,13 @@ TEST(libboids_utils, calculateSeparationVector_4)
     ASSERT_TRUE(res.length() >= 0.0f);
 }
 
-
 /*
  * Test that a boid with three neighbours, two either side and one behind
  * results in a forward pointing separation vector.
  */
-TEST(libboids_utils, calculateSeparationVector_5)
-{
-    const float minDist = 2.0f;
-    const boids::Boid boid(0, 0.0f, 0.0f);
+TEST(libboids_utils, calculateSeparationVector_5) {
+    const float              minDist = 2.0f;
+    const boids::Boid        boid(0, 0.0f, 0.0f);
     std::vector<boids::Boid> neighbours;
     neighbours.push_back(boids::Boid(1, -0.5f, 0.0f));
     neighbours.push_back(boids::Boid(2, 0.0f, 0.5f));
@@ -222,15 +201,13 @@ TEST(libboids_utils, calculateSeparationVector_5)
     EXPECT_NEAR(exp.y(), res.y(), 0.01f);
 }
 
-
 /*
  * Test that a boid with four neighbours all around results in a separation vector of
  * length zero because the forces from the neighbours cancel each other out.
  */
-TEST(libboids_utils, calculateSeparationVector_6)
-{
-    const float minDist = 2.0f;
-    const boids::Boid boid(0, 0.0f, 0.0f);
+TEST(libboids_utils, calculateSeparationVector_6) {
+    const float              minDist = 2.0f;
+    const boids::Boid        boid(0, 0.0f, 0.0f);
     std::vector<boids::Boid> neighbours;
     neighbours.push_back(boids::Boid(1, 1.0f, 0.0f));
     neighbours.push_back(boids::Boid(2, 0.0f, 1.0f));
@@ -244,13 +221,11 @@ TEST(libboids_utils, calculateSeparationVector_6)
     EXPECT_NEAR(exp.y(), res.y(), 0.01f);
 }
 
-
 /*
  * Test that a boid with a distance that is zero has a repulsion weighting of less or equal to 1.0.
  */
-TEST(libboids_utils, calculateRepulsionVector_1)
-{
-    const float dist = 0.0f;
+TEST(libboids_utils, calculateRepulsionVector_1) {
+    const float dist    = 0.0f;
     const float minDist = 1.0f;
 
     const float res = boids::utils::calculateRepulsionWeight(dist, minDist);
@@ -258,14 +233,12 @@ TEST(libboids_utils, calculateRepulsionVector_1)
     ASSERT_TRUE(res <= 1.0f);
 }
 
-
 /*
  * Test that a boid with a distance that is large and well beyond the minimum
  * distance has a resulsion weighting of 0.0.
  */
-TEST(libboids_utils, calculateRepulsionVector_2)
-{
-    const float dist = 1000.0f;
+TEST(libboids_utils, calculateRepulsionVector_2) {
+    const float dist    = 1000.0f;
     const float minDist = 1.0f;
 
     const float res = boids::utils::calculateRepulsionWeight(dist, minDist);
@@ -274,9 +247,7 @@ TEST(libboids_utils, calculateRepulsionVector_2)
     ASSERT_FLOAT_EQ(res, exp);
 }
 
-
-TEST(libboids_utils, distanceBetweenBoids_1)
-{
+TEST(libboids_utils, distanceBetweenBoids_1) {
     const boids::Boid b1(0, 0.0, 0.0);
     const boids::Boid b2(1, 1.0, 0.0);
 
@@ -286,9 +257,7 @@ TEST(libboids_utils, distanceBetweenBoids_1)
     ASSERT_FLOAT_EQ(exp, res);
 }
 
-
-TEST(libboids_utils, distanceBetweenBoids_2)
-{
+TEST(libboids_utils, distanceBetweenBoids_2) {
     const boids::Boid b1(0, 1.0, 0.0);
     const boids::Boid b2(1, 1.0, -5.0);
 
@@ -298,135 +267,111 @@ TEST(libboids_utils, distanceBetweenBoids_2)
     ASSERT_FLOAT_EQ(exp, res);
 }
 
-
 /**
  * @brief Test that the boids::utils::distanceBetweenBoids() method handles the situation
  * where the shortest distance between Boids is actually via the wrapping of the scene.
  */
-TEST(libboids_utils, distanceBetweenBoids_Bounded_1)
-{
-    const QRectF bounds(0.0f, 0.0f, 20.0f, 10.0f);
+TEST(libboids_utils, distanceBetweenBoids_Bounded_1) {
+    const QRectF      bounds(0.0f, 0.0f, 20.0f, 10.0f);
     const boids::Boid b1(0, 19.0f, 1.0f);
     const boids::Boid b2(1, 1.0f, 1.0f);
 
     const float exp = 2.0f;
     const float res = boids::utils::distanceBetweenBoids(b1, b2, bounds);
-    
+
     ASSERT_FLOAT_EQ(exp, res);
 }
-
 
 /**
  * @brief Test that the boids::utils::distanceBetweenBoids() method handles the situation
  * where the shortest distance between Boids is actually via the wrapping of the scene.
  */
-TEST(libboids_utils, distanceBetweenBoids_Bounded_2)
-{
-    const QRectF bounds(0.0f, 0.0f, 20.0f, 10.0f);
+TEST(libboids_utils, distanceBetweenBoids_Bounded_2) {
+    const QRectF      bounds(0.0f, 0.0f, 20.0f, 10.0f);
     const boids::Boid b1(0, 1.0f, 2.0f);
     const boids::Boid b2(1, 1.0f, 9.0f);
 
     const float exp = 3.0f;
     const float res = boids::utils::distanceBetweenBoids(b1, b2, bounds);
-    
+
     ASSERT_FLOAT_EQ(exp, res);
 }
-
 
 /**
  * @brief Test that the boids::utils::distanceBetweenBoids() method handles the case where
  * the euclidian distance is indeed the shortest distance between two Boids.
  */
-TEST(libboids_utils, distanceBetweenBoids_Bounded_3)
-{
-    const QRectF bounds(0.0f, 0.0f, 20.0f, 10.0f);
+TEST(libboids_utils, distanceBetweenBoids_Bounded_3) {
+    const QRectF      bounds(0.0f, 0.0f, 20.0f, 10.0f);
     const boids::Boid b1(0, 1.0f, 4.0f);
     const boids::Boid b2(1, 1.0f, 5.0f);
 
     const float exp = 1.0f;
     const float res = boids::utils::distanceBetweenBoids(b1, b2, bounds);
-    
+
     ASSERT_FLOAT_EQ(exp, res);
 }
 
-
-TEST(libboids_utils, generateRandomValue_float_1)
-{
-    const float a = 0.0f;
-    const float b = 1.0f;
+TEST(libboids_utils, generateRandomValue_float_1) {
+    const float a   = 0.0f;
+    const float b   = 1.0f;
     const float res = boids::utils::generateRandomValue<float>(a, b);
     ASSERT_TRUE(res > a);
     ASSERT_TRUE(res <= b);
 }
 
-
-TEST(libboids_utils, generateRandomValue_float_2)
-{
-    const float a = 0.25f;
-    const float b = 0.5f;
+TEST(libboids_utils, generateRandomValue_float_2) {
+    const float a   = 0.25f;
+    const float b   = 0.5f;
     const float res = boids::utils::generateRandomValue<float>(a, b);
     ASSERT_TRUE(res > a);
     ASSERT_TRUE(res <= b);
 }
 
-
-TEST(libboids_utils, generateRandomValue_float_3)
-{
-    const float a = -1.5f;
-    const float b = -1.0f;
+TEST(libboids_utils, generateRandomValue_float_3) {
+    const float a   = -1.5f;
+    const float b   = -1.0f;
     const float res = boids::utils::generateRandomValue<float>(a, b);
     ASSERT_TRUE(res > a);
     ASSERT_TRUE(res <= b);
 }
 
-
-TEST(libboids_utils, generateRandomValue_int_1)
-{
-    const int a = 0;
-    const int b = 10;
+TEST(libboids_utils, generateRandomValue_int_1) {
+    const int a   = 0;
+    const int b   = 10;
     const int res = boids::utils::generateRandomValue<int>(a, b);
     ASSERT_TRUE(res >= a);
     ASSERT_TRUE(res < b);
 }
 
-
-TEST(libboids_utils, generateRandomValue_int_2)
-{
-    for (std::size_t i=0; i<100; ++i)
-    {
-        const int a = -10;
-        const int b = 0;
+TEST(libboids_utils, generateRandomValue_int_2) {
+    for (std::size_t i = 0; i < 100; ++i) {
+        const int a   = -10;
+        const int b   = 0;
         const int res = boids::utils::generateRandomValue<int>(a, b);
         ASSERT_TRUE(res >= a);
         ASSERT_TRUE(res <= b);
     }
 }
 
-
-TEST(libboids_utils, generateRandomValue_int_3)
-{
-    const int a = 0;
-    const int b = 1;
+TEST(libboids_utils, generateRandomValue_int_3) {
+    const int a   = 0;
+    const int b   = 1;
     const int res = boids::utils::generateRandomValue<int>(a, b);
     ASSERT_TRUE(res >= a);
     ASSERT_TRUE(res < b);
 }
 
-
-TEST(libboids_utils, generateRandomVelocityVector_1)
-{
-    for (std::size_t i=0; i<100; ++i)
-    {
-        const float maxVel = boids::utils::generateRandomValue<float>(1.0f, 10.0f);
-        const QVector2D res = boids::utils::generateRandomVelocityVector(maxVel);
+TEST(libboids_utils, generateRandomVelocityVector_1) {
+    for (std::size_t i = 0; i < 100; ++i) {
+        const float     maxVel = boids::utils::generateRandomValue<float>(1.0f, 10.0f);
+        const QVector2D res    = boids::utils::generateRandomVelocityVector(maxVel);
         ASSERT_TRUE(res.length() >= 0.0f);
         ASSERT_TRUE(res.length() <= maxVel);
     }
 }
 
-
-TEST(libboids_utils, getBoidNeighbourhood_1)
-{
+TEST(libboids_utils, getBoidNeighbourhood_1) {
     const boids::Boid boid(0, 0.0f, 0.0f);
 
     std::vector<boids::Boid> flock;
@@ -441,9 +386,7 @@ TEST(libboids_utils, getBoidNeighbourhood_1)
     ASSERT_EQ(neighbours.at(1).getId(), 2);
 }
 
-
-TEST(libboids_utils, getBoidNeighbourhood_2)
-{
+TEST(libboids_utils, getBoidNeighbourhood_2) {
     const boids::Boid boid(0, 0.0f, 0.0f);
 
     std::vector<boids::Boid> flock;
@@ -459,11 +402,9 @@ TEST(libboids_utils, getBoidNeighbourhood_2)
     ASSERT_EQ(neighbours.at(1).getId(), 2);
 }
 
-
-TEST(libboids_utils, scaleVector_1)
-{
+TEST(libboids_utils, scaleVector_1) {
     const QVector2D vec(3.0f, 4.0f);
-    const float scalar = 5.0f;
+    const float     scalar = 5.0f;
 
     const QVector2D res = boids::utils::scaleVector(vec, scalar);
     const QVector2D exp(3.0f, 4.0f);
@@ -472,11 +413,9 @@ TEST(libboids_utils, scaleVector_1)
     ASSERT_FLOAT_EQ(exp.y(), res.y());
 }
 
-
-TEST(libboids_utils, scaleVector_2)
-{
+TEST(libboids_utils, scaleVector_2) {
     const QVector2D vec(-3.0f, 0.0f);
-    const float scalar = 10.0f;
+    const float     scalar = 10.0f;
 
     const QVector2D res = boids::utils::scaleVector(vec, scalar);
     const QVector2D exp(-10.0f, 0.0f);
@@ -485,10 +424,8 @@ TEST(libboids_utils, scaleVector_2)
     ASSERT_FLOAT_EQ(exp.y(), res.y());
 }
 
-
-TEST(libboids_utils, wrapBoidPosition_1)
-{
-    boids::Boid boid(0, 0.0f, 1.1f);
+TEST(libboids_utils, wrapBoidPosition_1) {
+    boids::Boid  boid(0, 0.0f, 1.1f);
     const QRectF rect(0.0f, 0.0f, 1.0f, 1.0f);
     boids::utils::wrapBoidPosition(boid, rect);
 
@@ -496,10 +433,8 @@ TEST(libboids_utils, wrapBoidPosition_1)
     ASSERT_FLOAT_EQ(boid.getPosition().y(), 0.1f);
 }
 
-
-TEST(libboids_utils, wrapBoidPosition_2)
-{
-    boids::Boid boid(0, -0.1f, 0.0f);
+TEST(libboids_utils, wrapBoidPosition_2) {
+    boids::Boid  boid(0, -0.1f, 0.0f);
     const QRectF rect(0.0f, 0.0f, 1.0f, 1.0f);
     boids::utils::wrapBoidPosition(boid, rect);
 
@@ -507,74 +442,62 @@ TEST(libboids_utils, wrapBoidPosition_2)
     ASSERT_FLOAT_EQ(boid.getPosition().y(), 0.0f);
 }
 
-
-TEST(libboids_utils, wrapValue_1)
-{
-    const float value = 1.1f;
+TEST(libboids_utils, wrapValue_1) {
+    const float value    = 1.1f;
     const float minValue = 0.0f;
     const float maxValue = 1.0f;
-    const float res = boids::utils::wrapValue(value, minValue, maxValue);
-    const float exp = 0.1f;
+    const float res      = boids::utils::wrapValue(value, minValue, maxValue);
+    const float exp      = 0.1f;
 
     ASSERT_FLOAT_EQ(res, exp);
 }
 
-
-TEST(libboids_utils, wrapValue_2)
-{
-    const float value = 1.1f;
+TEST(libboids_utils, wrapValue_2) {
+    const float value    = 1.1f;
     const float minValue = -1.0f;
     const float maxValue = 1.0f;
-    const float res = boids::utils::wrapValue(value, minValue, maxValue);
-    const float exp = -0.9f;
+    const float res      = boids::utils::wrapValue(value, minValue, maxValue);
+    const float exp      = -0.9f;
 
     ASSERT_FLOAT_EQ(res, exp);
 }
 
-
-TEST(libboids_utils, wrapValue_3)
-{
-    const float value = 1.1f;
+TEST(libboids_utils, wrapValue_3) {
+    const float value    = 1.1f;
     const float minValue = 0.0f;
     const float maxValue = 2.0f;
-    const float res = boids::utils::wrapValue(value, minValue, maxValue);
-    const float exp = 1.1f;
+    const float res      = boids::utils::wrapValue(value, minValue, maxValue);
+    const float exp      = 1.1f;
 
     ASSERT_FLOAT_EQ(res, exp);
 }
 
-
-TEST(libboids_utils, wrapValue_4)
-{
-    const float value = 5.1f;
+TEST(libboids_utils, wrapValue_4) {
+    const float value    = 5.1f;
     const float minValue = 1.0f;
     const float maxValue = 5.0f;
-    const float res = boids::utils::wrapValue(value, minValue, maxValue);
-    const float exp = 1.1f;
+    const float res      = boids::utils::wrapValue(value, minValue, maxValue);
+    const float exp      = 1.1f;
 
     ASSERT_FLOAT_EQ(res, exp);
 }
 
-
-TEST(libboids_utils, wrapValue_5)
-{
-    const float value = -0.1f;
+TEST(libboids_utils, wrapValue_5) {
+    const float value    = -0.1f;
     const float minValue = 0.0f;
     const float maxValue = 1.0f;
-    const float res = boids::utils::wrapValue(value, minValue, maxValue);
-    const float exp = 0.9f;
+    const float res      = boids::utils::wrapValue(value, minValue, maxValue);
+    const float exp      = 0.9f;
 
     ASSERT_FLOAT_EQ(res, exp);
 }
 
-
-TEST(libboids_utils, wrapValue_6)
-{
-    const float value = 0.0f;
+TEST(libboids_utils, wrapValue_6) {
+    const float value    = 0.0f;
     const float minValue = 0.0f;
     const float maxValue = 1.0f;
-    const float res = boids::utils::wrapValue(value, minValue, maxValue);
-    const float exp = 0.0f;
+    const float res      = boids::utils::wrapValue(value, minValue, maxValue);
+    const float exp      = 0.0f;
 
     ASSERT_FLOAT_EQ(res, exp);
 }
@@ -583,26 +506,22 @@ TEST(libboids_utils, wrapValue_6)
  * @brief Test that the clipVectorMagnitude() method correctly clips a vector
  * whose length is greater than the maximum value.
  */
-TEST(libboids_utils, clipVectorMangitude_OverMax)
-{
-    const float maxMag = 5.0f;
+TEST(libboids_utils, clipVectorMangitude_OverMax) {
+    const float     maxMag = 5.0f;
     const QVector2D exp(5.0f, 0.0f);
-    QVector2D vec(10.0f, 0.0f);
+    QVector2D       vec(10.0f, 0.0f);
     boids::utils::clipVectorMangitude(vec, maxMag);
     ASSERT_EQ(vec, exp);
-
 }
 
 /**
  * @brief Test that the clipVectorMagnitude() method correctly clips a vector
  * whose length is less than the maximum value.
  */
-TEST(libboids_utils, clipVectorMangitude_UnderMax)
-{
-    const float maxMag = 50.0f;
+TEST(libboids_utils, clipVectorMangitude_UnderMax) {
+    const float     maxMag = 50.0f;
     const QVector2D exp(10.0f, 0.0f);
-    QVector2D vec(10.0f, 0.0f);
+    QVector2D       vec(10.0f, 0.0f);
     boids::utils::clipVectorMangitude(vec, maxMag);
     ASSERT_EQ(vec, exp);
-
 }
