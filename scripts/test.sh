@@ -11,5 +11,12 @@ then
 fi
 
 pushd $BUILD_DIR
-ctest
+    # Run the test suite
+    ctest
+    
+    # Generate the coverage report
+    lcov --capture --directory . --output-file coverage.info
+    lcov --remove coverage.info '/usr/*' '*/test/*' --output-file filtered_coverage.info
+    lcov --list filtered_coverage.info
+    genhtml filtered_coverage.info --output-directory coverage-report
 popd
