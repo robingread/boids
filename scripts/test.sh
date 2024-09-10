@@ -12,7 +12,7 @@ fi
 
 pushd $BUILD_DIR
     # Run the test suite
-    ctest
+    ctest --verbose
     
     # Generate the coverage report
     lcov --capture --directory . --output-file coverage.info
