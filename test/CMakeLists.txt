@@ -1,11 +1,7 @@
 find_package(GTest REQUIRED)
-
 find_package(Qt5 REQUIRED COMPONENTS Core Widgets Gui)
 
 file(GLOB_RECURSE SOURCES "**/*.cpp")
-
-message (${SOURCES})
-
 add_executable(test_example ${SOURCES})
 target_link_libraries(test_example Qt5::Core Qt5::Widgets Qt5::Gui GTest::GTest GTest::Main libboids)
 gtest_discover_tests(test_example)
