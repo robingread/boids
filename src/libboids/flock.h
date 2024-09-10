@@ -14,6 +14,8 @@ class Flock {
     void              clearBoids();
     int               getNumBoids() const;
     std::vector<Boid> getBoids() const;
+    Config            getConfig() const;
+    void              setConfig(const Config& config);
 
     QRectF getSceneBounds() const;
     void   setSceneBounds(const QRectF& bounds);

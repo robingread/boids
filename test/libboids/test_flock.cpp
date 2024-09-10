@@ -50,3 +50,16 @@ TEST(libboids_flock, setSceneBounds) {
     ASSERT_FLOAT_EQ(res.left(), exp.left());
     ASSERT_FLOAT_EQ(res.right(), exp.right());
 }
+
+/**
+ * @brief Test that getting and setting a new Config works.
+ */
+TEST(libboids_flock, getConfig) {
+    boids::Flock  flock;
+    boids::Config cfg;
+    cfg.alignmentScale = 100.0f;
+
+    ASSERT_NE(cfg.alignmentScale, flock.getConfig().alignmentScale);
+    flock.setConfig(cfg);
+    ASSERT_EQ(cfg.alignmentScale, flock.getConfig().alignmentScale);
+}

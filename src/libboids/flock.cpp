@@ -15,6 +15,10 @@ void Flock::clearBoids() { m_boids.clear(); }
 
 std::vector<Boid> Flock::getBoids() const { return m_boids; }
 
+Config Flock::getConfig() const { return m_config; }
+
+void Flock::setConfig(const Config& config) { m_config = config; }
+
 int Flock::getNumBoids() const { return m_boids.size(); }
 
 QRectF Flock::getSceneBounds() const { return m_sceneBounds; }
