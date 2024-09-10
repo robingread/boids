@@ -5,6 +5,7 @@ RUN apt-get update && apt-get install -y \
     clang-format \
     git \
     g++ \
+    lcov \
     libgtest-dev \
     qtbase5-dev \
     && rm -rf /var/lib/apt/lists/*
