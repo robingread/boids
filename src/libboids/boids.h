@@ -7,6 +7,14 @@
 namespace boids {
 
 /**
+ * @brief The type of Boid:
+ * - BOID is a standard boids that follows normal rules.
+ * - PREDATOR is a boids that hunts the BOIDs, but avoids other PREDATORs.
+ * - OBSTACLE is a static obstacle that both BOIDs and PREDATORs avoid.
+ */
+enum BoidType { BOID, PREDATOR, OBSTACLE };
+
+/**
  * @brief The Boid class contains the data pertaining to a single Boid.
  * That is, the ID, the colour, the current position and heading and the current velocity.
  */
