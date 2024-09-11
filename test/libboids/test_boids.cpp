@@ -8,7 +8,10 @@ class BasicBoidInit : public ::testing::Test {
     uint16_t                     m_id;
     std::unique_ptr<boids::Boid> m_boid;
 
-    virtual void SetUp() { m_boid = std::make_unique<boids::Boid>(m_id); }
+    virtual void SetUp() {
+        m_id   = 10;
+        m_boid = std::make_unique<boids::Boid>(m_id);
+    }
 };
 
 /**
@@ -27,6 +30,16 @@ TEST_F(BasicBoidInit, test_getAngle) { ASSERT_EQ(0.0f, m_boid->getAngle()); }
 TEST_F(BasicBoidInit, test_getPosition) {
     const QPointF exp(0.0, 0.0);
     const QPointF res = m_boid->getPosition();
+    ASSERT_EQ(exp, res);
+}
+
+/**
+ * @brief Test that the getType() method works as expected when no type is offered up at
+ * construction.
+ */
+TEST_F(BasicBoidInit, test_getType) {
+    const boids::BoidType exp = boids::BoidType::BOID;
+    const boids::BoidType res = m_boid->getType();
     ASSERT_EQ(exp, res);
 }
 
@@ -65,6 +78,56 @@ TEST_F(BasicBoidInit, test_setVelocity) {
     m_boid->setVelocity(exp);
     const QVector2D res = m_boid->getVelocity();
     ASSERT_EQ(exp, res);
+}
+
+/**
+ * @brief Create an initialisation where the Boid is of a OBSTACLE type
+ */
+class InitObstacleBoid : public ::testing::Test {
+  protected:
+    uint16_t                     m_id;
+    boids::BoidType              m_type;
+    std::unique_ptr<boids::Boid> m_boid;
+
+    virtual void SetUp() {
+        m_id   = 1;
+        m_type = boids::BoidType::OBSTACLE;
+        m_boid = std::make_unique<boids::Boid>(m_id, m_type);
+    }
+};
+
+/**
+ * @brief Test that the getType() method works as expected when no type is offered up at
+ * construction.
+ */
+TEST_F(InitObstacleBoid, test_getType) {
+    const boids::BoidType res = m_boid->getType();
+    ASSERT_EQ(m_type, res);
+}
+
+/**
+ * @brief Create an initialisation where the Boid is of a PREDATOR type
+ */
+class InitPredatorBoid : public ::testing::Test {
+  protected:
+    uint16_t                     m_id;
+    boids::BoidType              m_type;
+    std::unique_ptr<boids::Boid> m_boid;
+
+    virtual void SetUp() {
+        m_id   = 1;
+        m_type = boids::BoidType::PREDATOR;
+        m_boid = std::make_unique<boids::Boid>(m_id, m_type);
+    }
+};
+
+/**
+ * @brief Test that the getType() method works as expected when no type is offered up at
+ * construction.
+ */
+TEST_F(InitPredatorBoid, test_getType) {
+    const boids::BoidType res = m_boid->getType();
+    ASSERT_EQ(m_type, res);
 }
 
 /*
