@@ -39,8 +39,10 @@ void SimThread::run() {
         m_boidSim.update();
 
         QList<boids::Boid> boids;
-        for (const auto& b : m_boidSim.getBoids()) {
-            boids.push_back(b);
+        for (const auto& [key, value] : m_boidSim.getBoids()) {
+            for (const auto& v : value) {
+                boids.push_back(v);
+            }
         }
         emit update(boids);
         this->usleep(10000);
