@@ -1,5 +1,6 @@
 #include "displaygraphicsview.h"
 #include "boid.h"
+#include "boids.h"
 #include <QMouseEvent>
 #include <QtMath>
 #include <iostream>

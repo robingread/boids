@@ -21,7 +21,7 @@ class DisplayGraphicsView : public QGraphicsView {
     void addDisplayItem(const QPointF& pos, const float& angle, const QColor& color);
 
   signals:
-    void createItem(const QPointF pos);
+    void createItem(const QPointF pos, const boids::BoidType& type = boids::BoidType::BOID);
 
   public slots:
     void mousePressEvent(QMouseEvent* event) override;
