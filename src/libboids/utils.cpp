@@ -122,6 +122,14 @@ std::vector<Boid> getBoidNeighbourhood(const Boid& boid, const std::vector<boids
     return ret;
 }
 
+std::size_t getTotalNumBoids(const std::map<BoidType, std::vector<Boid>>& boids) {
+    std::size_t n = 0;
+    for (const auto& [key, value] : boids) {
+        n += value.size();
+    }
+    return n;
+}
+
 QVector2D scaleVector(const QVector2D& vec, const float& scalar) {
     return vec.normalized() * scalar;
 }

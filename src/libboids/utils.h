@@ -86,6 +86,13 @@ std::vector<Boid> getBoidNeighbourhood(const Boid& boid, const std::vector<Boid>
                                        const float& dist, const QRectF& bounds);
 
 /**
+ * @brief Get the total number in a map of different types of Boids.
+ * @param boids Standard Map containing vectors of different types of Boids.
+ * @return Total number of Boids.
+ */
+std::size_t getTotalNumBoids(const std::map<BoidType, std::vector<Boid>>& boids);
+
+/**
  * @brief Get a QVector scaled by a given value.
  * @param vec Vector to sclae.
  * @param scalar Scalar value.

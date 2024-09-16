@@ -402,6 +402,32 @@ TEST(libboids_utils, getBoidNeighbourhood_2) {
     ASSERT_EQ(neighbours.at(1).getId(), 2);
 }
 
+/**
+ * @brief Test the getTotalNumBoids() method in the boids::utils namespace to check that
+ * it returns the correct number of Boids in the input std::map. In this test, the input
+ * map is empty.
+ */
+TEST(libboids_utils, getTotalNumBoids_0) {
+    std::map<boids::BoidType, std::vector<boids::Boid>> boids = {};
+    const std::size_t                                   res = boids::utils::getTotalNumBoids(boids);
+    const std::size_t                                   exp = 0;
+    ASSERT_EQ(res, exp);
+}
+
+/**
+ * @brief Test the getTotalNumBoids() method in the boids::utils namespace to check that
+ * it returns the correct number of Boids in the input std::map.
+ */
+TEST(libboids_utils, getTotalNumBoids_6) {
+    std::map<boids::BoidType, std::vector<boids::Boid>> boids;
+    boids[boids::BoidType::BOID]     = {boids::Boid(1, 1.0f, 2.0f), boids::Boid(2, 1.0f, 2.0f)};
+    boids[boids::BoidType::OBSTACLE] = {boids::Boid(3, 1.0f, 2.0f), boids::Boid(4, 1.0f, 2.0f)};
+    boids[boids::BoidType::PREDATOR] = {boids::Boid(5, 1.0f, 2.0f), boids::Boid(6, 1.0f, 2.0f)};
+    const std::size_t res            = boids::utils::getTotalNumBoids(boids);
+    const std::size_t exp            = 6;
+    ASSERT_EQ(res, exp);
+}
+
 TEST(libboids_utils, scaleVector_1) {
     const QVector2D vec(3.0f, 4.0f);
     const float     scalar = 5.0f;
