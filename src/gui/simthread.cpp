@@ -9,12 +9,12 @@ SimThread::~SimThread() {
     wait();
 }
 
-void SimThread::addNewItem(const QPointF& pos) {
+void SimThread::addNewItem(const QPointF& pos, const boids::BoidType& type) {
     std::cout << "Running addNewItem() slot" << std::endl;
 
     QMutex mutex;
     mutex.lock();
-    m_boidSim.addBoid(pos.x(), pos.y());
+    m_boidSim.addBoid(pos.x(), pos.y(), type);
     mutex.unlock();
 }
 

@@ -42,7 +42,7 @@ class SimThread : public QThread {
      * @param pos Position for the new boid in the format (x, y), in a normalized
      * coorindate space.
      */
-    void addNewItem(const QPointF& pos);
+    void addNewItem(const QPointF& pos, const boids::BoidType& type = boids::BoidType::BOID);
 
     /**
      * @brief Stop the simulation thread.
