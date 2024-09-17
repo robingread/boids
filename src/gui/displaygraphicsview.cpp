@@ -62,6 +62,12 @@ void DisplayGraphicsView::renderObstacle(const QPointF& pos) {
     m_scene->addItem(circle);
 }
 
+void DisplayGraphicsView::renderPredator(const QPointF& pos, const float& angle) {
+    QColor    color(Qt::red);
+    Predator* boid = new Predator(pos, angle, color);
+    m_scene->addItem(boid);
+}
+
 void DisplayGraphicsView::renderBoids(const QList<boids::Boid>& boids) {
     m_scene->clear();
     for (const boids::Boid& b : boids) {
