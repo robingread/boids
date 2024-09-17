@@ -57,9 +57,15 @@ void DisplayGraphicsView::renderObstacle(const QPointF& pos) {
     const float           x        = pos.x() - (diameter * 0.5f);
     const float           y        = pos.y() - (diameter * 0.5f);
     QGraphicsEllipseItem* circle   = new QGraphicsEllipseItem(x, y, diameter, diameter);
-    circle->setBrush(QBrush(Qt::red));
+    circle->setBrush(QBrush(Qt::lightGray));
     circle->setPen(Qt::NoPen);
     m_scene->addItem(circle);
+}
+
+void DisplayGraphicsView::renderPredator(const QPointF& pos, const float& angle) {
+    QColor    color(Qt::red);
+    Predator* boid = new Predator(pos, angle, color);
+    m_scene->addItem(boid);
 }
 
 void DisplayGraphicsView::renderBoids(const QList<boids::Boid>& boids) {
@@ -71,6 +77,9 @@ void DisplayGraphicsView::renderBoids(const QList<boids::Boid>& boids) {
                 break;
             case boids::OBSTACLE:
                 renderObstacle(b.getPosition());
+                break;
+            case boids::PREDATOR:
+                renderPredator(b.getPosition(), qRadiansToDegrees(b.getAngle()));
                 break;
             default:
                 break;

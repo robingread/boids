@@ -25,6 +25,7 @@ class Flock {
 
   private:
     Config                                m_config;
+    Config                                m_predatorCfg;
     std::size_t                           m_idCount;
     QRectF                                m_sceneBounds;
     std::map<BoidType, std::vector<Boid>> m_boidMap;

@@ -26,6 +26,13 @@ class DisplayGraphicsView : public QGraphicsView {
      */
     void renderObstacle(const QPointF& pos);
 
+    /**
+     * @brief Render a Predator Boid.
+     * @param pos Postion of the Boid.
+     * @param angle Heading of the Boid.
+     */
+    void renderPredator(const QPointF& pos, const float& angle);
+
   signals:
     void createItem(const QPointF pos, const boids::BoidType& type = boids::BoidType::BOID);
 
