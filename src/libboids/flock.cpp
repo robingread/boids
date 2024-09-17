@@ -4,6 +4,63 @@
 
 namespace boids {
 
+/**
+ * @brief Update a vector of Boid instances, taking into account the flock of boids,
+ * obstacles and the predators.
+ * @param boids Vector of Boid instances to update.
+ * @param flock Vector of standard Boids.
+ * @param predators Vector of Predator Boids.
+ * @param obstacles Vector of Obstacle Boids.
+ * @param cfg Configuration parameters to use for the update.
+ * @param sceneBounds Bounds of the Scene.
+ */
+void updateBoids(std::vector<Boid>& boids, const std::vector<Boid>& flock,
+                 const std::vector<Boid>& predators, const std::vector<Boid>& obstacles,
+                 const Config& cfg, const QRectF& sceneBounds) {
+    for (Boid& b : boids) {
+        const std::vector<boids::Boid> neighbours =
+            boids::utils::getBoidNeighbourhood(b, flock, cfg.neighbourhoodRadius, sceneBounds);
+
+        const std::vector<boids::Boid> obstacleNeighbours =
+            boids::utils::getBoidNeighbourhood(b, obstacles, cfg.neighbourhoodRadius, sceneBounds);
+
+        const std::vector<boids::Boid> predatorNeighbours = boids::utils::getBoidNeighbourhood(
+            b, predators, cfg.neighbourhoodRadius * 2.0f, sceneBounds);
+
+        const QVector2D alignVector =
+            boids::utils::calculateAlignmentVector(b, neighbours).normalized() * cfg.alignmentScale;
+
+        const QVector2D cohesionVector =
+            boids::utils::calculateCohesionVector(b, neighbours).normalized() * cfg.coheasionScale;
+
+        const QVector2D repelVec =
+            boids::utils::calculateSeparationVector(b, neighbours, 50.0f).normalized() *
+            cfg.repelScale;
+
+        const QVector2D obstacleVec =
+            boids::utils::calculateSeparationVector(b, obstacleNeighbours, 150.0f).normalized() *
+            cfg.repelScale * 2.0f;
+
+        const QVector2D predatorVec =
+            boids::utils::calculateSeparationVector(b, predatorNeighbours, 150.0f).normalized() *
+            cfg.repelScale * 5.0f;
+
+        const QVector2D noiseVec = boids::utils::generateRandomVelocityVector(0.0001f);
+
+        const QPointF& p = b.getPosition();
+
+        QVector2D v = b.getVelocity() + alignVector + cohesionVector + repelVec + obstacleVec +
+                      predatorVec + noiseVec;
+
+        boids::utils::clipVectorMangitude(v, cfg.maxVelocity);
+
+        b.setPosition(QPointF(p.x() + v.x(), p.y() + v.y()));
+        utils::wrapBoidPosition(b, sceneBounds);
+
+        b.setVelocity(v);
+    }
+};
+
 Flock::Flock() {
     m_idCount = 0;
     m_boidMap = {};
