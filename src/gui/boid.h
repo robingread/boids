@@ -22,3 +22,13 @@ class Boid : public QGraphicsItem {
     std::size_t m_height;
 };
 
+/**
+ * @brief The Predator class is used to render Predators in the GUI. It inherits from the
+ * Boid class, which itself is a QGraphicsItem. The main differece from the Boid class is
+ * that it has an alternative implementation for the paint() method.
+ */
+class Predator : public Boid {
+  public:
+    Predator(const QPointF& pos, const float rot, const QColor& colour);
+    void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget) override;
+};
