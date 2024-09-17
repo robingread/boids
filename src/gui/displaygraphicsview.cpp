@@ -57,7 +57,7 @@ void DisplayGraphicsView::renderObstacle(const QPointF& pos) {
     const float           x        = pos.x() - (diameter * 0.5f);
     const float           y        = pos.y() - (diameter * 0.5f);
     QGraphicsEllipseItem* circle   = new QGraphicsEllipseItem(x, y, diameter, diameter);
-    circle->setBrush(QBrush(Qt::red));
+    circle->setBrush(QBrush(Qt::lightGray));
     circle->setPen(Qt::NoPen);
     m_scene->addItem(circle);
 }
