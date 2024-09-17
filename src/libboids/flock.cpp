@@ -101,45 +101,12 @@ QRectF Flock::getSceneBounds() const { return m_sceneBounds; }
 void Flock::setSceneBounds(const QRectF& bounds) { m_sceneBounds = bounds; }
 
 void Flock::update() {
-    std::vector<Boid>&       boids     = m_boidMap[BoidType::BOID];
-    const std::vector<Boid>& obstacles = m_boidMap[BoidType::OBSTACLE];
-    for (Boid& b : boids) {
-        const std::vector<boids::Boid> neighbours = boids::utils::getBoidNeighbourhood(
-            b, boids, m_config.neighbourhoodRadius, m_sceneBounds);
+    updateBoids(m_boidMap[BoidType::BOID], m_boidMap[BoidType::BOID], m_boidMap[BoidType::PREDATOR],
+                m_boidMap[BoidType::OBSTACLE], m_config, m_sceneBounds);
 
-        const std::vector<boids::Boid> obstacleNeighbours = boids::utils::getBoidNeighbourhood(
-            b, obstacles, m_config.neighbourhoodRadius, m_sceneBounds);
-
-        const QVector2D alignVector =
-            boids::utils::calculateAlignmentVector(b, neighbours).normalized() *
-            m_config.alignmentScale;
-
-        const QVector2D cohesionVector =
-            boids::utils::calculateCohesionVector(b, neighbours).normalized() *
-            m_config.coheasionScale;
-
-        const QVector2D repelVec =
-            boids::utils::calculateSeparationVector(b, neighbours, 75.0f).normalized() *
-            m_config.repelScale;
-
-        const QVector2D obstacleVec =
-            boids::utils::calculateSeparationVector(b, obstacleNeighbours, 150.0f).normalized() *
-            m_config.repelScale * 2.0f;
-
-        const QVector2D noiseVec = boids::utils::generateRandomVelocityVector(0.0001f);
-
-        const QPointF& p = b.getPosition();
-
-        QVector2D v =
-            b.getVelocity() + alignVector + cohesionVector + repelVec + obstacleVec + noiseVec;
-
-        boids::utils::clipVectorMangitude(v, m_config.maxVelocity);
-
-        b.setPosition(QPointF(p.x() + v.x(), p.y() + v.y()));
-        utils::wrapBoidPosition(b, m_sceneBounds);
-
-        b.setVelocity(v);
-    }
+    updateBoids(m_boidMap[BoidType::PREDATOR], m_boidMap[BoidType::BOID],
+                m_boidMap[BoidType::PREDATOR], m_boidMap[BoidType::OBSTACLE], m_predatorCfg,
+                m_sceneBounds);
 }
 
 }; // namespace boids
