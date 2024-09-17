@@ -5,14 +5,15 @@
 
 namespace boids {
 
-Boid::Boid(const uint16_t& id) : m_id(id) {
+Boid::Boid(const uint16_t& id, const BoidType type) : m_id(id), m_type(type) {
     m_position.setX(0.0f);
     m_position.setY(0.0f);
     m_velocity.setX(0.0f);
     m_velocity.setY(0.0f);
 }
 
-Boid::Boid(const uint16_t& id, const float x, const float y) : m_id(id) {
+Boid::Boid(const uint16_t& id, const float x, const float y, const BoidType type)
+    : m_id(id), m_type(type) {
     m_position.setX(x);
     m_position.setY(y);
 
@@ -25,8 +26,9 @@ Boid::Boid(const uint16_t& id, const float x, const float y) : m_id(id) {
     m_color     = QColor(r, g, b, 255);
 }
 
-Boid::Boid(const uint16_t& id, const float x, const float y, const float dx, const float dy)
-    : m_id(id) {
+Boid::Boid(const uint16_t& id, const float x, const float y, const float dx, const float dy,
+           const BoidType type)
+    : m_id(id), m_type(type) {
     m_position.setX(x);
     m_position.setY(y);
     m_velocity.setX(dx);
@@ -40,6 +42,8 @@ QColor Boid::getColor() const { return m_color; }
 uint16_t Boid::getId() const { return m_id; }
 
 QPointF Boid::getPosition() const { return m_position; }
+
+BoidType Boid::getType() const { return m_type; }
 
 QVector2D Boid::getVelocity() const { return m_velocity; }
 

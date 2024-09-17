@@ -1,5 +1,6 @@
 #include "displaygraphicsview.h"
 #include "boid.h"
+#include "boids.h"
 #include <QMouseEvent>
 #include <QtMath>
 #include <iostream>
@@ -24,12 +25,13 @@ DisplayGraphicsView::DisplayGraphicsView(QWidget* parent) : QGraphicsView(parent
 void DisplayGraphicsView::mousePressEvent(QMouseEvent* event) {
     if (event->button() == Qt::LeftButton) {
         std::cout << "Left Mouse Button Clicked!" << std::endl;
-        emit createItem(mapToScene(event->pos()));
+        emit createItem(mapToScene(event->pos()), boids::BoidType::BOID);
     } else if (event->button() == Qt::RightButton) {
         std::cout << "Right Mouse Button Clicked!" << std::endl;
-        m_scene->clear();
+        emit createItem(mapToScene(event->pos()), boids::BoidType::PREDATOR);
     } else if (event->button() == Qt::MiddleButton) {
         std::cout << "Middle Mouse Button Clicked!" << std::endl;
+        emit createItem(mapToScene(event->pos()), boids::BoidType::OBSTACLE);
     }
 }
 
@@ -50,9 +52,28 @@ void DisplayGraphicsView::addDisplayItem(const QPointF& pos, const float& angle,
     m_scene->addItem(boid);
 }
 
+void DisplayGraphicsView::renderObstacle(const QPointF& pos) {
+    const float           diameter = 15;
+    const float           x        = pos.x() - (diameter * 0.5f);
+    const float           y        = pos.y() - (diameter * 0.5f);
+    QGraphicsEllipseItem* circle   = new QGraphicsEllipseItem(x, y, diameter, diameter);
+    circle->setBrush(QBrush(Qt::red));
+    circle->setPen(Qt::NoPen);
+    m_scene->addItem(circle);
+}
+
 void DisplayGraphicsView::renderBoids(const QList<boids::Boid>& boids) {
     m_scene->clear();
     for (const boids::Boid& b : boids) {
-        addDisplayItem(b.getPosition(), qRadiansToDegrees(b.getAngle()), b.getColor());
+        switch (b.getType()) {
+            case boids::BoidType::BOID:
+                addDisplayItem(b.getPosition(), qRadiansToDegrees(b.getAngle()), b.getColor());
+                break;
+            case boids::OBSTACLE:
+                renderObstacle(b.getPosition());
+                break;
+            default:
+                break;
+        }
     }
 }

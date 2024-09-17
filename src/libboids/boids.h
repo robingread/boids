@@ -7,6 +7,14 @@
 namespace boids {
 
 /**
+ * @brief The type of Boid:
+ * - BOID is a standard boids that follows normal rules.
+ * - PREDATOR is a boids that hunts the BOIDs, but avoids other PREDATORs.
+ * - OBSTACLE is a static obstacle that both BOIDs and PREDATORs avoid.
+ */
+enum BoidType { BOID, PREDATOR, OBSTACLE };
+
+/**
  * @brief The Boid class contains the data pertaining to a single Boid.
  * That is, the ID, the colour, the current position and heading and the current velocity.
  */
@@ -16,7 +24,7 @@ class Boid {
      * @brief Construct a new Boid object at location 0.0, 0.0, with not velocity.
      * @param id ID to assign to the Boid.
      */
-    Boid(const uint16_t& id);
+    Boid(const uint16_t& id, const BoidType type = BoidType::BOID);
 
     /**
      * @brief Construct a new Boid object at a given location with a given ID.
@@ -24,7 +32,7 @@ class Boid {
      * @param x X screen coordinate.
      * @param y Y screen coordinate.
      */
-    Boid(const uint16_t& id, const float x, const float y);
+    Boid(const uint16_t& id, const float x, const float y, const BoidType type = BoidType::BOID);
 
     /**
      * @brief Construct a new Boid object at a given location, with a given velocity and ID.
@@ -35,7 +43,8 @@ class Boid {
      * @param dx X velocity.
      * @param dy Y velocity.
      */
-    Boid(const uint16_t& id, const float x, const float y, const float dx, const float dy);
+    Boid(const uint16_t& id, const float x, const float y, const float dx, const float dy,
+         const BoidType type = BoidType::BOID);
 
     /**
      * @brief Get the heading angle of the boid. This will be in the range (-PI, PI) and
@@ -61,6 +70,12 @@ class Boid {
      * @return Position in the scene.
      */
     QPointF getPosition() const;
+
+    /**
+     * @brief Get the type of Boid.
+     * @return const BoidType
+     */
+    BoidType getType() const;
 
     /**
      * @brief Get the current velocity of the Boid.
@@ -91,6 +106,7 @@ class Boid {
     QColor    m_color;
     QPointF   m_position;
     QVector2D m_velocity;
+    BoidType  m_type;
 };
 
 }; // namespace boids

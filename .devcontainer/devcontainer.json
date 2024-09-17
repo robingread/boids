@@ -20,12 +20,14 @@
         "vscode": {
             // Add the IDs of extensions you want installed when the container is created.
             "extensions": [
+                "DavidAnson.vscode-markdownlint",
                 "cschlosser.doxdocgen",
-                "ms-azuretools.vscode-docker",
-                "ms-python.python",
-                "ms-vscode.cpptools",
+                "gruntfuggly.todo-tree",
                 "ms-vscode.cmake-tools",
+                "ms-vscode.cpptools",
                 "ms-vscode.cpptools-extension-pack",
+                "ms-vscode.cpptools-themes",
+                "wayou.vscode-todo-highlight",
                 "xaver.clang-format"
             ]
         }

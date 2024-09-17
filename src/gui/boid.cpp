@@ -29,6 +29,6 @@ void Boid::paint(QPainter* painter, const QStyleOptionGraphicsItem* /*option*/,
     path.lineTo(p3);
     path.lineTo(p1);
 
-    painter->setPen(Qt ::NoPen);
+    painter->setPen(Qt::NoPen);
     painter->fillPath(path, QBrush(m_colour));
 }

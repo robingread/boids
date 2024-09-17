@@ -9,12 +9,12 @@ SimThread::~SimThread() {
     wait();
 }
 
-void SimThread::addNewItem(const QPointF& pos) {
+void SimThread::addNewItem(const QPointF& pos, const boids::BoidType& type) {
     std::cout << "Running addNewItem() slot" << std::endl;
 
     QMutex mutex;
     mutex.lock();
-    m_boidSim.addBoid(pos.x(), pos.y());
+    m_boidSim.addBoid(pos.x(), pos.y(), type);
     mutex.unlock();
 }
 
@@ -39,8 +39,10 @@ void SimThread::run() {
         m_boidSim.update();
 
         QList<boids::Boid> boids;
-        for (const auto& b : m_boidSim.getBoids()) {
-            boids.push_back(b);
+        for (const auto& [key, value] : m_boidSim.getBoids()) {
+            for (const auto& v : value) {
+                boids.push_back(v);
+            }
         }
         emit update(boids);
         this->usleep(10000);
