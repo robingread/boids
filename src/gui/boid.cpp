@@ -2,8 +2,8 @@
 #include <QPainterPath>
 
 Boid::Boid(const QPointF& pos, const float rot, const QColor& colour) {
-    m_width  = 30;
-    m_height = 20;
+    m_width  = 15;
+    m_height = 10;
     m_colour = colour;
     this->setPos(pos);
     this->setRotation(rot);
