@@ -78,6 +78,9 @@ void DisplayGraphicsView::renderBoids(const QList<boids::Boid>& boids) {
             case boids::OBSTACLE:
                 renderObstacle(b.getPosition());
                 break;
+            case boids::PREDATOR:
+                renderPredator(b.getPosition(), qRadiansToDegrees(b.getAngle()));
+                break;
             default:
                 break;
         }
