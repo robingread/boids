@@ -8,6 +8,12 @@ Flock::Flock() {
     m_idCount = 0;
     m_boidMap = {};
 
+    m_config.neighbourhoodRadius = 50.0f;
+    m_config.alignmentScale      = 0.1f;
+    m_config.coheasionScale      = 0.05f;
+    m_config.repelScale          = 0.075f;
+    m_config.maxVelocity         = 2.0f;
+
     m_predatorCfg.neighbourhoodRadius = 120.0f;
     m_predatorCfg.alignmentScale      = 1.0f;
     m_predatorCfg.coheasionScale      = 1.0f;
