@@ -7,6 +7,12 @@ namespace boids {
 Flock::Flock() {
     m_idCount = 0;
     m_boidMap = {};
+
+    m_predatorCfg.neighbourhoodRadius = 120.0f;
+    m_predatorCfg.alignmentScale      = 1.0f;
+    m_predatorCfg.coheasionScale      = 1.0f;
+    m_predatorCfg.repelScale          = 0.05f;
+    m_predatorCfg.maxVelocity         = 1.75f;
 }
 
 int Flock::addBoid(const float x, const float y, const BoidType type) {
