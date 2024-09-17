@@ -1,5 +1,4 @@
-#ifndef BOID_H
-#define BOID_H
+#pragma once
 
 #include <QColor>
 #include <QGraphicsItem>
@@ -18,4 +17,3 @@ class Boid : public QGraphicsItem {
     std::size_t m_height;
 };
 
-#endif // BOID_H
