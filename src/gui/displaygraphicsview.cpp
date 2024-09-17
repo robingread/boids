@@ -65,6 +65,15 @@ void DisplayGraphicsView::renderObstacle(const QPointF& pos) {
 void DisplayGraphicsView::renderBoids(const QList<boids::Boid>& boids) {
     m_scene->clear();
     for (const boids::Boid& b : boids) {
-        addDisplayItem(b.getPosition(), qRadiansToDegrees(b.getAngle()), b.getColor());
+        switch (b.getType()) {
+            case boids::BoidType::BOID:
+                addDisplayItem(b.getPosition(), qRadiansToDegrees(b.getAngle()), b.getColor());
+                break;
+            case boids::OBSTACLE:
+                renderObstacle(b.getPosition());
+                break;
+            default:
+                break;
+        }
     }
 }
