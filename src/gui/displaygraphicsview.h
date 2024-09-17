@@ -20,6 +20,12 @@ class DisplayGraphicsView : public QGraphicsView {
     void addDisplayItem(const QPointF& pos);
     void addDisplayItem(const QPointF& pos, const float& angle, const QColor& color);
 
+    /**
+     * @brief Render an Obstacle Boid at a given position.
+     * @param pos Position of the obstacle.
+     */
+    void renderObstacle(const QPointF& pos);
+
   signals:
     void createItem(const QPointF pos, const boids::BoidType& type = boids::BoidType::BOID);
 

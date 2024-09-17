@@ -52,6 +52,16 @@ void DisplayGraphicsView::addDisplayItem(const QPointF& pos, const float& angle,
     m_scene->addItem(boid);
 }
 
+void DisplayGraphicsView::renderObstacle(const QPointF& pos) {
+    const float           diameter = 15;
+    const float           x        = pos.x() - (diameter * 0.5f);
+    const float           y        = pos.y() - (diameter * 0.5f);
+    QGraphicsEllipseItem* circle   = new QGraphicsEllipseItem(x, y, diameter, diameter);
+    circle->setBrush(QBrush(Qt::red));
+    circle->setPen(Qt::NoPen);
+    m_scene->addItem(circle);
+}
+
 void DisplayGraphicsView::renderBoids(const QList<boids::Boid>& boids) {
     m_scene->clear();
     for (const boids::Boid& b : boids) {
