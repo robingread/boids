@@ -11,7 +11,7 @@ class Boid : public QGraphicsItem {
     QRectF boundingRect() const override;
     void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget) override;
 
-  private:
+  protected:
     QColor      m_colour;
     std::size_t m_width;
     std::size_t m_height;
