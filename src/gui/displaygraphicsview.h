@@ -1,5 +1,4 @@
-#ifndef DISPLAYGRAPHICSVIEW_H
-#define DISPLAYGRAPHICSVIEW_H
+#pragma once
 
 #include <boids.h>
 
@@ -40,5 +39,3 @@ class DisplayGraphicsView : public QGraphicsView {
     void mousePressEvent(QMouseEvent* event) override;
     void renderBoids(const QList<boids::Boid>& boids);
 };
-
-#endif // DISPLAYGRAPHICSVIEW_H
