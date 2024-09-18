@@ -17,9 +17,31 @@ class Boid : public QGraphicsItem {
     void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget) override;
 
   protected:
-    QColor      m_colour;
-    std::size_t m_width;
-    std::size_t m_height;
+    QColor       m_colour;
+    std::size_t  m_width;
+    std::size_t  m_height;
+    QPainterPath m_path;
+};
+
+/**
+ * @brief The Obstacle class is used to render Obstacles in the GUI and inherits from the
+ * QGraphicsItem class.
+ */
+class Obstacle : public QGraphicsItem {
+  public:
+    /**
+     * @brief Construct a new Obstacle object.
+     * @param pos Position of the obstacle.
+     * @param color Colour of the obstacle.
+     * @param radius Radius of the obstacle.
+     */
+    Obstacle(const QPointF& pos, const QColor& color, const float& radius);
+    QRectF boundingRect() const override;
+    void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget) override;
+
+  private:
+    QColor m_color;
+    QRectF m_boundingRect;
 };
 
 /**
