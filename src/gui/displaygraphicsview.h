@@ -1,5 +1,6 @@
 #pragma once
 
+#include "boid.h"
 #include <boids.h>
 
 #include <QGraphicsScene>
@@ -16,21 +17,33 @@ class DisplayGraphicsView : public QGraphicsView {
   private:
     QGraphicsScene* m_scene;
 
-    void addDisplayItem(const QPointF& pos);
-    void addDisplayItem(const QPointF& pos, const float& angle, const QColor& color);
+    /**
+     * @brief Render a standard Boid.
+     * @param pos Postion of the Boid.
+     * @param angle Heading of the Boid.
+     */
+    void renderBoid(const uint16_t& id, const QPointF& pos, const float& angle,
+                    const QColor& color);
+
+    /**
+     * @brief Render a circle with a given radius around a point.
+     * @param pos Center of the circle (in pixels).
+     * @param radius Radius of the cirlce (in pixels).
+     */
+    void renderCircle(const QPointF& pos, const float& radius);
 
     /**
      * @brief Render an Obstacle Boid at a given position.
      * @param pos Position of the obstacle.
      */
-    void renderObstacle(const QPointF& pos);
+    void renderObstacle(const uint16_t& id, const QPointF& pos);
 
     /**
      * @brief Render a Predator Boid.
      * @param pos Postion of the Boid.
      * @param angle Heading of the Boid.
      */
-    void renderPredator(const QPointF& pos, const float& angle);
+    void renderPredator(const uint16_t& id, const QPointF& pos, const float& angle);
 
   private:
     std::map<const uint16_t, std::unique_ptr<QGraphicsItem>> m_displayItems;
