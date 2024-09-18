@@ -26,6 +26,18 @@
             ]
         },
         {
+            "label": "Clean, Build, Test, Run",
+            "detail": "Perform a clean build, test, then run",
+            "type": "shell",
+            "dependsOrder": "sequence",
+            "dependsOn": [
+                "Clean",
+                "Build",
+                "Test",
+                "Run"
+            ]
+        },
+        {
             "label": "Clean, Build, Test",
             "detail": "Perform a clean build and then run the unit-test suite",
             "type": "shell",
