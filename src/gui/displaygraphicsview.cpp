@@ -18,6 +18,8 @@ DisplayGraphicsView::DisplayGraphicsView(QWidget* parent) : QGraphicsView(parent
     this->setSceneRect(0, 0, this->width(), this->height());
     this->setScene(m_scene);
 
+    m_displayItems.clear();
+
     const int c = 60;
     m_scene->setBackgroundBrush(QBrush(QColor(c, c, c, 255)));
 }
