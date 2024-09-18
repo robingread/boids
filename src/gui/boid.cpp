@@ -7,6 +7,16 @@ Boid::Boid(const QPointF& pos, const float rot, const QColor& colour) {
     m_colour = colour;
     this->setPos(pos);
     this->setRotation(rot);
+
+    const float   w = m_width / 2.0f;
+    const float   h = m_height / 2.0f;
+    const QPointF p1(w, 0);
+    const QPointF p2(-w, h);
+    const QPointF p3(-w, -h);
+    m_path.moveTo(p1);
+    m_path.lineTo(p2);
+    m_path.lineTo(p3);
+    m_path.lineTo(p1);
 }
 
 QRectF Boid::boundingRect() const {
@@ -17,30 +27,34 @@ QRectF Boid::boundingRect() const {
 
 void Boid::paint(QPainter* painter, const QStyleOptionGraphicsItem* /*option*/,
                  QWidget* /*widget*/) {
-    const int     w = m_width / 2;
-    const int     h = m_height / 2;
-    const QPointF p1(w, 0);
-    const QPointF p2(-w, h);
-    const QPointF p3(-w, -h);
-
-    QPainterPath path;
-    path.moveTo(p1);
-    path.lineTo(p2);
-    path.lineTo(p3);
-    path.lineTo(p1);
-
+    painter->setRenderHint(QPainter::Antialiasing, false);
     painter->setPen(Qt::NoPen);
-    painter->fillPath(path, QBrush(m_colour));
+    painter->fillPath(m_path, QBrush(m_colour));
+}
+
+Obstacle::Obstacle(const QPointF& pos, const QColor& color, const float& radius) {
+    const float xy = -radius;
+    const float wh = radius * 2.0;
+    m_boundingRect = QRectF(xy, xy, wh, wh);
+    m_color        = color;
+    this->setPos(pos);
+};
+
+QRectF Obstacle::boundingRect() const { return m_boundingRect; }
+
+void Obstacle::paint(QPainter* painter, const QStyleOptionGraphicsItem* /*option*/,
+                     QWidget* /*widget*/) {
+    painter->setRenderHint(QPainter::Antialiasing, false);
+    painter->setBrush(QBrush(m_color));
+    painter->setPen(Qt::NoPen);
+    painter->drawEllipse(m_boundingRect);
 }
 
 Predator::Predator(const QPointF& pos, const float rot, const QColor& colour)
     : Boid(pos, rot, colour) {
     m_width *= 1.5;
     m_height *= 1.5;
-};
 
-void Predator::paint(QPainter* painter, const QStyleOptionGraphicsItem* /*option*/,
-                     QWidget* /*widget*/) {
     const float   w = m_width / 2.0f;
     const float   h = m_height / 2.0f;
     const QPointF p1(w, 0);
@@ -48,13 +62,17 @@ void Predator::paint(QPainter* painter, const QStyleOptionGraphicsItem* /*option
     const QPointF p3(-w * 0.6, 0);
     const QPointF p4(-w, -h);
 
-    QPainterPath path;
-    path.moveTo(p1);
-    path.lineTo(p2);
-    path.lineTo(p3);
-    path.lineTo(p4);
-    path.lineTo(p1);
+    m_path.clear();
+    m_path.moveTo(p1);
+    m_path.lineTo(p2);
+    m_path.lineTo(p3);
+    m_path.lineTo(p4);
+    m_path.lineTo(p1);
+};
 
+void Predator::paint(QPainter* painter, const QStyleOptionGraphicsItem* /*option*/,
+                     QWidget* /*widget*/) {
+    // painter->setRenderHint(QPainter::Antialiasing, false);
     painter->setPen(Qt::NoPen);
-    painter->fillPath(path, QBrush(m_colour));
+    painter->fillPath(m_path, QBrush(m_colour));
 }

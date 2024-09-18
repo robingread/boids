@@ -24,8 +24,8 @@ void updateBoids(std::vector<Boid>& boids, const std::vector<Boid>& flock,
         const std::vector<boids::Boid> obstacleNeighbours =
             boids::utils::getBoidNeighbourhood(b, obstacles, cfg.neighbourhoodRadius, sceneBounds);
 
-        const std::vector<boids::Boid> predatorNeighbours = boids::utils::getBoidNeighbourhood(
-            b, predators, cfg.neighbourhoodRadius * 2.0f, sceneBounds);
+        const std::vector<boids::Boid> predatorNeighbours =
+            boids::utils::getBoidNeighbourhood(b, predators, cfg.neighbourhoodRadius, sceneBounds);
 
         const QVector2D alignVector =
             boids::utils::calculateAlignmentVector(b, neighbours).normalized() * cfg.alignmentScale;
@@ -34,16 +34,16 @@ void updateBoids(std::vector<Boid>& boids, const std::vector<Boid>& flock,
             boids::utils::calculateCohesionVector(b, neighbours).normalized() * cfg.coheasionScale;
 
         const QVector2D repelVec =
-            boids::utils::calculateSeparationVector(b, neighbours, 50.0f).normalized() *
+            boids::utils::calculateSeparationVector(b, neighbours, 20.0f).normalized() *
             cfg.repelScale;
 
         const QVector2D obstacleVec =
-            boids::utils::calculateSeparationVector(b, obstacleNeighbours, 150.0f).normalized() *
-            cfg.repelScale * 2.0f;
+            boids::utils::calculateSeparationVector(b, obstacleNeighbours, 50.0f).normalized() *
+            cfg.obstacleRepelScale;
 
         const QVector2D predatorVec =
             boids::utils::calculateSeparationVector(b, predatorNeighbours, 150.0f).normalized() *
-            cfg.repelScale * 5.0f;
+            cfg.predatorRepelScale;
 
         const QVector2D noiseVec = boids::utils::generateRandomVelocityVector(0.0001f);
 
@@ -65,17 +65,21 @@ Flock::Flock() {
     m_idCount = 0;
     m_boidMap = {};
 
-    m_config.neighbourhoodRadius = 50.0f;
+    m_config.neighbourhoodRadius = 80.0f;
     m_config.alignmentScale      = 0.1f;
-    m_config.coheasionScale      = 0.05f;
-    m_config.repelScale          = 0.075f;
+    m_config.coheasionScale      = 0.075f;
+    m_config.repelScale          = 0.1f;
     m_config.maxVelocity         = 2.0f;
+    m_config.obstacleRepelScale  = 0.5f;
+    m_config.predatorRepelScale  = 5.0f;
 
     m_predatorCfg.neighbourhoodRadius = 120.0f;
     m_predatorCfg.alignmentScale      = 1.0f;
     m_predatorCfg.coheasionScale      = 1.0f;
-    m_predatorCfg.repelScale          = 0.05f;
+    m_predatorCfg.repelScale          = 0.0f;
     m_predatorCfg.maxVelocity         = 1.75f;
+    m_predatorCfg.obstacleRepelScale  = 1.0f;
+    m_predatorCfg.predatorRepelScale  = 5.0f;
 }
 
 int Flock::addBoid(const float x, const float y, const BoidType type) {
