@@ -49,6 +49,12 @@
             ]
         },
         {
+            "label": "Edit GUI",
+            "detail": "Edit the GUI using QtDesigner",
+            "type": "shell",
+            "command": "designer src/gui/dialog.ui"
+        },
+        {
             "label": "Format Code",
             "detail": "Format all the C++ code in the project",
             "type": "shell",
