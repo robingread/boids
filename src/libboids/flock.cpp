@@ -65,17 +65,21 @@ Flock::Flock() {
     m_idCount = 0;
     m_boidMap = {};
 
-    m_config.neighbourhoodRadius = 50.0f;
+    m_config.neighbourhoodRadius = 80.0f;
     m_config.alignmentScale      = 0.1f;
-    m_config.coheasionScale      = 0.05f;
-    m_config.repelScale          = 0.075f;
+    m_config.coheasionScale      = 0.075f;
+    m_config.repelScale          = 0.1f;
     m_config.maxVelocity         = 2.0f;
+    m_config.obstacleRepelScale  = 0.5f;
+    m_config.predatorRepelScale  = 5.0f;
 
     m_predatorCfg.neighbourhoodRadius = 120.0f;
     m_predatorCfg.alignmentScale      = 1.0f;
     m_predatorCfg.coheasionScale      = 1.0f;
-    m_predatorCfg.repelScale          = 0.05f;
+    m_predatorCfg.repelScale          = 0.0f;
     m_predatorCfg.maxVelocity         = 1.75f;
+    m_predatorCfg.obstacleRepelScale  = 1.0f;
+    m_predatorCfg.predatorRepelScale  = 5.0f;
 }
 
 int Flock::addBoid(const float x, const float y, const BoidType type) {
