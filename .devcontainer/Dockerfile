@@ -1,5 +1,7 @@
 FROM ubuntu:22.04
 
+ARG DEBIAN_FRONTEND=noninteractive
+
 RUN apt-get update && apt-get install -y \
     cmake \
     clang-format \
@@ -8,6 +10,7 @@ RUN apt-get update && apt-get install -y \
     lcov \
     libgtest-dev \
     qtbase5-dev \
+    qttools5-dev-tools \
     && rm -rf /var/lib/apt/lists/*
 
 ARG USERNAME=vscode
