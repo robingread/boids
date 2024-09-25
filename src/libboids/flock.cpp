@@ -52,7 +52,7 @@ void updateBoids(std::vector<Boid>& boids, const std::vector<Boid>& flock,
         QVector2D v = b.getVelocity() + alignVector + cohesionVector + repelVec + obstacleVec +
                       predatorVec + noiseVec;
 
-        boids::utils::clipVectorMangitude(v, cfg.maxVelocity);
+        boids::utils::clipVectorMangitude(v, 0.1f, cfg.maxVelocity);
 
         b.setPosition(QPointF(p.x() + v.x(), p.y() + v.y()));
         utils::wrapBoidPosition(b, sceneBounds);
