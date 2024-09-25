@@ -1,15 +1,12 @@
 #pragma once
 
+#include "control_panel.h"
+#include "displaygraphicsview.h"
 #include "simthread.h"
-#include <QDialog>
+#include <QHBoxLayout>
+#include <QMainWindow>
 
-QT_BEGIN_NAMESPACE
-namespace Ui {
-class Dialog;
-}
-QT_END_NAMESPACE
-
-class Dialog : public QDialog {
+class Dialog : public QMainWindow {
     Q_OBJECT
 
   public:
@@ -18,7 +15,15 @@ class Dialog : public QDialog {
 
     void run();
 
+  protected:
+    void resizeEvent(QResizeEvent* event);
+
   private:
-    Ui::Dialog* ui;
-    SimThread   m_sim;
+    SimThread                m_sim;
+    ui::ControlPanelWidget*  m_control;
+    ui::DisplayGraphicsView* m_graphicsView;
+    QHBoxLayout*             m_layout;
+
+  private slots:
+    void onConfigChanged();
 };

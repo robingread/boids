@@ -18,6 +18,14 @@ void SimThread::addNewItem(const QPointF& pos, const boids::BoidType& type) {
     mutex.unlock();
 }
 
+void SimThread::setConfig(const boids::Config& boidCfg, const boids::Config& predCfg) {
+    QMutex mutex;
+    mutex.lock();
+    m_boidSim.setConfig(boidCfg, boids::BoidType::BOID);
+    m_boidSim.setConfig(predCfg, boids::BoidType::PREDATOR);
+    mutex.unlock();
+}
+
 void SimThread::stopSim() {
     QMutex mutex;
     mutex.lock();

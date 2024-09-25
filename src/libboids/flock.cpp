@@ -27,32 +27,32 @@ void updateBoids(std::vector<Boid>& boids, const std::vector<Boid>& flock,
         const std::vector<boids::Boid> predatorNeighbours =
             boids::utils::getBoidNeighbourhood(b, predators, cfg.neighbourhoodRadius, sceneBounds);
 
-        const QVector2D alignVector =
-            boids::utils::calculateAlignmentVector(b, neighbours).normalized() * cfg.alignmentScale;
+        const QVector2D alignVector = boids::utils::calculateAlignmentVector(b, neighbours);
 
-        const QVector2D cohesionVector =
-            boids::utils::calculateCohesionVector(b, neighbours).normalized() * cfg.coheasionScale;
+        const QVector2D cohesionVector = boids::utils::calculateCohesionVector(b, neighbours);
 
         const QVector2D repelVec =
-            boids::utils::calculateSeparationVector(b, neighbours, 20.0f).normalized() *
-            cfg.repelScale;
+            boids::utils::calculateSeparationVector(b, neighbours, cfg.repelMinDist);
 
         const QVector2D obstacleVec =
-            boids::utils::calculateSeparationVector(b, obstacleNeighbours, 50.0f).normalized() *
-            cfg.obstacleRepelScale;
+            boids::utils::calculateSeparationVector(b, obstacleNeighbours, cfg.repelMinDist * 2.0f);
 
         const QVector2D predatorVec =
-            boids::utils::calculateSeparationVector(b, predatorNeighbours, 150.0f).normalized() *
-            cfg.predatorRepelScale;
+            boids::utils::calculateSeparationVector(b, predatorNeighbours, cfg.repelMinDist * 5.0f);
 
-        const QVector2D noiseVec = boids::utils::generateRandomVelocityVector(0.0001f);
+        const QVector2D noiseVec = boids::utils::generateRandomVelocityVector(0.05f);
 
         const QPointF& p = b.getPosition();
 
-        QVector2D v = b.getVelocity() + alignVector + cohesionVector + repelVec + obstacleVec +
-                      predatorVec + noiseVec;
+        QVector2D v = b.getVelocity();
+        v += (alignVector * cfg.alignmentScale);
+        v += (cohesionVector * cfg.coheasionScale);
+        v += (repelVec * cfg.repelScale);
+        v += (obstacleVec * cfg.obstacleRepelScale);
+        v += (predatorVec * cfg.predatorRepelScale);
+        v += (noiseVec * 1.0f);
 
-        boids::utils::clipVectorMangitude(v, cfg.maxVelocity);
+        boids::utils::clipVectorMangitude(v, 0.1f, cfg.maxVelocity);
 
         b.setPosition(QPointF(p.x() + v.x(), p.y() + v.y()));
         utils::wrapBoidPosition(b, sceneBounds);
@@ -63,23 +63,27 @@ void updateBoids(std::vector<Boid>& boids, const std::vector<Boid>& flock,
 
 Flock::Flock() {
     m_idCount = 0;
-    m_boidMap = {};
+    m_boidMap.clear();
+    m_cfgMap.clear();
 
-    m_config.neighbourhoodRadius = 80.0f;
-    m_config.alignmentScale      = 0.1f;
-    m_config.coheasionScale      = 0.075f;
-    m_config.repelScale          = 0.1f;
-    m_config.maxVelocity         = 2.0f;
-    m_config.obstacleRepelScale  = 0.5f;
-    m_config.predatorRepelScale  = 5.0f;
+    m_cfgMap[BoidType::BOID]     = Config();
+    m_cfgMap[BoidType::PREDATOR] = Config();
 
-    m_predatorCfg.neighbourhoodRadius = 120.0f;
-    m_predatorCfg.alignmentScale      = 1.0f;
-    m_predatorCfg.coheasionScale      = 1.0f;
-    m_predatorCfg.repelScale          = 0.0f;
-    m_predatorCfg.maxVelocity         = 1.75f;
-    m_predatorCfg.obstacleRepelScale  = 1.0f;
-    m_predatorCfg.predatorRepelScale  = 5.0f;
+    m_cfgMap[BoidType::BOID].neighbourhoodRadius = 80.0f;
+    m_cfgMap[BoidType::BOID].alignmentScale      = 0.1f;
+    m_cfgMap[BoidType::BOID].coheasionScale      = 0.075f;
+    m_cfgMap[BoidType::BOID].repelScale          = 0.1f;
+    m_cfgMap[BoidType::BOID].maxVelocity         = 2.0f;
+    m_cfgMap[BoidType::BOID].obstacleRepelScale  = 0.5f;
+    m_cfgMap[BoidType::BOID].predatorRepelScale  = 5.0f;
+
+    m_cfgMap[BoidType::PREDATOR].neighbourhoodRadius = 120.0f;
+    m_cfgMap[BoidType::PREDATOR].alignmentScale      = 1.0f;
+    m_cfgMap[BoidType::PREDATOR].coheasionScale      = 1.0f;
+    m_cfgMap[BoidType::PREDATOR].repelScale          = 0.0f;
+    m_cfgMap[BoidType::PREDATOR].maxVelocity         = 1.75f;
+    m_cfgMap[BoidType::PREDATOR].obstacleRepelScale  = 1.0f;
+    m_cfgMap[BoidType::PREDATOR].predatorRepelScale  = 5.0f;
 }
 
 int Flock::addBoid(const float x, const float y, const BoidType type) {
@@ -92,11 +96,17 @@ int Flock::addBoid(const float x, const float y, const BoidType type) {
 
 void Flock::clearBoids() { m_boidMap.clear(); }
 
+void Flock::clearBoids(const BoidType& type) {
+    if (!m_boidMap.contains(type))
+        return;
+    m_boidMap.at(type).clear();
+}
+
 std::map<BoidType, std::vector<Boid>> Flock::getBoids() const { return m_boidMap; }
 
-Config Flock::getConfig() const { return m_config; }
+Config Flock::getConfig(const BoidType& type) const { return m_cfgMap.at(type); }
 
-void Flock::setConfig(const Config& config) { m_config = config; }
+void Flock::setConfig(const Config& cfg, const BoidType& type) { m_cfgMap[type] = cfg; }
 
 int Flock::getNumBoids() const { return boids::utils::getTotalNumBoids(m_boidMap); }
 
@@ -106,11 +116,11 @@ void Flock::setSceneBounds(const QRectF& bounds) { m_sceneBounds = bounds; }
 
 void Flock::update() {
     updateBoids(m_boidMap[BoidType::BOID], m_boidMap[BoidType::BOID], m_boidMap[BoidType::PREDATOR],
-                m_boidMap[BoidType::OBSTACLE], m_config, m_sceneBounds);
+                m_boidMap[BoidType::OBSTACLE], m_cfgMap[BoidType::BOID], m_sceneBounds);
 
     updateBoids(m_boidMap[BoidType::PREDATOR], m_boidMap[BoidType::BOID],
-                m_boidMap[BoidType::PREDATOR], m_boidMap[BoidType::OBSTACLE], m_predatorCfg,
-                m_sceneBounds);
+                m_boidMap[BoidType::PREDATOR], m_boidMap[BoidType::OBSTACLE],
+                m_cfgMap[BoidType::PREDATOR], m_sceneBounds);
 }
 
 }; // namespace boids

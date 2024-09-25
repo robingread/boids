@@ -12,9 +12,12 @@ QVector2D calculateAlignmentVector(const Boid& boid, const std::vector<Boid>& ne
 
     QVector2D vec(0.0, 0.0);
     for (const Boid& n : neighbours) {
-        vec += n.getVelocity();
+        const float dist = distanceBetweenBoids(boid, n);
+        QVector2D   vel  = n.getVelocity().normalized() / dist;
+        vec += vel;
     }
-    return vec / float(neighbours.size());
+
+    return vec;
 }
 
 QVector2D calculateCohesionVector(const Boid& boid, const std::vector<Boid>& neighbours) {
@@ -22,13 +25,16 @@ QVector2D calculateCohesionVector(const Boid& boid, const std::vector<Boid>& nei
         return QVector2D(0.0f, 0.0f);
     }
 
-    QPointF point(0.0, 0.0);
+    QVector2D vec(0.0, 0.0);
     for (const Boid& n : neighbours) {
-        const QPointF diff = n.getPosition() - boid.getPosition();
-        point += diff;
+        vec += QVector2D(n.getPosition());
     }
-    point /= neighbours.size();
-    return QVector2D(point.x(), point.y());
+
+    vec /= float(neighbours.size());
+    QVector2D ret = vec - QVector2D(boid.getPosition());
+    ret.normalize();
+    ret *= 0.25f;
+    return ret;
 }
 
 QVector2D calculateSeparationVector(const Boid& boid, const std::vector<Boid>& neighbours,
@@ -39,27 +45,22 @@ QVector2D calculateSeparationVector(const Boid& boid, const std::vector<Boid>& n
 
     QVector2D vec(0.0, 0.0);
     for (const Boid& n : neighbours) {
-        if (distanceBetweenBoids(boid, n) > minDist)
+        const float dist = distanceBetweenBoids(boid, n);
+
+        if ((dist > minDist))
             continue;
-        const QPointF diff   = boid.getPosition() - n.getPosition();
-        const float   weight = calculateRepulsionWeight(diff.manhattanLength(), minDist);
 
-        if (diff.manhattanLength() == 0.0f) {
-            vec.setX(vec.x() + (0.0 * weight));
-            vec.setY(vec.y() + (1.0 * weight));
-        } else {
-            vec.setX(vec.x() + (diff.x() * weight));
-            vec.setY(vec.y() + (diff.y() * weight));
+        else if (dist == 0.0f) {
+            vec += QVector2D(1.0f, 0.0f);
+            continue;
         }
-    }
-    return vec / neighbours.size();
-}
 
-float calculateRepulsionWeight(const float dist, const float minDist) {
-    // TODO: This should probably not be 15!
-    const float c      = 15.0;
-    const float weight = (1.0f / (1.0f + std::exp(c * (dist - (minDist * 0.5f)))));
-    return weight;
+        const float     w    = std::max(1.0f, dist - minDist);
+        const QVector2D diff = QVector2D(boid.getPosition() - n.getPosition()).normalized() / w;
+        vec += diff;
+    }
+
+    return vec;
 }
 
 float distanceBetweenBoids(const Boid& b1, const Boid& b2) {
@@ -89,23 +90,8 @@ float distanceBetweenBoids(const Boid& b1, const Boid& b2, const QRectF& bounds)
 QVector2D generateRandomVelocityVector(const float maxMagnitude) {
     const float dx = generateRandomValue<float>(-1.0f, 1.0f);
     const float dy = generateRandomValue<float>(-1.0f, 1.0f);
-    const float w  = generateRandomValue<float>(0.1f, maxMagnitude);
+    const float w  = generateRandomValue<float>(0.0f, maxMagnitude);
     return scaleVector(QVector2D(dx, dy), w);
-}
-
-std::vector<Boid> getBoidNeighbourhood(const Boid& boid, const std::vector<boids::Boid>& flock,
-                                       const float& dist) {
-    // TODO: This does not take into account the issue of wrap around with the sim space.
-    std::vector<Boid> ret;
-    for (const Boid& b : flock) {
-        if (boid.getId() == b.getId())
-            continue;
-        const float d = distanceBetweenBoids(boid, b);
-        if (d > dist)
-            continue;
-        ret.push_back(b);
-    }
-    return ret;
 }
 
 std::vector<Boid> getBoidNeighbourhood(const Boid& boid, const std::vector<boids::Boid>& flock,
@@ -150,7 +136,16 @@ float wrapValue(const float& value, const float& minValue, const float& maxValue
     }
 }
 
-void clipVectorMangitude(QVector2D& vec, const float& maxMagnitude) {
+void clipVectorMangitude(QVector2D& vec, const float& minMagnitude, const float& maxMagnitude) {
+
+    if (minMagnitude > maxMagnitude)
+        throw std::invalid_argument("Minimum value is greater than the maximum.");
+
+    if (vec.length() < minMagnitude) {
+        vec *= minMagnitude / vec.length();
+        return;
+    }
+
     if (vec.length() < maxMagnitude)
         return;
     vec *= maxMagnitude / vec.length();

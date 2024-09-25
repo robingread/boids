@@ -11,5 +11,7 @@ struct Config {
     float repelScale         = 0.1f;
     float obstacleRepelScale = 2.0f;
     float predatorRepelScale = 5.0f;
+
+    float repelMinDist = 50.0f;
 };
 } // namespace boids

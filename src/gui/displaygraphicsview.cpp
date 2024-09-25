@@ -13,6 +13,8 @@ template <typename T> T generateRandomValue(const T minValue, const T maxValue) 
     return distr(gen);
 }
 
+namespace ui {
+
 DisplayGraphicsView::DisplayGraphicsView(QWidget* parent) : QGraphicsView(parent) {
     m_scene = new QGraphicsScene();
     this->setSceneRect(0, 0, this->width(), this->height());
@@ -91,3 +93,5 @@ void DisplayGraphicsView::renderBoids(const QList<boids::Boid>& boids) {
         }
     }
 }
+
+} // namespace ui

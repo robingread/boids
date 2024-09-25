@@ -45,6 +45,13 @@ class SimThread : public QThread {
     void addNewItem(const QPointF& pos, const boids::BoidType& type = boids::BoidType::BOID);
 
     /**
+     * @brief Set the configuration for the Boids and Predators.
+     * @param boidCfg Boid configuration object.
+     * @param predCfg Predator configuration object.
+     */
+    void setConfig(const boids::Config& boidCfg, const boids::Config& predCfg);
+
+    /**
      * @brief Stop the simulation thread.
      */
     void stopSim();
