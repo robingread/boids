@@ -151,12 +151,6 @@ float wrapValue(const float& value, const float& minValue, const float& maxValue
     }
 }
 
-void clipVectorMangitude(QVector2D& vec, const float& maxMagnitude) {
-    if (vec.length() < maxMagnitude)
-        return;
-    vec *= maxMagnitude / vec.length();
-}
-
 void clipVectorMangitude(QVector2D& vec, const float& minMagnitude, const float& maxMagnitude) {
 
     if (minMagnitude > maxMagnitude)
