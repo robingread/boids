@@ -59,6 +59,35 @@ TEST(libboids_flock, clearBoids_allBoids) {
     ASSERT_EQ(flock.getNumBoids(), 0);
 }
 
+/**
+ * @brief Test the Flock::getBoids() method to check that it returns all the boids as expected.
+ *
+ */
+TEST(libboids_flock, getBoids) {
+    boids::Flock flock;
+
+    for (std::size_t n = 0; n < 1; ++n) {
+        flock.addBoid(0.0f, 0.0f, boids::BOID);
+    }
+
+    for (std::size_t n = 0; n < 2; ++n) {
+        flock.addBoid(0.0f, 0.0f, boids::OBSTACLE);
+    }
+
+    for (std::size_t n = 0; n < 3; ++n) {
+        flock.addBoid(0.0f, 0.0f, boids::PREDATOR);
+    }
+
+    const auto ret      = flock.getBoids();
+    const auto retBoids = ret.at(boids::BOID);
+    const auto retObs   = ret.at(boids::OBSTACLE);
+    const auto retPred  = ret.at(boids::PREDATOR);
+
+    ASSERT_EQ(retBoids.size(), 1);
+    ASSERT_EQ(retObs.size(), 2);
+    ASSERT_EQ(retPred.size(), 3);
+}
+
 TEST(libboids_flock, setSceneBounds) {
     boids::Flock flock;
     const QRectF exp(0.0f, 0.0f, 10.0f, 10.0f);
