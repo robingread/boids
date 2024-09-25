@@ -39,6 +39,26 @@ TEST(libboids_flock, clearBoids_2) {
     ASSERT_EQ(flock.getNumBoids(), 0);
 }
 
+/**
+ * @brief Test that the Flock::clearBoids() method removes all boids from the object.
+ */
+TEST(libboids_flock, clearBoids_allBoids) {
+    std::vector<boids::BoidType> types = {boids::BOID, boids::OBSTACLE, boids::PREDATOR};
+    int                          count = 0;
+    boids::Flock                 flock;
+
+    for (const auto type : types) {
+        for (std::size_t i = 0; i < 1000; ++i) {
+            flock.addBoid(0.0f, 0.0f, type);
+            count++;
+        }
+    }
+
+    ASSERT_EQ(flock.getNumBoids(), count);
+    flock.clearBoids();
+    ASSERT_EQ(flock.getNumBoids(), 0);
+}
+
 TEST(libboids_flock, setSceneBounds) {
     boids::Flock flock;
     const QRectF exp(0.0f, 0.0f, 10.0f, 10.0f);

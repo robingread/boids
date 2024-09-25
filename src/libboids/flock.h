@@ -11,6 +11,12 @@ class Flock {
     Flock();
 
     int  addBoid(const float x, const float y, const BoidType type = BoidType::BOID);
+
+    /**
+     * @brief Clear all the boids in the flock.
+     *
+     * This includes all the normal boids, obstacles and predators.
+     */
     void clearBoids();
     int  getNumBoids() const;
     // std::vector<Boid> getBoids() const;
