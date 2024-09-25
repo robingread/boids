@@ -12,34 +12,10 @@ SimThread::~SimThread() {
     wait();
 }
 
-void SimThread::addNewItem(const QPointF& pos, const boids::BoidType& type) {
-    std::cout << "Running addNewItem() slot" << std::endl;
-
-    QMutex mutex;
-    mutex.lock();
-    m_boidSim->addBoid(pos.x(), pos.y(), type);
-    mutex.unlock();
-}
-
-void SimThread::setConfig(const boids::Config& boidCfg, const boids::Config& predCfg) {
-    QMutex mutex;
-    mutex.lock();
-    m_boidSim->setConfig(boidCfg, boids::BoidType::BOID);
-    m_boidSim->setConfig(predCfg, boids::BoidType::PREDATOR);
-    mutex.unlock();
-}
-
 void SimThread::stopSim() {
     QMutex mutex;
     mutex.lock();
     m_stop = true;
-    mutex.unlock();
-}
-
-void SimThread::updateSceneBounds(const QRectF& bounds) {
-    QMutex mutex;
-    mutex.lock();
-    m_boidSim->setSceneBounds(bounds);
     mutex.unlock();
 }
 
