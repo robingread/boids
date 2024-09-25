@@ -31,6 +31,10 @@ class Flock {
      */
     int getNumBoids() const;
 
+    /**
+     * @brief Get the std::map of boids
+     * @return The std::map containing all the differet types of boids.
+     */
     std::map<BoidType, std::vector<Boid>> getBoids() const;
     Config                                getConfig() const;
     void                                  setConfig(const Config& config);
