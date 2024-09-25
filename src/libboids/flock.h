@@ -36,9 +36,20 @@ class Flock {
      * @return The std::map containing all the differet types of boids.
      */
     std::map<BoidType, std::vector<Boid>> getBoids() const;
-    Config                                getConfig() const;
-    void                                  setConfig(const Config& config);
 
+    /**
+     * @brief Get the configuration for a given boid type.
+     * @param type Type of Boids.
+     * @return Configuration object.
+     */
+    Config getConfig(const BoidType& type = BoidType::BOID) const;
+
+    /**
+     * @brief Set the configuration object for a given Boid type.
+     * @param cfg Configuration object.
+     * @param type The type of boid.
+     */
+    void setConfig(const Config& cfg, const BoidType& type = BoidType::BOID);
 
     /**
      * @brief Get the scene bounds that the Boids adhere to.
@@ -60,11 +71,10 @@ class Flock {
     void update();
 
   private:
-    Config                                m_config;
-    Config                                m_predatorCfg;
     std::size_t                           m_idCount;
     QRectF                                m_sceneBounds;
     std::map<BoidType, std::vector<Boid>> m_boidMap;
+    std::map<BoidType, Config>            m_cfgMap;
 };
 
 }; // namespace boids
