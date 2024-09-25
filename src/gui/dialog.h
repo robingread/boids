@@ -1,5 +1,6 @@
 #pragma once
 
+#include "boids.h"
 #include "control_panel.h"
 #include "displaygraphicsview.h"
 #include "simthread.h"
@@ -24,6 +25,9 @@ class Dialog : public QMainWindow {
     ui::DisplayGraphicsView* m_graphicsView;
     QHBoxLayout*             m_layout;
 
+    std::shared_ptr<boids::Flock> m_flock;
+
   private slots:
     void onConfigChanged();
+    void createBoid(const QPointF& pos, const boids::BoidType& type = boids::BoidType::BOID);
 };
