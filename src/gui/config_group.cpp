@@ -37,6 +37,17 @@ boids::Config ConfigGroup::getConfig() const {
     return cfg;
 }
 
+void ConfigGroup::setConfig(const boids::Config& cfg) {
+    m_nRadSlider->setValue(cfg.neighbourhoodRadius);
+    m_maxVelSlider->setValue(cfg.maxVelocity);
+    m_alignSlider->setValue(cfg.alignmentScale);
+    m_cohesionSlider->setValue(cfg.coheasionScale);
+    m_repelSlider->setValue(cfg.repelScale);
+    m_obsRepelSlider->setValue(cfg.obstacleRepelScale);
+    m_predRepelSlider->setValue(cfg.predatorRepelScale);
+    m_repelMinDist->setValue(cfg.repelMinDist);
+}
+
 std::unique_ptr<Slider> ConfigGroup::createSlider(const QString& name, const float& minValue,
                                                   const float& maxValue) {
     std::unique_ptr<Slider> ptr = std::make_unique<Slider>(name, minValue, maxValue, this);

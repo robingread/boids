@@ -30,6 +30,12 @@ class ConfigGroup : public QWidget {
      */
     boids::Config getConfig() const;
 
+    /**
+     * @brief Set the overall configuration to display on the GUI.
+     * @param cfg Configuration object.
+     */
+    void setConfig(const boids::Config& cfg);
+
   private:
     std::unique_ptr<QGroupBox>   m_groupBox;
     std::unique_ptr<QVBoxLayout> m_layout;
