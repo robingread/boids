@@ -157,5 +157,20 @@ void clipVectorMangitude(QVector2D& vec, const float& maxMagnitude) {
     vec *= maxMagnitude / vec.length();
 }
 
+void clipVectorMangitude(QVector2D& vec, const float& minMagnitude, const float& maxMagnitude) {
+
+    if (minMagnitude > maxMagnitude)
+        throw std::invalid_argument("Minimum value is greater than the maximum.");
+
+    if (vec.length() < minMagnitude) {
+        vec *= minMagnitude / vec.length();
+        return;
+    }
+
+    if (vec.length() < maxMagnitude)
+        return;
+    vec *= maxMagnitude / vec.length();
+}
+
 } // namespace utils
 }; // namespace boids

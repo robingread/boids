@@ -520,13 +520,27 @@ TEST(libboids_utils, wrapValue_6) {
 
 /**
  * @brief Test that the clipVectorMagnitude() method correctly clips a vector
+ * whose length is lower than the minimum value.
+ */
+TEST(libboids_utils, clipVectorMangitude_UnderMin) {
+    const float     minMag = 0.2f;
+    const float     maxMag = 5.0f;
+    QVector2D       vec(-0.1f, 0.0f);
+    const QVector2D exp(-0.2f, 0.0f);
+    boids::utils::clipVectorMangitude(vec, minMag, maxMag);
+    ASSERT_EQ(vec, exp);
+}
+
+/**
+ * @brief Test that the clipVectorMagnitude() method correctly clips a vector
  * whose length is greater than the maximum value.
  */
 TEST(libboids_utils, clipVectorMangitude_OverMax) {
+    const float     minMag = 0.2f;
     const float     maxMag = 5.0f;
     const QVector2D exp(5.0f, 0.0f);
     QVector2D       vec(10.0f, 0.0f);
-    boids::utils::clipVectorMangitude(vec, maxMag);
+    boids::utils::clipVectorMangitude(vec, minMag, maxMag);
     ASSERT_EQ(vec, exp);
 }
 
@@ -535,9 +549,21 @@ TEST(libboids_utils, clipVectorMangitude_OverMax) {
  * whose length is less than the maximum value.
  */
 TEST(libboids_utils, clipVectorMangitude_UnderMax) {
+    const float     minMag = 0.2f;
     const float     maxMag = 50.0f;
     const QVector2D exp(10.0f, 0.0f);
     QVector2D       vec(10.0f, 0.0f);
-    boids::utils::clipVectorMangitude(vec, maxMag);
+    boids::utils::clipVectorMangitude(vec, minMag, maxMag);
     ASSERT_EQ(vec, exp);
+}
+
+/**
+ * @brief Test that the clipVectorMagnitude() method throws an exception if the min and max
+ * magnitude values are the wrong way around.
+ */
+TEST(libboids_utils, clipVectorMangitude_InvalidArgs) {
+    const float minMag = 2.0f;
+    const float maxMag = 1.0f;
+    QVector2D   vec(10.0f, 0.0f);
+    ASSERT_THROW(boids::utils::clipVectorMangitude(vec, minMag, maxMag), std::invalid_argument);
 }

@@ -131,5 +131,15 @@ float wrapValue(const float& value, const float& minValue, const float& maxValue
  */
 void clipVectorMangitude(QVector2D& vec, const float& maxMagnitude);
 
+/**
+ * @brief Clip the length of a vector so that it falls within an allowed minimum/maximum range. This
+ * operation is performed in place on the input vector.
+ * @param vec Vector to clip.
+ * @param minMagnitude Minimum magnitude/length value of the vector.
+ * @param maxMagnitude Maximum magnitude/length value of the vector.
+ * @throws std::invalid_argument If the minimum value is greater than the maximum.
+ */
+void clipVectorMangitude(QVector2D& vec, const float& minMagnitude, const float& maxMagnitude);
+
 } // namespace utils
 }; // namespace boids
