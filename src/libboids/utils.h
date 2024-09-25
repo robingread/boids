@@ -83,9 +83,6 @@ template <typename T> T generateRandomValue(const T minValue, const T maxValue) 
  */
 QVector2D generateRandomVelocityVector(const float maxMagnitude);
 
-std::vector<Boid> getBoidNeighbourhood(const Boid& boid, const std::vector<Boid>& flock,
-                                       const float& dist);
-
 /**
  * @brief Get the Boids that are within the neighbourhood of a given Boid. This will
  * include checking for distance across scene wrappings and not purely the classical
