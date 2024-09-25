@@ -90,7 +90,7 @@ float distanceBetweenBoids(const Boid& b1, const Boid& b2, const QRectF& bounds)
 QVector2D generateRandomVelocityVector(const float maxMagnitude) {
     const float dx = generateRandomValue<float>(-1.0f, 1.0f);
     const float dy = generateRandomValue<float>(-1.0f, 1.0f);
-    const float w  = generateRandomValue<float>(0.1f, maxMagnitude);
+    const float w  = generateRandomValue<float>(0.0f, maxMagnitude);
     return scaleVector(QVector2D(dx, dy), w);
 }
 
