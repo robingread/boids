@@ -8,6 +8,8 @@
 #include <QList>
 #include <QObject>
 
+namespace ui {
+
 class DisplayGraphicsView : public QGraphicsView {
     Q_OBJECT
 
@@ -55,3 +57,5 @@ class DisplayGraphicsView : public QGraphicsView {
     void mousePressEvent(QMouseEvent* event) override;
     void renderBoids(const QList<boids::Boid>& boids);
 };
+
+} // namespace ui
