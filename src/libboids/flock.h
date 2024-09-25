@@ -32,6 +32,11 @@ class Flock {
     QRectF getSceneBounds() const;
     void   setSceneBounds(const QRectF& bounds);
 
+    /**
+     * @brief Update the boids with a single step. This will update the normal boids, as well as the
+     * predators.
+     * @throws Exception if a config has not been set for the BoidType::BOID or BoidType::PREDATOR.
+     */
     void update();
 
   private:
