@@ -19,7 +19,7 @@ class Dialog : public QMainWindow {
     void resizeEvent(QResizeEvent* event) override;
 
   private:
-    SimThread                m_sim;
+    SimThread*               m_sim;
     ui::ControlPanelWidget*  m_control;
     ui::DisplayGraphicsView* m_graphicsView;
     QHBoxLayout*             m_layout;
