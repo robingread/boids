@@ -363,13 +363,16 @@ TEST(libboids_utils, generateRandomVelocityVector_1) {
 
 TEST(libboids_utils, getBoidNeighbourhood_1) {
     const boids::Boid boid(0, 0.0f, 0.0f);
+    const QRectF      bounds(0.0f, 0.0f, 10.0f, 10.0f);
+    const float       minDist = 1.5f;
 
     std::vector<boids::Boid> flock;
     flock.push_back(boids::Boid(1, 1.0f, 0.0f));
     flock.push_back(boids::Boid(2, 0.0f, 1.0f));
     flock.push_back(boids::Boid(3, 2.0f, 0.0f));
 
-    std::vector<boids::Boid> neighbours = boids::utils::getBoidNeighbourhood(boid, flock, 1.5f);
+    std::vector<boids::Boid> neighbours =
+        boids::utils::getBoidNeighbourhood(boid, flock, minDist, bounds);
 
     ASSERT_EQ(neighbours.size(), 2);
     ASSERT_EQ(neighbours.at(0).getId(), 1);
@@ -378,6 +381,8 @@ TEST(libboids_utils, getBoidNeighbourhood_1) {
 
 TEST(libboids_utils, getBoidNeighbourhood_2) {
     const boids::Boid boid(0, 0.0f, 0.0f);
+    const QRectF      bounds(0.0f, 0.0f, 10.0f, 10.0f);
+    const float       minDist = 1.5f;
 
     std::vector<boids::Boid> flock;
     flock.push_back(boid);
@@ -385,11 +390,44 @@ TEST(libboids_utils, getBoidNeighbourhood_2) {
     flock.push_back(boids::Boid(2, 0.0f, 1.0f));
     flock.push_back(boids::Boid(3, 2.0f, 0.0f));
 
-    std::vector<boids::Boid> neighbours = boids::utils::getBoidNeighbourhood(boid, flock, 1.5f);
+    std::vector<boids::Boid> neighbours =
+        boids::utils::getBoidNeighbourhood(boid, flock, minDist, bounds);
 
     ASSERT_EQ(neighbours.size(), 2);
     ASSERT_EQ(neighbours.at(0).getId(), 1);
     ASSERT_EQ(neighbours.at(1).getId(), 2);
+}
+
+/**
+ * @brief Test the boids::utils::getBoidNeighbourhood() method where some of the boids span across
+ * the scene boundary. This method tests that the scene is wrapped correctly both vertically and
+ * horizontally.
+ *
+ */
+TEST(libboids_utils, getBoidNeighbourhood_checkSceneWrapping) {
+
+    const boids::Boid boid0(0, 0.1f, 0.1f);
+    const boids::Boid boid1(1, 0.9f, 0.1f);
+    const boids::Boid boid2(2, 0.1f, 0.9f);
+    const boids::Boid boid3(3, 0.9f, 0.9f);
+    const boids::Boid boid4(4, 0.5f, 0.5f); // This boid should not be part of the neighbourhood.
+    const QRectF      bounds(0.0f, 0.0f, 1.0f, 1.0f);
+    const float       minDist = 0.4;
+
+    std::vector<boids::Boid> flock;
+    flock.push_back(boid0);
+    flock.push_back(boid1);
+    flock.push_back(boid2);
+    flock.push_back(boid3);
+    flock.push_back(boid4);
+
+    std::vector<boids::Boid> neighbours =
+        boids::utils::getBoidNeighbourhood(boid0, flock, minDist, bounds);
+
+    ASSERT_EQ(neighbours.size(), 3);
+    ASSERT_EQ(neighbours.at(0).getId(), 1);
+    ASSERT_EQ(neighbours.at(1).getId(), 2);
+    ASSERT_EQ(neighbours.at(2).getId(), 3);
 }
 
 /**
