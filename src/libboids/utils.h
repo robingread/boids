@@ -38,6 +38,11 @@ QVector2D calculateCohesionVector(const Boid& boid, const std::vector<Boid>& nei
 /**
  * @brief Calculate the vector that repels a given Boids from the other boids wihtin
  * the neighbourhood to maintain a minimum distance between them.
+ *
+ * The separation vector is calculated by calculating the difference between the boid and each
+ * neighbour, and weighing the difference based on the distance itself. The result is that the
+ * separation force is greater with boids that are closer to each other.
+ *
  * @param boid Boid to check calculate the cohesion vector for.
  * @param neighbours Neighbourhood around the Boid
  * @param minDist Minimum distance to retain between Boids.

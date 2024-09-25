@@ -45,20 +45,22 @@ QVector2D calculateSeparationVector(const Boid& boid, const std::vector<Boid>& n
 
     QVector2D vec(0.0, 0.0);
     for (const Boid& n : neighbours) {
-        if (distanceBetweenBoids(boid, n) > minDist)
-            continue;
-        const QPointF diff   = boid.getPosition() - n.getPosition();
-        const float   weight = calculateRepulsionWeight(diff.manhattanLength(), minDist);
+        const float dist = distanceBetweenBoids(boid, n);
 
-        if (diff.manhattanLength() == 0.0f) {
-            vec.setX(vec.x() + (0.0 * weight));
-            vec.setY(vec.y() + (1.0 * weight));
-        } else {
-            vec.setX(vec.x() + (diff.x() * weight));
-            vec.setY(vec.y() + (diff.y() * weight));
+        if ((dist > minDist))
+            continue;
+
+        else if (dist == 0.0f) {
+            vec += QVector2D(1.0f, 0.0f);
+            continue;
         }
+
+        const float     w    = std::max(1.0f, dist - minDist);
+        const QVector2D diff = QVector2D(boid.getPosition() - n.getPosition()).normalized() / w;
+        vec += diff;
     }
-    return vec / neighbours.size();
+
+    return vec;
 }
 
 float calculateRepulsionWeight(const float dist, const float minDist) {
