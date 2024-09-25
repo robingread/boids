@@ -29,6 +29,11 @@ class Flock {
     Config                                getConfig() const;
     void                                  setConfig(const Config& config);
 
+
+    /**
+     * @brief Get the scene bounds that the Boids adhere to.
+     * @return The scene bounds rectangle.
+     */
     QRectF getSceneBounds() const;
     void   setSceneBounds(const QRectF& bounds);
 
