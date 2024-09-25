@@ -5,15 +5,13 @@ find_package(Qt5 REQUIRED COMPONENTS Core Widgets Gui)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOMOC ON)   # For signals and slots
-set(CMAKE_AUTOUIC ON)   # For UI files
 set(CMAKE_AUTORCC ON)   # For resource files
 
 # Add the source files and UI files
 file(GLOB SOURCES "*.cpp")
 file(GLOB HEADERS "*.h")
-file(GLOB UIS "*.ui")
 
-add_library(libboids_gui SHARED ${SOURCES} ${HEADERS} ${UIS})
+add_library(libboids_gui SHARED ${SOURCES} ${HEADERS})
 target_link_libraries(libboids_gui Qt5::Core Qt5::Widgets Qt5::Gui libboids)
 
 # Specify where the public headers are located
