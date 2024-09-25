@@ -6,6 +6,7 @@
 #include <QRectF>
 #include <QThread>
 #include <flock.h>
+#include <memory>
 
 /**
  * @brief The SimThread class is used to run the main logic of the Boids simulation.
@@ -22,7 +23,9 @@ class SimThread : public QThread {
     Q_OBJECT
 
   public:
-    SimThread(QObject* parent = 0);
+    std::shared_ptr<boids::Flock> m_boidSim;
+
+    SimThread(const std::shared_ptr<boids::Flock> flock, QObject* parent = 0);
     ~SimThread();
 
     /**
@@ -31,8 +34,7 @@ class SimThread : public QThread {
     void run() override;
 
   private:
-    bool         m_stop;
-    boids::Flock m_boidSim;
+    bool m_stop;
 
   public slots:
 
