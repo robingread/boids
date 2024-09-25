@@ -52,6 +52,9 @@ void Dialog::createBoid(const QPointF& pos, const boids::BoidType& type) {
 }
 
 void Dialog::run() {
+    m_control->m_boidCfgGroup->setConfig(m_flock->getConfig(boids::BOID));
+    m_control->m_predatorCfgGroup->setConfig(m_flock->getConfig(boids::PREDATOR));
+
     QObject::connect(m_graphicsView, &ui::DisplayGraphicsView::createItem, this,
                      &Dialog::createBoid);
 
