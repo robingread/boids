@@ -27,30 +27,30 @@ void updateBoids(std::vector<Boid>& boids, const std::vector<Boid>& flock,
         const std::vector<boids::Boid> predatorNeighbours =
             boids::utils::getBoidNeighbourhood(b, predators, cfg.neighbourhoodRadius, sceneBounds);
 
-        const QVector2D alignVector =
-            boids::utils::calculateAlignmentVector(b, neighbours).normalized() * cfg.alignmentScale;
+        const QVector2D alignVector = boids::utils::calculateAlignmentVector(b, neighbours);
 
-        const QVector2D cohesionVector =
-            boids::utils::calculateCohesionVector(b, neighbours).normalized() * cfg.coheasionScale;
+        const QVector2D cohesionVector = boids::utils::calculateCohesionVector(b, neighbours);
 
         const QVector2D repelVec =
-            boids::utils::calculateSeparationVector(b, neighbours, 20.0f).normalized() *
-            cfg.repelScale;
+            boids::utils::calculateSeparationVector(b, neighbours, cfg.repelMinDist);
 
         const QVector2D obstacleVec =
-            boids::utils::calculateSeparationVector(b, obstacleNeighbours, 50.0f).normalized() *
-            cfg.obstacleRepelScale;
+            boids::utils::calculateSeparationVector(b, obstacleNeighbours, cfg.repelMinDist * 2.0f);
 
         const QVector2D predatorVec =
-            boids::utils::calculateSeparationVector(b, predatorNeighbours, 150.0f).normalized() *
-            cfg.predatorRepelScale;
+            boids::utils::calculateSeparationVector(b, predatorNeighbours, cfg.repelMinDist * 5.0f);
 
-        const QVector2D noiseVec = boids::utils::generateRandomVelocityVector(0.0001f);
+        const QVector2D noiseVec = boids::utils::generateRandomVelocityVector(0.05f);
 
         const QPointF& p = b.getPosition();
 
-        QVector2D v = b.getVelocity() + alignVector + cohesionVector + repelVec + obstacleVec +
-                      predatorVec + noiseVec;
+        QVector2D v = b.getVelocity();
+        v += (alignVector * cfg.alignmentScale);
+        v += (cohesionVector * cfg.coheasionScale);
+        v += (repelVec * cfg.repelScale);
+        v += (obstacleVec * cfg.obstacleRepelScale);
+        v += (predatorVec * cfg.predatorRepelScale);
+        v += (noiseVec * 1.0f);
 
         boids::utils::clipVectorMangitude(v, 0.1f, cfg.maxVelocity);
 
