@@ -10,7 +10,14 @@ class Flock {
   public:
     Flock();
 
-    int  addBoid(const float x, const float y, const BoidType type = BoidType::BOID);
+    /**
+     * @brief Add a boid of a given type to the Flock, at a given coordinate.
+     * @param x X cooridnate.
+     * @param y Y cooridnate.
+     * @param type Type of boids, defaults to BoidType::BOID.
+     * @return Unique ID for the new boid.
+     */
+    int addBoid(const float x, const float y, const BoidType type = BoidType::BOID);
 
     /**
      * @brief Clear all the boids in the flock.
