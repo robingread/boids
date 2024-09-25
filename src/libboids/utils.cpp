@@ -12,9 +12,12 @@ QVector2D calculateAlignmentVector(const Boid& boid, const std::vector<Boid>& ne
 
     QVector2D vec(0.0, 0.0);
     for (const Boid& n : neighbours) {
-        vec += n.getVelocity();
+        const float dist = distanceBetweenBoids(boid, n);
+        QVector2D   vel  = n.getVelocity().normalized() / dist;
+        vec += vel;
     }
-    return vec / float(neighbours.size());
+
+    return vec;
 }
 
 QVector2D calculateCohesionVector(const Boid& boid, const std::vector<Boid>& neighbours) {

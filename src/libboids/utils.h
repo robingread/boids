@@ -9,10 +9,16 @@ namespace boids {
 namespace utils {
 
 /**
- * @brief Calculate the average velocity vector for a neighbourhood of Boids.
- * @param boid Not used.
- * @param neighbours Neighbour
- * @return QVector2D
+ * @brief Calculate the velocity vector that aligns a boid with the direction of it's neighbourhood.
+ *
+ * This vector will help "steer" the boid in the same direction as all those in the
+ * near vicinity. The velocity vector of each obtained, normalised and then weighted
+ * by the inverse of the distance to that neighbour. This is done for each neighbour,
+ * with the final alignment vector being the total sum.
+ *
+ * @param boid Boid to calculate the alignment vector for.
+ * @param neighbours Neighbourhood of Boids.
+ * @return Vector aligning the boid with the neighbours.
  */
 QVector2D calculateAlignmentVector(const Boid& boid, const std::vector<Boid>& neighbours);
 

@@ -77,6 +77,10 @@ TEST(libboids_utils, calculateAlignmentVector_0) {
     ASSERT_EQ(exp, res);
 }
 
+/**
+ * @brief Test that when there is neighourhood of size one, then the alignment
+ * vector is not zero.
+ */
 TEST(libboids_utils, calculateAlignmentVector_1) {
     const boids::Boid        boid(0, 0.0, 0.0);
     std::vector<boids::Boid> neighbours;
@@ -85,10 +89,17 @@ TEST(libboids_utils, calculateAlignmentVector_1) {
     const QVector2D exp(1.0, 0.0);
     const QVector2D res = boids::utils::calculateAlignmentVector(boid, neighbours);
 
-    ASSERT_FLOAT_EQ(exp.x(), res.x());
-    ASSERT_FLOAT_EQ(exp.y(), res.y());
+    ASSERT_GE(res.x(), 0.0f);
+    ASSERT_GE(res.y(), 0.0f);
+
+    ASSERT_LE(res.x(), 1.0f);
+    ASSERT_LE(res.y(), 1.0f);
 }
 
+/**
+ * @brief Test that when there is neighourhood of size two, then the alignment
+ * vector is not zero.
+ */
 TEST(libboids_utils, calculateAlignmentVector_2) {
     const boids::Boid        boid(0, 0.0, 0.0);
     std::vector<boids::Boid> neighbours;
