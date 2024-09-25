@@ -25,6 +25,12 @@ class Flock {
      */
     void clearBoids(const BoidType& type);
 
+    /**
+     * @brief Get the total number of boids. This covers all types of boids.
+     * @return Number of boids.
+     */
+    int getNumBoids() const;
+
     std::map<BoidType, std::vector<Boid>> getBoids() const;
     Config                                getConfig() const;
     void                                  setConfig(const Config& config);
