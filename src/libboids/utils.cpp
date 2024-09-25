@@ -63,13 +63,6 @@ QVector2D calculateSeparationVector(const Boid& boid, const std::vector<Boid>& n
     return vec;
 }
 
-float calculateRepulsionWeight(const float dist, const float minDist) {
-    // TODO: This should probably not be 15!
-    const float c      = 15.0;
-    const float weight = (1.0f / (1.0f + std::exp(c * (dist - (minDist * 0.5f)))));
-    return weight;
-}
-
 float distanceBetweenBoids(const Boid& b1, const Boid& b2) {
     const auto  p1   = b1.getPosition();
     const auto  p2   = b2.getPosition();

@@ -51,8 +51,6 @@ QVector2D calculateCohesionVector(const Boid& boid, const std::vector<Boid>& nei
 QVector2D calculateSeparationVector(const Boid& boid, const std::vector<Boid>& neighbours,
                                     const float minDist);
 
-float calculateRepulsionWeight(const float dist, const float minDist);
-
 /**
  * @brief Calculate the euclidean distance between two Boids.
  * @param b1 First boid.

@@ -237,32 +237,6 @@ TEST(libboids_utils, calculateSeparationVector_6) {
     EXPECT_NEAR(exp.y(), res.y(), 0.01f);
 }
 
-/*
- * Test that a boid with a distance that is zero has a repulsion weighting of less or equal to 1.0.
- */
-TEST(libboids_utils, calculateRepulsionVector_1) {
-    const float dist    = 0.0f;
-    const float minDist = 1.0f;
-
-    const float res = boids::utils::calculateRepulsionWeight(dist, minDist);
-
-    ASSERT_TRUE(res <= 1.0f);
-}
-
-/*
- * Test that a boid with a distance that is large and well beyond the minimum
- * distance has a resulsion weighting of 0.0.
- */
-TEST(libboids_utils, calculateRepulsionVector_2) {
-    const float dist    = 1000.0f;
-    const float minDist = 1.0f;
-
-    const float res = boids::utils::calculateRepulsionWeight(dist, minDist);
-    const float exp = 0.0f;
-
-    ASSERT_FLOAT_EQ(res, exp);
-}
-
 TEST(libboids_utils, distanceBetweenBoids_1) {
     const boids::Boid b1(0, 0.0, 0.0);
     const boids::Boid b2(1, 1.0, 0.0);
