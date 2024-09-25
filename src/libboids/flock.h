@@ -35,7 +35,12 @@ class Flock {
      * @return The scene bounds rectangle.
      */
     QRectF getSceneBounds() const;
-    void   setSceneBounds(const QRectF& bounds);
+
+    /**
+     * @brief Set the Scene Bounds object
+     * @param bounds Scene bounds rectangle object.
+     */
+    void setSceneBounds(const QRectF& bounds);
 
     /**
      * @brief Update the boids with a single step. This will update the normal boids, as well as the
