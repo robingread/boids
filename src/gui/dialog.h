@@ -16,7 +16,7 @@ class Dialog : public QMainWindow {
     void run();
 
   protected:
-    void resizeEvent(QResizeEvent* event);
+    void resizeEvent(QResizeEvent* event) override;
 
   private:
     SimThread                m_sim;
