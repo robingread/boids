@@ -24,6 +24,11 @@ QVector2D calculateAlignmentVector(const Boid& boid, const std::vector<Boid>& ne
 
 /**
  * @brief Calculate the vector that pulls a Boid towards the center of the neighbourood.
+ *
+ * This vector is calculated by calculting the center point of the neighbourhood,
+ * substracting the boid position from this, normalising the vector and giving it a small magnitude
+ * to gently pull the boids towards the center of the neighbourhood.
+ *
  * @param boid Boid to check calculate the cohesion vector for.
  * @param neighbours Neighbourhood around the Boid
  * @return Vector towards the center of the neighbourhood.

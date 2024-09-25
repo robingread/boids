@@ -25,13 +25,16 @@ QVector2D calculateCohesionVector(const Boid& boid, const std::vector<Boid>& nei
         return QVector2D(0.0f, 0.0f);
     }
 
-    QPointF point(0.0, 0.0);
+    QVector2D vec(0.0, 0.0);
     for (const Boid& n : neighbours) {
-        const QPointF diff = n.getPosition() - boid.getPosition();
-        point += diff;
+        vec += QVector2D(n.getPosition());
     }
-    point /= neighbours.size();
-    return QVector2D(point.x(), point.y());
+
+    vec /= float(neighbours.size());
+    QVector2D ret = vec - QVector2D(boid.getPosition());
+    ret.normalize();
+    ret *= 0.25f;
+    return ret;
 }
 
 QVector2D calculateSeparationVector(const Boid& boid, const std::vector<Boid>& neighbours,
