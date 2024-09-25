@@ -92,6 +92,12 @@ int Flock::addBoid(const float x, const float y, const BoidType type) {
 
 void Flock::clearBoids() { m_boidMap.clear(); }
 
+void Flock::clearBoids(const BoidType& type) {
+    if (!m_boidMap.contains(type))
+        return;
+    m_boidMap.at(type).clear();
+}
+
 std::map<BoidType, std::vector<Boid>> Flock::getBoids() const { return m_boidMap; }
 
 Config Flock::getConfig() const { return m_config; }

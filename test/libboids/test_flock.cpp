@@ -60,6 +60,15 @@ TEST(libboids_flock, clearBoids_allBoids) {
 }
 
 /**
+ * @brief Test that calling the Flock::clearBoids() with a given type method without adding any
+ * boids doesn't throw an exception.
+ */
+TEST(libboids_flock, clearBoids_boidType) {
+    boids::Flock flock;
+    ASSERT_NO_THROW(flock.clearBoids(boids::BOID));
+}
+
+/**
  * @brief Test the Flock::getBoids() method to check that it returns all the boids as expected.
  *
  */
@@ -112,3 +121,59 @@ TEST(libboids_flock, getConfig) {
     flock.setConfig(cfg);
     ASSERT_EQ(cfg.alignmentScale, flock.getConfig().alignmentScale);
 }
+
+/**
+ * @brief Test Flock class that has instances of BOIDS, OBSTACLES and PREDATORS.
+ */
+class FullFlockTest : public testing::Test {
+
+  protected:
+    boids::Flock m_flock;
+
+    void SetUp() {
+        for (std::size_t i = 0; i < 10; ++i) {
+            m_flock.addBoid(0.0f, 0.0f, boids::BOID);
+        }
+        for (std::size_t i = 0; i < 10; ++i) {
+            m_flock.addBoid(0.0f, 0.0f, boids::OBSTACLE);
+        }
+        for (std::size_t i = 0; i < 10; ++i) {
+            m_flock.addBoid(0.0f, 0.0f, boids::PREDATOR);
+        }
+    }
+};
+
+/**
+ * @brief Test that the Flock::clearBoids() only clears the expected BOIDS boids.
+ */
+TEST_F(FullFlockTest, clearBoids_boids) {
+    m_flock.clearBoids(boids::BOID);
+    ASSERT_EQ(m_flock.getBoids().at(boids::BOID).size(), 0);
+    ASSERT_EQ(m_flock.getBoids().at(boids::OBSTACLE).size(), 10);
+    ASSERT_EQ(m_flock.getBoids().at(boids::PREDATOR).size(), 10);
+}
+
+/**
+ * @brief Test that the Flock::clearBoids() only clears the expected OBSTACLE boids.
+ */
+TEST_F(FullFlockTest, clearBoids_obstalces) {
+    m_flock.clearBoids(boids::OBSTACLE);
+    ASSERT_EQ(m_flock.getBoids().at(boids::BOID).size(), 10);
+    ASSERT_EQ(m_flock.getBoids().at(boids::OBSTACLE).size(), 0);
+    ASSERT_EQ(m_flock.getBoids().at(boids::PREDATOR).size(), 10);
+}
+
+/**
+ * @brief Test that the Flock::clearBoids() only clears the expected PREDATOR boids.
+ */
+TEST_F(FullFlockTest, clearBoids_predators) {
+    m_flock.clearBoids(boids::PREDATOR);
+    ASSERT_EQ(m_flock.getBoids().at(boids::BOID).size(), 10);
+    ASSERT_EQ(m_flock.getBoids().at(boids::OBSTACLE).size(), 10);
+    ASSERT_EQ(m_flock.getBoids().at(boids::PREDATOR).size(), 0);
+}
+
+/**
+ * @brief Test that the Flock::update() doesn't throw any exceptions when called.
+ */
+TEST_F(FullFlockTest, update_noThrow) { ASSERT_NO_THROW(m_flock.update()); }

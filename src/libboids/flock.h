@@ -18,8 +18,13 @@ class Flock {
      * This includes all the normal boids, obstacles and predators.
      */
     void clearBoids();
-    int  getNumBoids() const;
-    // std::vector<Boid> getBoids() const;
+
+    /**
+     * @brief Clear all the boids of a given type.
+     * @param type The enum for the type of Boids to clear.
+     */
+    void clearBoids(const BoidType& type);
+
     std::map<BoidType, std::vector<Boid>> getBoids() const;
     Config                                getConfig() const;
     void                                  setConfig(const Config& config);
