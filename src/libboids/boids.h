@@ -110,3 +110,8 @@ class Boid {
 };
 
 }; // namespace boids
+
+// Declare Qt meta types
+Q_DECLARE_METATYPE(boids::BoidType);
+Q_DECLARE_METATYPE(std::vector<boids::Boid>);
+Q_DECLARE_METATYPE(std::vector<boids::BoidType>);
