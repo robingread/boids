@@ -94,4 +94,13 @@ void DisplayGraphicsView::renderBoids(const QList<boids::Boid>& boids) {
     }
 }
 
+void DisplayGraphicsView::clearBoids(const std::vector<boids::Boid>& boids) {
+    for (const auto& boid : boids) {
+        const auto id = boid.getId();
+        m_scene->removeItem(m_displayItems.at(id).get());
+        m_displayItems.at(id).release();
+        m_displayItems.erase(id);
+    }
+}
+
 } // namespace ui

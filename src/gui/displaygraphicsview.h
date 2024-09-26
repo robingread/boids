@@ -56,6 +56,7 @@ class DisplayGraphicsView : public QGraphicsView {
   public slots:
     void mousePressEvent(QMouseEvent* event) override;
     void renderBoids(const QList<boids::Boid>& boids);
+    void clearBoids(const std::vector<boids::Boid>& boids);
 };
 
 } // namespace ui
