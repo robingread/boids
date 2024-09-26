@@ -30,4 +30,5 @@ class Dialog : public QMainWindow {
   private slots:
     void onConfigChanged();
     void createBoid(const QPointF& pos, const boids::BoidType& type = boids::BoidType::BOID);
+    void clearBoids(const std::vector<boids::BoidType>& types);
 };

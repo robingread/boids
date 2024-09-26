@@ -49,6 +49,15 @@ void Dialog::createBoid(const QPointF& pos, const boids::BoidType& type) {
     m_flock->addBoid(pos.x(), pos.y(), type);
 }
 
+void Dialog::clearBoids(const std::vector<boids::BoidType>& types) {
+    const auto boids = m_flock->getBoids();
+
+    for (const auto& t : types) {
+        m_graphicsView->clearBoids(boids.at(t));
+        m_flock->clearBoids(t);
+    }
+}
+
 void Dialog::run() {
     m_control->m_boidCfgGroup->setConfig(m_flock->getConfig(boids::BOID));
     m_control->m_predatorCfgGroup->setConfig(m_flock->getConfig(boids::PREDATOR));
