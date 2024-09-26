@@ -23,6 +23,7 @@
                 "DavidAnson.vscode-markdownlint",
                 "cschlosser.doxdocgen",
                 "gruntfuggly.todo-tree",
+                "ms-azuretools.vscode-docker",
                 "ms-vscode.cmake-tools",
                 "ms-vscode.cpptools",
                 "ms-vscode.cpptools-extension-pack",
