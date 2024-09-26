@@ -74,6 +74,9 @@ void Dialog::run() {
     QObject::connect(m_control->m_predatorCfgGroup.get(), &ui::ConfigGroup::configChanged, this,
                      &Dialog::onConfigChanged);
 
+    QObject::connect(m_control->m_buttonGroup.get(), &ui::ButtonGroup::clearBoids, this,
+                     &Dialog::clearBoids);
+
     const QRectF rect = m_graphicsView->mapToScene(m_graphicsView->rect()).boundingRect();
     m_flock->setSceneBounds(rect);
 
