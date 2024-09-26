@@ -20,7 +20,6 @@ void SimThread::stopSim() {
 }
 
 void SimThread::run() {
-    std::cout << "Runing the main sim loop..." << std::endl;
 
     while (!m_stop) {
         m_boidSim->update();
