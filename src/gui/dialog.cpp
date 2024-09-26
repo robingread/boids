@@ -3,8 +3,6 @@
 #include <boids.h>
 #include <iostream>
 
-Q_DECLARE_METATYPE(QList<boids::Boid>);
-
 Dialog::Dialog(QWidget* parent) : QMainWindow(parent) {
 
     m_flock = std::make_shared<boids::Flock>();
