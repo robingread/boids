@@ -2,7 +2,6 @@
 #include "config_group.h"
 
 #include <QVBoxLayout>
-#include <iostream>
 
 namespace ui {
 

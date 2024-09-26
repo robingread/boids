@@ -3,7 +3,6 @@
 #include "boids.h"
 #include <QMouseEvent>
 #include <QtMath>
-#include <iostream>
 #include <random>
 
 template <typename T> T generateRandomValue(const T minValue, const T maxValue) {

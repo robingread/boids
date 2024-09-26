@@ -1,6 +1,5 @@
 #include "simthread.h"
 #include <QMutex>
-#include <iostream>
 
 SimThread::SimThread(const std::shared_ptr<boids::Flock> flock, QObject* parent) : QThread(parent) {
     m_stop    = false;

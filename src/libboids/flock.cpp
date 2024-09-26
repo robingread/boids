@@ -1,6 +1,5 @@
 #include "flock.h"
 #include "utils.h"
-#include <iostream>
 
 namespace boids {
 
