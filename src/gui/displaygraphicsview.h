@@ -48,7 +48,7 @@ class DisplayGraphicsView : public QGraphicsView {
     void renderPredator(const uint16_t& id, const QPointF& pos, const float& angle);
 
   private:
-    std::map<const uint16_t, std::unique_ptr<QGraphicsItem>> m_displayItems;
+    std::map<const uint16_t, std::unique_ptr<Boid>> m_displayItems;
 
   signals:
     void createItem(const QPointF pos, const boids::BoidType& type = boids::BoidType::BOID);
