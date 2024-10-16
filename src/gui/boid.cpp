@@ -32,6 +32,8 @@ void Boid::paint(QPainter* painter, const QStyleOptionGraphicsItem* /*option*/,
     painter->fillPath(m_path, QBrush(m_colour));
 }
 
+void Boid::setColor(const QColor& color) { m_colour = color; }
+
 Obstacle::Obstacle(const QPointF& pos, const QColor& color, const float& radius)
     : Boid(pos, 0.0f, color) {
     const float xy = -radius;
