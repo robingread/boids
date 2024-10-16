@@ -77,6 +77,7 @@ void DisplayGraphicsView::renderBoids(const QList<boids::Boid>& boids) {
             case boids::BoidType::BOID:
                 renderBoid(b.getId(), b.getPosition(), qRadiansToDegrees(b.getAngle()),
                            b.getColor());
+                m_displayItems[b.getId()]->setColor(b.getColor());
                 break;
             case boids::OBSTACLE:
                 renderObstacle(b.getId(), b.getPosition());
