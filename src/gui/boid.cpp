@@ -32,11 +32,11 @@ void Boid::paint(QPainter* painter, const QStyleOptionGraphicsItem* /*option*/,
     painter->fillPath(m_path, QBrush(m_colour));
 }
 
-Obstacle::Obstacle(const QPointF& pos, const QColor& color, const float& radius) {
+Obstacle::Obstacle(const QPointF& pos, const QColor& color, const float& radius)
+    : Boid(pos, 0.0f, color) {
     const float xy = -radius;
     const float wh = radius * 2.0;
     m_boundingRect = QRectF(xy, xy, wh, wh);
-    m_color        = color;
     this->setPos(pos);
 };
 
@@ -45,7 +45,7 @@ QRectF Obstacle::boundingRect() const { return m_boundingRect; }
 void Obstacle::paint(QPainter* painter, const QStyleOptionGraphicsItem* /*option*/,
                      QWidget* /*widget*/) {
     painter->setRenderHint(QPainter::Antialiasing, false);
-    painter->setBrush(QBrush(m_color));
+    painter->setBrush(QBrush(m_colour));
     painter->setPen(Qt::NoPen);
     painter->drawEllipse(m_boundingRect);
 }

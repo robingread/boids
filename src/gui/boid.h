@@ -27,7 +27,7 @@ class Boid : public QGraphicsItem {
  * @brief The Obstacle class is used to render Obstacles in the GUI and inherits from the
  * QGraphicsItem class.
  */
-class Obstacle : public QGraphicsItem {
+class Obstacle : public Boid {
   public:
     /**
      * @brief Construct a new Obstacle object.
@@ -40,7 +40,6 @@ class Obstacle : public QGraphicsItem {
     void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget) override;
 
   private:
-    QColor m_color;
     QRectF m_boundingRect;
 };
 
