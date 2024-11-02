@@ -15,7 +15,12 @@ jobs:
         uses: docker/setup-buildx-action@v2
 
       - name: Build Docker image
-        run: docker build -t boids-dev-container -f .devcontainer/Dockerfile .
+        run: |
+          docker build \
+          --tag boids-dev-container \
+          --file .devcontainer/Dockerfile \
+          --target base \
+          .
 
       - name: Run unit-tests
         run: |
