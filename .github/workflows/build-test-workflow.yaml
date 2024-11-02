@@ -22,5 +22,6 @@ jobs:
           docker run --rm \
             -v ${{ github.workspace }}:/workspaces/boids \
             -w /workspaces/boids \
+            -u root \
             boids-dev-container \
             bash -c "./scripts/build.sh && ./scripts/test.sh"
