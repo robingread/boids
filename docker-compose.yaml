@@ -1,0 +1,17 @@
+version: "3.9"
+
+services:
+  ci:
+    image: boids:ci
+    build:
+      dockerfile: .devcontainer/Dockerfile
+      context: .
+      target: base
+    volumes:
+      - ./build:/workspace/build:rw
+      - ./scripts:/workspace/scripts:ro
+      - ./src:/workspace/src:ro
+      - ./test:/workspace/test:ro
+      - ./CMakeLists.txt:/workspace/CMakeLists.txt:ro
+    working_dir: /workspace
+    command: bash -c "./scripts/build.sh && ./scripts/test.sh"
