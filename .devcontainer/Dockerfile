@@ -1,12 +1,10 @@
-FROM ubuntu:22.04
+FROM ubuntu:22.04 AS base
 
 ARG DEBIAN_FRONTEND=noninteractive
 
+# Install core dependencies
 RUN apt-get update && apt-get install -y \
     cmake \
-    clang-format \
-    gdb \
-    git \
     g++ \
     lcov \
     libgtest-dev \
@@ -14,9 +12,22 @@ RUN apt-get update && apt-get install -y \
     qttools5-dev-tools \
     && rm -rf /var/lib/apt/lists/*
 
+#########################
+# Build Development stage
+#########################
+FROM base AS dev
+
 ARG USERNAME=vscode
 ARG USER_UID=1000
 ARG USER_GID=$USER_UID
+
+# Install tools for development
+RUN apt-get update && apt-get install -y \
+    clang-format \
+    gdb \
+    git \
+    lcov \
+    && rm -rf /var/lib/apt/lists/*
 
 # Create a non-root user
 RUN groupadd --gid $USER_GID $USERNAME \
@@ -27,3 +38,5 @@ RUN groupadd --gid $USER_GID $USERNAME \
     && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME\
     && chmod 0440 /etc/sudoers.d/$USERNAME \
     && rm -rf /var/lib/apt/lists/*
+
+USER ${USERNAME}
