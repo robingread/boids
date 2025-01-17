@@ -17,13 +17,13 @@ Boid::Boid(const QPointF& pos, const float rot, const QColor& colour) {
     m_path.lineTo(p2);
     m_path.lineTo(p3);
     m_path.lineTo(p1);
+
+    const qreal penWidth = 1;
+    m_boundingRect = QRectF(-(m_width * 0.5) - (penWidth / 2), -(m_height * 0.5) - (penWidth / 2),
+                            m_width + penWidth, m_height + penWidth);
 }
 
-QRectF Boid::boundingRect() const {
-    qreal penWidth = 1;
-    return QRectF(-(m_width * 0.5) - (penWidth / 2), -(m_height * 0.5) - (penWidth / 2),
-                  m_width + penWidth, m_height + penWidth);
-}
+QRectF Boid::boundingRect() const { return m_boundingRect; }
 
 void Boid::paint(QPainter* painter, const QStyleOptionGraphicsItem* /*option*/,
                  QWidget* /*widget*/) {
@@ -32,20 +32,22 @@ void Boid::paint(QPainter* painter, const QStyleOptionGraphicsItem* /*option*/,
     painter->fillPath(m_path, QBrush(m_colour));
 }
 
-Obstacle::Obstacle(const QPointF& pos, const QColor& color, const float& radius) {
+void Boid::setColor(const QColor& color) { m_colour = color; }
+
+Obstacle::Obstacle(const QPointF& pos, const QColor& color, const float& radius)
+    : Boid(pos, 0.0f, color) {
     const float xy = -radius;
     const float wh = radius * 2.0;
     m_boundingRect = QRectF(xy, xy, wh, wh);
-    m_color        = color;
     this->setPos(pos);
 };
 
-QRectF Obstacle::boundingRect() const { return m_boundingRect; }
+// QRectF Obstacle::boundingRect() const { return m_boundingRect; }
 
 void Obstacle::paint(QPainter* painter, const QStyleOptionGraphicsItem* /*option*/,
                      QWidget* /*widget*/) {
     painter->setRenderHint(QPainter::Antialiasing, false);
-    painter->setBrush(QBrush(m_color));
+    painter->setBrush(QBrush(m_colour));
     painter->setPen(Qt::NoPen);
     painter->drawEllipse(m_boundingRect);
 }
@@ -68,6 +70,10 @@ Predator::Predator(const QPointF& pos, const float rot, const QColor& colour)
     m_path.lineTo(p3);
     m_path.lineTo(p4);
     m_path.lineTo(p1);
+
+    const qreal penWidth = 1;
+    m_boundingRect = QRectF(-(m_width * 0.5) - (penWidth / 2), -(m_height * 0.5) - (penWidth / 2),
+                            m_width + penWidth, m_height + penWidth);
 };
 
 void Predator::paint(QPainter* painter, const QStyleOptionGraphicsItem* /*option*/,

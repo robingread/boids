@@ -1,7 +1,6 @@
 #include "dialog.h"
 #include "displaygraphicsview.h"
 #include <boids.h>
-#include <iostream>
 
 Dialog::Dialog(QWidget* parent) : QMainWindow(parent) {
 

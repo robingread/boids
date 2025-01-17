@@ -36,6 +36,14 @@ QVector2D calculateAlignmentVector(const Boid& boid, const std::vector<Boid>& ne
 QVector2D calculateCohesionVector(const Boid& boid, const std::vector<Boid>& neighbours);
 
 /**
+ * @brief Calculaet the new color of a boids given the neighbourhood.
+ *
+ * @param boid Boid to calculate the color for.
+ * @param neighbours Neighbourhood around the Boid..
+ * @return QColor New Boid color.
+ */
+QColor calculateBoidColor(const Boid& boid, const std::vector<Boid>& neighbours);
+/**
  * @brief Calculate the vector that repels a given Boids from the other boids wihtin
  * the neighbourhood to maintain a minimum distance between them.
  *
@@ -110,6 +118,20 @@ std::size_t getTotalNumBoids(const std::map<BoidType, std::vector<Boid>>& boids)
  * @return QVector2D scaled.
  */
 QVector2D scaleVector(const QVector2D& vec, const float& scalar);
+
+/**
+ * @brief Calculate the shortest distance between two points/values in a 1D wrapped space.
+ *
+ * This value is not absolute, it is signed.
+ *
+ * @param v1 First value point.
+ * @param v2 Second value point.
+ * @param min Minimum value in the wrapped space/dimension.
+ * @param max Maximum value in the wrapped space/dimension.
+ * @return Shortest distance.
+ */
+float shortestDistanceInWrapedSpace(const float& v1, const float& v2, const float& min,
+                                    const float& max);
 
 /**
  * @brief Wrap the position of a boid within a defined simulation area.

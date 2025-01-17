@@ -3,7 +3,6 @@
 #include "boids.h"
 #include <QMouseEvent>
 #include <QtMath>
-#include <iostream>
 #include <random>
 
 template <typename T> T generateRandomValue(const T minValue, const T maxValue) {
@@ -28,13 +27,10 @@ DisplayGraphicsView::DisplayGraphicsView(QWidget* parent) : QGraphicsView(parent
 
 void DisplayGraphicsView::mousePressEvent(QMouseEvent* event) {
     if (event->button() == Qt::LeftButton) {
-        std::cout << "Left Mouse Button Clicked!" << std::endl;
         emit createItem(mapToScene(event->pos()), boids::BoidType::BOID);
     } else if (event->button() == Qt::RightButton) {
-        std::cout << "Right Mouse Button Clicked!" << std::endl;
         emit createItem(mapToScene(event->pos()), boids::BoidType::PREDATOR);
     } else if (event->button() == Qt::MiddleButton) {
-        std::cout << "Middle Mouse Button Clicked!" << std::endl;
         emit createItem(mapToScene(event->pos()), boids::BoidType::OBSTACLE);
     }
 }
@@ -81,6 +77,7 @@ void DisplayGraphicsView::renderBoids(const QList<boids::Boid>& boids) {
             case boids::BoidType::BOID:
                 renderBoid(b.getId(), b.getPosition(), qRadiansToDegrees(b.getAngle()),
                            b.getColor());
+                m_displayItems[b.getId()]->setColor(b.getColor());
                 break;
             case boids::OBSTACLE:
                 renderObstacle(b.getId(), b.getPosition());

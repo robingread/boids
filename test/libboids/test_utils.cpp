@@ -2,6 +2,25 @@
 #include <gtest/gtest.h>
 #include <utils.h>
 
+struct BoidVectorData {
+    boids::Boid              boid;
+    std::vector<boids::Boid> neighbours;
+    QVector2D                expected;
+};
+
+class CalculateCohesionVectorTest : public ::testing::TestWithParam<BoidVectorData> {};
+
+TEST_P(CalculateCohesionVectorTest, test_function) {
+    const auto params = GetParam();
+    const auto res    = boids::utils::calculateCohesionVector(params.boid, params.neighbours);
+    ASSERT_EQ(params.expected, res);
+}
+
+INSTANTIATE_TEST_SUITE_P(VariousInputs, CalculateCohesionVectorTest,
+                         ::testing::Values(BoidVectorData{boids::Boid(0, 0.0, 0.0),
+                                                          std::vector<boids::Boid>(),
+                                                          QVector2D(0.0, 0.0)}));
+
 /**
  * @brief Test the cohesion velocity vector calculation for a boid with no neighbours.
  */
@@ -257,100 +276,68 @@ TEST(libboids_utils, distanceBetweenBoids_2) {
     ASSERT_FLOAT_EQ(exp, res);
 }
 
-/**
- * @brief Test that the boids::utils::distanceBetweenBoids() method handles the situation
- * where the shortest distance between Boids is actually via the wrapping of the scene.
- */
-TEST(libboids_utils, distanceBetweenBoids_Bounded_1) {
-    const QRectF      bounds(0.0f, 0.0f, 20.0f, 10.0f);
-    const boids::Boid b1(0, 19.0f, 1.0f);
-    const boids::Boid b2(1, 1.0f, 1.0f);
+struct BoidDistanceData {
+    QRectF      bounds;
+    boids::Boid b1;
+    boids::Boid b2;
+    float       expected;
+};
 
-    const float exp = 2.0f;
-    const float res = boids::utils::distanceBetweenBoids(b1, b2, bounds);
+class DistanceBetweenBoidsTest : public ::testing::TestWithParam<BoidDistanceData> {};
 
-    ASSERT_FLOAT_EQ(exp, res);
+TEST_P(DistanceBetweenBoidsTest, test) {
+    const auto  params = GetParam();
+    const float res    = boids::utils::distanceBetweenBoids(params.b1, params.b2, params.bounds);
+    ASSERT_FLOAT_EQ(params.expected, res);
 }
 
-/**
- * @brief Test that the boids::utils::distanceBetweenBoids() method handles the situation
- * where the shortest distance between Boids is actually via the wrapping of the scene.
- */
-TEST(libboids_utils, distanceBetweenBoids_Bounded_2) {
-    const QRectF      bounds(0.0f, 0.0f, 20.0f, 10.0f);
-    const boids::Boid b1(0, 1.0f, 2.0f);
-    const boids::Boid b2(1, 1.0f, 9.0f);
+INSTANTIATE_TEST_SUITE_P(
+    utils, DistanceBetweenBoidsTest,
+    ::testing::Values(BoidDistanceData{QRectF(0.0f, 0.0f, 20.0f, 10.0f),
+                                       boids::Boid(0, 19.0f, 1.0f), boids::Boid(1, 1.0f, 1.0f),
+                                       2.0f},
+                      BoidDistanceData{QRectF(0.0f, 0.0f, 20.0f, 10.0f), boids::Boid(0, 1.0f, 2.0f),
+                                       boids::Boid(1, 1.0f, 9.0f), 3.0f},
+                      BoidDistanceData{QRectF(0.0f, 0.0f, 20.0f, 10.0f), boids::Boid(0, 1.0f, 4.0f),
+                                       boids::Boid(1, 1.0f, 5.0f), 1.0f}));
 
-    const float exp = 3.0f;
-    const float res = boids::utils::distanceBetweenBoids(b1, b2, bounds);
+// Float Test Fixture
+class GenerateRandomValueFloatTest : public ::testing::TestWithParam<std::tuple<float, float>> {};
 
-    ASSERT_FLOAT_EQ(exp, res);
-}
+TEST_P(GenerateRandomValueFloatTest, GeneratesValueInRange) {
+    float a   = std::get<0>(GetParam());
+    float b   = std::get<1>(GetParam());
+    float res = boids::utils::generateRandomValue<float>(a, b);
 
-/**
- * @brief Test that the boids::utils::distanceBetweenBoids() method handles the case where
- * the euclidian distance is indeed the shortest distance between two Boids.
- */
-TEST(libboids_utils, distanceBetweenBoids_Bounded_3) {
-    const QRectF      bounds(0.0f, 0.0f, 20.0f, 10.0f);
-    const boids::Boid b1(0, 1.0f, 4.0f);
-    const boids::Boid b2(1, 1.0f, 5.0f);
-
-    const float exp = 1.0f;
-    const float res = boids::utils::distanceBetweenBoids(b1, b2, bounds);
-
-    ASSERT_FLOAT_EQ(exp, res);
-}
-
-TEST(libboids_utils, generateRandomValue_float_1) {
-    const float a   = 0.0f;
-    const float b   = 1.0f;
-    const float res = boids::utils::generateRandomValue<float>(a, b);
     ASSERT_TRUE(res > a);
     ASSERT_TRUE(res <= b);
 }
 
-TEST(libboids_utils, generateRandomValue_float_2) {
-    const float a   = 0.25f;
-    const float b   = 0.5f;
-    const float res = boids::utils::generateRandomValue<float>(a, b);
-    ASSERT_TRUE(res > a);
-    ASSERT_TRUE(res <= b);
-}
+INSTANTIATE_TEST_SUITE_P(FloatRanges, GenerateRandomValueFloatTest,
+                         ::testing::Values(std::make_tuple(0.0f, 1.0f),
+                                           std::make_tuple(0.25f, 0.5f),
+                                           std::make_tuple(-1.5f, -1.0f)));
 
-TEST(libboids_utils, generateRandomValue_float_3) {
-    const float a   = -1.5f;
-    const float b   = -1.0f;
-    const float res = boids::utils::generateRandomValue<float>(a, b);
-    ASSERT_TRUE(res > a);
-    ASSERT_TRUE(res <= b);
-}
+// Int Test Fixture
+class GenerateRandomValueIntTest
+    : public ::testing::TestWithParam<std::tuple<int, int, std::size_t>> {};
 
-TEST(libboids_utils, generateRandomValue_int_1) {
-    const int a   = 0;
-    const int b   = 10;
-    const int res = boids::utils::generateRandomValue<int>(a, b);
-    ASSERT_TRUE(res >= a);
-    ASSERT_TRUE(res < b);
-}
+TEST_P(GenerateRandomValueIntTest, GeneratesValueInRange) {
+    int         a          = std::get<0>(GetParam());
+    int         b          = std::get<1>(GetParam());
+    std::size_t iterations = std::get<2>(GetParam());
 
-TEST(libboids_utils, generateRandomValue_int_2) {
-    for (std::size_t i = 0; i < 100; ++i) {
-        const int a   = -10;
-        const int b   = 0;
-        const int res = boids::utils::generateRandomValue<int>(a, b);
-        ASSERT_TRUE(res >= a);
-        ASSERT_TRUE(res <= b);
+    for (std::size_t i = 0; i < iterations; ++i) {
+        int res = boids::utils::generateRandomValue<int>(a, b);
+        ASSERT_GE(res, a);
+        ASSERT_LE(res, b);
     }
 }
 
-TEST(libboids_utils, generateRandomValue_int_3) {
-    const int a   = 0;
-    const int b   = 1;
-    const int res = boids::utils::generateRandomValue<int>(a, b);
-    ASSERT_TRUE(res >= a);
-    ASSERT_TRUE(res < b);
-}
+INSTANTIATE_TEST_SUITE_P(IntRanges, GenerateRandomValueIntTest,
+                         ::testing::Values(std::make_tuple(0, 10, 100),
+                                           std::make_tuple(-10, 0, 100),
+                                           std::make_tuple(0, 1, 100)));
 
 TEST(libboids_utils, generateRandomVelocityVector_1) {
     for (std::size_t i = 0; i < 100; ++i) {
@@ -405,7 +392,6 @@ TEST(libboids_utils, getBoidNeighbourhood_2) {
  *
  */
 TEST(libboids_utils, getBoidNeighbourhood_checkSceneWrapping) {
-
     const boids::Boid boid0(0, 0.1f, 0.1f);
     const boids::Boid boid1(1, 0.9f, 0.1f);
     const boids::Boid boid2(2, 0.1f, 0.9f);
@@ -456,105 +442,102 @@ TEST(libboids_utils, getTotalNumBoids_6) {
     ASSERT_EQ(res, exp);
 }
 
-TEST(libboids_utils, scaleVector_1) {
-    const QVector2D vec(3.0f, 4.0f);
-    const float     scalar = 5.0f;
+/**
+ * Test the scaleVector() method
+ */
+struct ScaleVectorData {
+    QVector2D vector;
+    float     scalar;
+    QVector2D expected;
+};
 
-    const QVector2D res = boids::utils::scaleVector(vec, scalar);
-    const QVector2D exp(3.0f, 4.0f);
+class ScaleVectorTest : public ::testing::TestWithParam<ScaleVectorData> {};
 
-    ASSERT_FLOAT_EQ(exp.x(), res.x());
-    ASSERT_FLOAT_EQ(exp.y(), res.y());
+TEST_P(ScaleVectorTest, test) {
+    const auto params = GetParam();
+    const auto res    = boids::utils::scaleVector(params.vector, params.scalar);
+    ASSERT_FLOAT_EQ(params.expected.x(), res.x());
+    ASSERT_FLOAT_EQ(params.expected.y(), res.y());
 }
 
-TEST(libboids_utils, scaleVector_2) {
-    const QVector2D vec(-3.0f, 0.0f);
-    const float     scalar = 10.0f;
+INSTANTIATE_TEST_SUITE_P(
+    utils, ScaleVectorTest,
+    ::testing::Values(ScaleVectorData{QVector2D(3.0f, 4.0f), 5.0f, QVector2D(3.0f, 4.0f)},
+                      ScaleVectorData{QVector2D(-3.0f, 0.0f), 10.0f, QVector2D(-10.0f, 0.0f)}));
 
-    const QVector2D res = boids::utils::scaleVector(vec, scalar);
-    const QVector2D exp(-10.0f, 0.0f);
+/**
+ * Test the shortestDistanceInWrappedSpace() method
+ */
+class DistanceTest
+    : public ::testing::TestWithParam<std::tuple<float, float, float, float, float>> {};
 
-    ASSERT_FLOAT_EQ(exp.x(), res.x());
-    ASSERT_FLOAT_EQ(exp.y(), res.y());
+TEST_P(DistanceTest, CalculatesShortestDistance) {
+    const float x1  = std::get<0>(GetParam());
+    const float x2  = std::get<1>(GetParam());
+    const float min = std::get<2>(GetParam());
+    const float max = std::get<3>(GetParam());
+    const float exp = std::get<4>(GetParam());
+
+    const float res = boids::utils::shortestDistanceInWrapedSpace(x1, x2, min, max);
+    ASSERT_FLOAT_EQ(exp, res);
 }
 
-TEST(libboids_utils, wrapBoidPosition_1) {
-    boids::Boid  boid(0, 0.0f, 1.1f);
-    const QRectF rect(0.0f, 0.0f, 1.0f, 1.0f);
-    boids::utils::wrapBoidPosition(boid, rect);
+INSTANTIATE_TEST_SUITE_P(utils, DistanceTest,
+                         ::testing::Values(std::make_tuple(-0.9f, 0.9f, -1.0f, 1.0f, -0.2f),
+                                           std::make_tuple(0.7f, 0.9f, -1.0f, 1.0f, 0.2f),
+                                           std::make_tuple(0.9f, 0.7f, -1.0f, 1.0f, -0.2f),
+                                           std::make_tuple(-0.2f, 0.2f, -10.0f, 1.0f, 0.4f)));
 
-    ASSERT_FLOAT_EQ(boid.getPosition().x(), 0.0f);
-    ASSERT_FLOAT_EQ(boid.getPosition().y(), 0.1f);
+/**
+ * Test the wrapBoidPosition() method.
+ */
+struct WrapBoidPositionData {
+    boids::Boid             boid;     // The boid to wrap.
+    QRectF                  rect;     // The scene rectangle
+    std::pair<float, float> expected; // Expected values in (x,y) format.
+};
+
+class WrapBoidPositionTest : public ::testing::TestWithParam<WrapBoidPositionData> {};
+
+TEST_P(WrapBoidPositionTest, WrapTest) {
+    auto params = GetParam();
+    boids::utils::wrapBoidPosition(params.boid, params.rect);
+    ASSERT_FLOAT_EQ(params.boid.getPosition().x(), params.expected.first);
+    ASSERT_FLOAT_EQ(params.boid.getPosition().y(), params.expected.second);
 }
 
-TEST(libboids_utils, wrapBoidPosition_2) {
-    boids::Boid  boid(0, -0.1f, 0.0f);
-    const QRectF rect(0.0f, 0.0f, 1.0f, 1.0f);
-    boids::utils::wrapBoidPosition(boid, rect);
+INSTANTIATE_TEST_SUITE_P(utils, WrapBoidPositionTest,
+                         ::testing::Values(WrapBoidPositionData{boids::Boid(0, 0.0f, 1.1f),
+                                                                QRectF(0.0f, 0.0f, 1.0f, 1.0f),
+                                                                std::make_pair(0.0f, 0.1f)},
+                                           WrapBoidPositionData{boids::Boid(0, -0.1f, 0.0f),
+                                                                QRectF(0.0f, 0.0f, 1.0f, 1.0f),
+                                                                std::make_pair(0.9f, 0.0f)}));
 
-    ASSERT_FLOAT_EQ(boid.getPosition().x(), 0.9f);
-    ASSERT_FLOAT_EQ(boid.getPosition().y(), 0.0f);
+/**
+ * Test the wrapValue() method.
+ */
+struct WrapValueData {
+    float value;
+    float minValue;
+    float maxValue;
+    float expected;
+};
+
+class WrapValueTest : public ::testing::TestWithParam<WrapValueData> {};
+
+TEST_P(WrapValueTest, test) {
+    const auto  params = GetParam();
+    const float res    = boids::utils::wrapValue(params.value, params.minValue, params.maxValue);
+    ASSERT_FLOAT_EQ(res, params.expected);
 }
 
-TEST(libboids_utils, wrapValue_1) {
-    const float value    = 1.1f;
-    const float minValue = 0.0f;
-    const float maxValue = 1.0f;
-    const float res      = boids::utils::wrapValue(value, minValue, maxValue);
-    const float exp      = 0.1f;
-
-    ASSERT_FLOAT_EQ(res, exp);
-}
-
-TEST(libboids_utils, wrapValue_2) {
-    const float value    = 1.1f;
-    const float minValue = -1.0f;
-    const float maxValue = 1.0f;
-    const float res      = boids::utils::wrapValue(value, minValue, maxValue);
-    const float exp      = -0.9f;
-
-    ASSERT_FLOAT_EQ(res, exp);
-}
-
-TEST(libboids_utils, wrapValue_3) {
-    const float value    = 1.1f;
-    const float minValue = 0.0f;
-    const float maxValue = 2.0f;
-    const float res      = boids::utils::wrapValue(value, minValue, maxValue);
-    const float exp      = 1.1f;
-
-    ASSERT_FLOAT_EQ(res, exp);
-}
-
-TEST(libboids_utils, wrapValue_4) {
-    const float value    = 5.1f;
-    const float minValue = 1.0f;
-    const float maxValue = 5.0f;
-    const float res      = boids::utils::wrapValue(value, minValue, maxValue);
-    const float exp      = 1.1f;
-
-    ASSERT_FLOAT_EQ(res, exp);
-}
-
-TEST(libboids_utils, wrapValue_5) {
-    const float value    = -0.1f;
-    const float minValue = 0.0f;
-    const float maxValue = 1.0f;
-    const float res      = boids::utils::wrapValue(value, minValue, maxValue);
-    const float exp      = 0.9f;
-
-    ASSERT_FLOAT_EQ(res, exp);
-}
-
-TEST(libboids_utils, wrapValue_6) {
-    const float value    = 0.0f;
-    const float minValue = 0.0f;
-    const float maxValue = 1.0f;
-    const float res      = boids::utils::wrapValue(value, minValue, maxValue);
-    const float exp      = 0.0f;
-
-    ASSERT_FLOAT_EQ(res, exp);
-}
+INSTANTIATE_TEST_SUITE_P(utils, WrapValueTest,
+                         ::testing::Values(WrapValueData{1.1f, -1.0f, 1.0f, -0.9f},
+                                           WrapValueData{1.1f, 0.0f, 2.0f, 1.1f},
+                                           WrapValueData{5.1f, 1.0f, 5.0f, 1.1f},
+                                           WrapValueData{-0.1f, 0.0f, 1.0f, 0.9f},
+                                           WrapValueData{0.0f, 0.0f, 1.0f, 0.0f}));
 
 /**
  * @brief Test that the clipVectorMagnitude() method correctly clips a vector

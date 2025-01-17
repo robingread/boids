@@ -37,6 +37,41 @@ QVector2D calculateCohesionVector(const Boid& boid, const std::vector<Boid>& nei
     return ret;
 }
 
+QColor calculateBoidColor(const Boid& boid, const std::vector<Boid>& neighbours) {
+
+    const QColor& boidColor = boid.getColor();
+
+    // If there are no neighbours, return the current color.
+    if (neighbours.size() == 0) {
+        return boidColor;
+    }
+
+    // Calculate the average hue difference to all the neighbours.
+    float h = 0.0f;
+    for (const Boid& n : neighbours) {
+        const float dist = distanceBetweenBoids(boid, n);
+
+        const float h1      = boidColor.hsvHue();
+        const float h2      = n.getColor().hue();
+        const float hueDiff = shortestDistanceInWrapedSpace(h2, h1, 0.0f, 359.0f);
+        h += (hueDiff / dist);
+    }
+    h /= neighbours.size();
+
+    // Calculate a small correction to the boid hue to move it closer to the group average, with
+    // some noise.
+    const float noise  = generateRandomValue<float>(-3.0f, 3.0f) * 0.0001f;
+    float       newHue = float(boidColor.hue()) - (h * 0.005f) + noise;
+
+    // Make sure that the new hue wraps into the range [0, 359].
+    newHue = wrapValue(newHue, 0.0f, 359.0f);
+
+    // Create and return hue in new QColor object.
+    QColor ret;
+    ret.setHsv(int(newHue), boidColor.saturation(), boidColor.value());
+    return ret;
+}
+
 QVector2D calculateSeparationVector(const Boid& boid, const std::vector<Boid>& neighbours,
                                     const float minDist) {
     if (neighbours.size() == 0) {
@@ -73,16 +108,13 @@ float distanceBetweenBoids(const Boid& b1, const Boid& b2) {
 }
 
 float distanceBetweenBoids(const Boid& b1, const Boid& b2, const QRectF& bounds) {
-    const float dx1 = std::abs(b1.getPosition().x() - b2.getPosition().x());
-    const float dx2 = std::abs((bounds.right() - b1.getPosition().x()) + b2.getPosition().x());
-    const float dx3 = std::abs(b1.getPosition().x() + (bounds.right() - b2.getPosition().x()));
+    const auto p1 = b1.getPosition();
+    const auto p2 = b2.getPosition();
 
-    const float dy1 = std::abs(b1.getPosition().y() - b2.getPosition().y());
-    const float dy2 = std::abs((bounds.bottom() - b1.getPosition().y()) + b2.getPosition().y());
-    const float dy3 = std::abs(b1.getPosition().y() + (bounds.bottom() - b2.getPosition().y()));
-
-    const float dx = std::min(std::min(dx1, dx2), dx3);
-    const float dy = std::min(std::min(dy1, dy2), dy3);
+    const float dx =
+        std::abs(shortestDistanceInWrapedSpace(p1.x(), p2.x(), bounds.left(), bounds.right()));
+    const float dy =
+        std::abs(shortestDistanceInWrapedSpace(p1.y(), p2.y(), bounds.top(), bounds.bottom()));
 
     return std::sqrt(std::pow(dx, 2) + std::pow(dy, 2));
 }
@@ -118,6 +150,20 @@ std::size_t getTotalNumBoids(const std::map<BoidType, std::vector<Boid>>& boids)
 
 QVector2D scaleVector(const QVector2D& vec, const float& scalar) {
     return vec.normalized() * scalar;
+}
+
+float shortestDistanceInWrapedSpace(const float& v1, const float& v2, const float& min,
+                                    const float& max) {
+    // Standard difference
+    const float a = v2 - v1;
+
+    // Difference that is wrapped around
+    const float b = (std::min(v1, v2) - min) + (max - std::max(v1, v2));
+
+    if (std::abs(a) <= std::abs(b))
+        return a;
+
+    return b * (-a / std::abs(a));
 }
 
 void wrapBoidPosition(Boid& boid, const QRectF& rect) {

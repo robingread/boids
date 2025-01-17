@@ -1,5 +1,4 @@
 #include "config_group.h"
-#include <iostream>
 
 namespace ui {
 
