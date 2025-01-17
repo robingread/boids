@@ -64,65 +64,65 @@ void updateBoids(std::vector<Boid>& boids, const std::vector<Boid>& flock,
 };
 
 Flock::Flock() {
-    m_idCount = 0;
-    m_boidMap.clear();
-    m_cfgMap.clear();
+    idCount_ = 0;
+    boidMap_.clear();
+    cfgMap_.clear();
 
-    m_cfgMap[BoidType::BOID]     = Config();
-    m_cfgMap[BoidType::PREDATOR] = Config();
+    cfgMap_[BoidType::BOID]     = Config();
+    cfgMap_[BoidType::PREDATOR] = Config();
 
-    m_cfgMap[BoidType::BOID].neighbourhoodRadius = 80.0f;
-    m_cfgMap[BoidType::BOID].alignmentScale      = 0.1f;
-    m_cfgMap[BoidType::BOID].coheasionScale      = 0.075f;
-    m_cfgMap[BoidType::BOID].repelScale          = 0.1f;
-    m_cfgMap[BoidType::BOID].maxVelocity         = 2.0f;
-    m_cfgMap[BoidType::BOID].obstacleRepelScale  = 0.5f;
-    m_cfgMap[BoidType::BOID].predatorRepelScale  = 5.0f;
+    cfgMap_[BoidType::BOID].neighbourhoodRadius = 80.0f;
+    cfgMap_[BoidType::BOID].alignmentScale      = 0.1f;
+    cfgMap_[BoidType::BOID].coheasionScale      = 0.075f;
+    cfgMap_[BoidType::BOID].repelScale          = 0.1f;
+    cfgMap_[BoidType::BOID].maxVelocity         = 2.0f;
+    cfgMap_[BoidType::BOID].obstacleRepelScale  = 0.5f;
+    cfgMap_[BoidType::BOID].predatorRepelScale  = 5.0f;
 
-    m_cfgMap[BoidType::PREDATOR].neighbourhoodRadius = 120.0f;
-    m_cfgMap[BoidType::PREDATOR].alignmentScale      = 1.0f;
-    m_cfgMap[BoidType::PREDATOR].coheasionScale      = 1.0f;
-    m_cfgMap[BoidType::PREDATOR].repelScale          = 0.0f;
-    m_cfgMap[BoidType::PREDATOR].maxVelocity         = 1.75f;
-    m_cfgMap[BoidType::PREDATOR].obstacleRepelScale  = 1.0f;
-    m_cfgMap[BoidType::PREDATOR].predatorRepelScale  = 5.0f;
+    cfgMap_[BoidType::PREDATOR].neighbourhoodRadius = 120.0f;
+    cfgMap_[BoidType::PREDATOR].alignmentScale      = 1.0f;
+    cfgMap_[BoidType::PREDATOR].coheasionScale      = 1.0f;
+    cfgMap_[BoidType::PREDATOR].repelScale          = 0.0f;
+    cfgMap_[BoidType::PREDATOR].maxVelocity         = 1.75f;
+    cfgMap_[BoidType::PREDATOR].obstacleRepelScale  = 1.0f;
+    cfgMap_[BoidType::PREDATOR].predatorRepelScale  = 5.0f;
 }
 
 int Flock::addBoid(const float x, const float y, const BoidType type) {
-    if (!m_boidMap.contains(type)) {
-        m_boidMap[type] = std::vector<Boid>();
+    if (!boidMap_.contains(type)) {
+        boidMap_[type] = std::vector<Boid>();
     }
-    m_boidMap[type].push_back(Boid(m_idCount, x, y, type));
-    return m_idCount++;
+    boidMap_[type].push_back(Boid(idCount_, x, y, type));
+    return idCount_++;
 }
 
-void Flock::clearBoids() { m_boidMap.clear(); }
+void Flock::clearBoids() { boidMap_.clear(); }
 
 void Flock::clearBoids(const BoidType& type) {
-    if (!m_boidMap.contains(type))
+    if (!boidMap_.contains(type))
         return;
-    m_boidMap.at(type).clear();
+    boidMap_.at(type).clear();
 }
 
-std::map<BoidType, std::vector<Boid>> Flock::getBoids() const { return m_boidMap; }
+std::map<BoidType, std::vector<Boid>> Flock::getBoids() const { return boidMap_; }
 
-Config Flock::getConfig(const BoidType& type) const { return m_cfgMap.at(type); }
+Config Flock::getConfig(const BoidType& type) const { return cfgMap_.at(type); }
 
-void Flock::setConfig(const Config& cfg, const BoidType& type) { m_cfgMap[type] = cfg; }
+void Flock::setConfig(const Config& cfg, const BoidType& type) { cfgMap_[type] = cfg; }
 
-int Flock::getNumBoids() const { return boids::utils::getTotalNumBoids(m_boidMap); }
+int Flock::getNumBoids() const { return boids::utils::getTotalNumBoids(boidMap_); }
 
-QRectF Flock::getSceneBounds() const { return m_sceneBounds; }
+QRectF Flock::getSceneBounds() const { return sceneBounds_; }
 
-void Flock::setSceneBounds(const QRectF& bounds) { m_sceneBounds = bounds; }
+void Flock::setSceneBounds(const QRectF& bounds) { sceneBounds_ = bounds; }
 
 void Flock::update() {
-    updateBoids(m_boidMap[BoidType::BOID], m_boidMap[BoidType::BOID], m_boidMap[BoidType::PREDATOR],
-                m_boidMap[BoidType::OBSTACLE], m_cfgMap[BoidType::BOID], m_sceneBounds);
+    updateBoids(boidMap_[BoidType::BOID], boidMap_[BoidType::BOID], boidMap_[BoidType::PREDATOR],
+                boidMap_[BoidType::OBSTACLE], cfgMap_[BoidType::BOID], sceneBounds_);
 
-    updateBoids(m_boidMap[BoidType::PREDATOR], m_boidMap[BoidType::BOID],
-                m_boidMap[BoidType::PREDATOR], m_boidMap[BoidType::OBSTACLE],
-                m_cfgMap[BoidType::PREDATOR], m_sceneBounds);
+    updateBoids(boidMap_[BoidType::PREDATOR], boidMap_[BoidType::BOID],
+                boidMap_[BoidType::PREDATOR], boidMap_[BoidType::OBSTACLE],
+                cfgMap_[BoidType::PREDATOR], sceneBounds_);
 }
 
 }; // namespace boids

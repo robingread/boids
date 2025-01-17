@@ -78,10 +78,10 @@ class Flock {
     void update();
 
   private:
-    std::size_t                           m_idCount;
-    QRectF                                m_sceneBounds;
-    std::map<BoidType, std::vector<Boid>> m_boidMap;
-    std::map<BoidType, Config>            m_cfgMap;
+    std::size_t                           idCount_;
+    QRectF                                sceneBounds_;
+    std::map<BoidType, std::vector<Boid>> boidMap_;
+    std::map<BoidType, Config>            cfgMap_;
 };
 
 }; // namespace boids
