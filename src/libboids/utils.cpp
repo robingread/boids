@@ -120,6 +120,20 @@ QVector2D scaleVector(const QVector2D& vec, const float& scalar) {
     return vec.normalized() * scalar;
 }
 
+float shortestDistanceInWrapedSpace(const float& v1, const float& v2, const float& min,
+                                    const float& max) {
+    // Standard difference
+    const float a = v2 - v1;
+
+    // Difference that is wrapped around
+    const float b = (std::min(v1, v2) - min) + (max - std::max(v1, v2));
+
+    if (std::abs(a) <= std::abs(b))
+        return a;
+
+    return b * (-a / std::abs(a));
+}
+
 void wrapBoidPosition(Boid& boid, const QRectF& rect) {
     const float x = wrapValue(boid.getPosition().x(), rect.left(), rect.right());
     const float y = wrapValue(boid.getPosition().y(), rect.top(), rect.bottom());

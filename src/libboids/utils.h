@@ -112,6 +112,20 @@ std::size_t getTotalNumBoids(const std::map<BoidType, std::vector<Boid>>& boids)
 QVector2D scaleVector(const QVector2D& vec, const float& scalar);
 
 /**
+ * @brief Calculate the shortest distance between two points/values in a 1D wrapped space.
+ *
+ * This value is not absolute, it is signed.
+ *
+ * @param v1 First value point.
+ * @param v2 Second value point.
+ * @param min Minimum value in the wrapped space/dimension.
+ * @param max Maximum value in the wrapped space/dimension.
+ * @return Shortest distance.
+ */
+float shortestDistanceInWrapedSpace(const float& v1, const float& v2, const float& min,
+                                    const float& max);
+
+/**
  * @brief Wrap the position of a boid within a defined simulation area.
  * @param boid Boid to process.
  * @param rect Rectangle representing the simulation area.
