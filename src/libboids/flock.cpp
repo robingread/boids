@@ -57,6 +57,9 @@ void updateBoids(std::vector<Boid>& boids, const std::vector<Boid>& flock,
         utils::wrapBoidPosition(b, sceneBounds);
 
         b.setVelocity(v);
+
+        const QColor& colour = boids::utils::calculateBoidColor(b, neighbours);
+        b.setColor(colour);
     }
 };
 
