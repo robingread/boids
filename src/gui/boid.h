@@ -23,10 +23,11 @@ class Boid : public QGraphicsItem {
     void setColor(const QColor& color);
 
   protected:
-    QColor       m_colour;
-    std::size_t  m_width;
-    std::size_t  m_height;
-    QPainterPath m_path;
+    QColor       m_colour;       ///< Colour og the boid.
+    std::size_t  m_width;        ///< Width of the boid in pixels.
+    std::size_t  m_height;       ///< Height of the boid in pixels.
+    QPainterPath m_path;         ///< Path that draws the boid outline.
+    QRectF       m_boundingRect; ///< Bounding rectangle for rendering
 };
 
 /**
@@ -42,11 +43,7 @@ class Obstacle : public Boid {
      * @param radius Radius of the obstacle.
      */
     Obstacle(const QPointF& pos, const QColor& color, const float& radius);
-    QRectF boundingRect() const override;
     void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget) override;
-
-  private:
-    QRectF m_boundingRect;
 };
 
 /**
@@ -56,6 +53,13 @@ class Obstacle : public Boid {
  */
 class Predator : public Boid {
   public:
-    Predator(const QPointF& pos, const float rot, const QColor& colour);
+    /**
+     * @brief Construct a new Predator object.
+     *
+     * @param pos Position of the boid.
+     * @param rot Rotation of the boid (in degrees).
+     * @param color Colour of the boid.
+     */
+    Predator(const QPointF& pos, const float rot, const QColor& color);
     void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget) override;
 };

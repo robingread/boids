@@ -17,13 +17,13 @@ Boid::Boid(const QPointF& pos, const float rot, const QColor& colour) {
     m_path.lineTo(p2);
     m_path.lineTo(p3);
     m_path.lineTo(p1);
+
+    const qreal penWidth = 1;
+    m_boundingRect = QRectF(-(m_width * 0.5) - (penWidth / 2), -(m_height * 0.5) - (penWidth / 2),
+                            m_width + penWidth, m_height + penWidth);
 }
 
-QRectF Boid::boundingRect() const {
-    qreal penWidth = 1;
-    return QRectF(-(m_width * 0.5) - (penWidth / 2), -(m_height * 0.5) - (penWidth / 2),
-                  m_width + penWidth, m_height + penWidth);
-}
+QRectF Boid::boundingRect() const { return m_boundingRect; }
 
 void Boid::paint(QPainter* painter, const QStyleOptionGraphicsItem* /*option*/,
                  QWidget* /*widget*/) {
@@ -42,7 +42,7 @@ Obstacle::Obstacle(const QPointF& pos, const QColor& color, const float& radius)
     this->setPos(pos);
 };
 
-QRectF Obstacle::boundingRect() const { return m_boundingRect; }
+// QRectF Obstacle::boundingRect() const { return m_boundingRect; }
 
 void Obstacle::paint(QPainter* painter, const QStyleOptionGraphicsItem* /*option*/,
                      QWidget* /*widget*/) {
@@ -70,6 +70,10 @@ Predator::Predator(const QPointF& pos, const float rot, const QColor& colour)
     m_path.lineTo(p3);
     m_path.lineTo(p4);
     m_path.lineTo(p1);
+
+    const qreal penWidth = 1;
+    m_boundingRect = QRectF(-(m_width * 0.5) - (penWidth / 2), -(m_height * 0.5) - (penWidth / 2),
+                            m_width + penWidth, m_height + penWidth);
 };
 
 void Predator::paint(QPainter* painter, const QStyleOptionGraphicsItem* /*option*/,
