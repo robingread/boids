@@ -36,6 +36,14 @@ QVector2D calculateAlignmentVector(const Boid& boid, const std::vector<Boid>& ne
 QVector2D calculateCohesionVector(const Boid& boid, const std::vector<Boid>& neighbours);
 
 /**
+ * @brief Calculaet the new color of a boids given the neighbourhood.
+ *
+ * @param boid Boid to calculate the color for.
+ * @param neighbours Neighbourhood around the Boid..
+ * @return QColor New Boid color.
+ */
+QColor calculateBoidColor(const Boid& boid, const std::vector<Boid>& neighbours);
+/**
  * @brief Calculate the vector that repels a given Boids from the other boids wihtin
  * the neighbourhood to maintain a minimum distance between them.
  *

@@ -37,6 +37,41 @@ QVector2D calculateCohesionVector(const Boid& boid, const std::vector<Boid>& nei
     return ret;
 }
 
+QColor calculateBoidColor(const Boid& boid, const std::vector<Boid>& neighbours) {
+
+    const QColor& boidColor = boid.getColor();
+
+    // If there are no neighbours, return the current color.
+    if (neighbours.size() == 0) {
+        return boidColor;
+    }
+
+    // Calculate the average hue difference to all the neighbours.
+    float h = 0.0f;
+    for (const Boid& n : neighbours) {
+        const float dist = distanceBetweenBoids(boid, n);
+
+        const float h1      = boidColor.hsvHue();
+        const float h2      = n.getColor().hue();
+        const float hueDiff = shortestDistanceInWrapedSpace(h2, h1, 0.0f, 359.0f);
+        h += (hueDiff / dist);
+    }
+    h /= neighbours.size();
+
+    // Calculate a small correction to the boid hue to move it closer to the group average, with
+    // some noise.
+    const float noise  = generateRandomValue<float>(-3.0f, 3.0f) * 0.0001f;
+    float       newHue = float(boidColor.hue()) - (h * 0.005f) + noise;
+
+    // Make sure that the new hue wraps into the range [0, 359].
+    newHue = wrapValue(newHue, 0.0f, 359.0f);
+
+    // Create and return hue in new QColor object.
+    QColor ret;
+    ret.setHsv(int(newHue), boidColor.saturation(), boidColor.value());
+    return ret;
+}
+
 QVector2D calculateSeparationVector(const Boid& boid, const std::vector<Boid>& neighbours,
                                     const float minDist) {
     if (neighbours.size() == 0) {
