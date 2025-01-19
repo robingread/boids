@@ -20,7 +20,8 @@ QVector2D calculateAlignmentVector(const Boid& boid, const std::vector<Boid>& ne
     return vec;
 }
 
-QVector2D calculateCohesionVector(const Boid& boid, const std::vector<Boid>& neighbours) {
+QVector2D calculateCohesionVector(const Boid& boid, const std::vector<Boid>& neighbours,
+                                  const QRectF& bounds) {
     if (neighbours.size() == 0) {
         return QVector2D(0.0f, 0.0f);
     }
@@ -31,7 +32,8 @@ QVector2D calculateCohesionVector(const Boid& boid, const std::vector<Boid>& nei
     }
 
     vec /= float(neighbours.size());
-    QVector2D ret = vec - QVector2D(boid.getPosition());
+
+    QVector2D ret = distanceVectorBetweenPoints(boid.getPosition(), vec.toPointF(), bounds);
     ret.normalize();
     ret *= 0.25f;
     return ret;

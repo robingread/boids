@@ -32,15 +32,17 @@ QVector2D calculateAlignmentVector(const Boid& boid, const std::vector<Boid>& ne
  *
  * @param boid Boid to check calculate the cohesion vector for.
  * @param neighbours Neighbourhood around the Boid
+ * @param bounds Scene bounds of the wrapped space.
  * @return Vector towards the center of the neighbourhood.
  */
-QVector2D calculateCohesionVector(const Boid& boid, const std::vector<Boid>& neighbours);
+QVector2D calculateCohesionVector(const Boid& boid, const std::vector<Boid>& neighbours,
+                                  const QRectF& bounds);
 
 /**
  * @brief Calculaet the new color of a boids given the neighbourhood.
  *
  * @param boid Boid to calculate the color for.
- * @param neighbours Neighbourhood around the Boid..
+ * @param neighbours Neighbourhood around the Boid.
  * @return QColor New Boid color.
  */
 QColor calculateBoidColor(const Boid& boid, const std::vector<Boid>& neighbours);

@@ -3,87 +3,6 @@
 #include <gtest/gtest.h>
 #include <utils.h>
 
-struct BoidVectorData {
-    boids::Boid              boid;
-    std::vector<boids::Boid> neighbours;
-    QVector2D                expected;
-};
-
-class CalculateCohesionVectorTest : public ::testing::TestWithParam<BoidVectorData> {};
-
-TEST_P(CalculateCohesionVectorTest, test_function) {
-    const auto params = GetParam();
-    const auto res    = boids::utils::calculateCohesionVector(params.boid, params.neighbours);
-    ASSERT_EQ(params.expected, res);
-}
-
-INSTANTIATE_TEST_SUITE_P(VariousInputs, CalculateCohesionVectorTest,
-                         ::testing::Values(BoidVectorData{boids::Boid(0, 0.0, 0.0),
-                                                          std::vector<boids::Boid>(),
-                                                          QVector2D(0.0, 0.0)}));
-
-/**
- * @brief Test the cohesion velocity vector calculation for a boid with no neighbours.
- */
-TEST(libboids_utils, calculateCohesionVector_0) {
-    const boids::Boid              boid(0, 0.0, 0.0);
-    const std::vector<boids::Boid> neighbours;
-
-    const QVector2D exp(0.0, 0.0);
-    const QVector2D res = boids::utils::calculateCohesionVector(boid, neighbours);
-
-    ASSERT_EQ(exp, res);
-}
-
-/**
- * @brief Test the cohesion velocity vector calculation for a boid with only one neighbour.
- */
-TEST(libboids_utils, calculateCohesionVector_1) {
-    const boids::Boid        boid(0, 0.0, 0.0);
-    std::vector<boids::Boid> neighbours;
-    neighbours.push_back(boids::Boid(1, 1.0, 0.0));
-
-    const QVector2D res = boids::utils::calculateCohesionVector(boid, neighbours);
-
-    ASSERT_GE(res.x(), 0.0f);
-    ASSERT_FLOAT_EQ(res.y(), 0.0f);
-}
-
-/**
- * @brief Test the cohesion velocity vector calculation for a boid with two neighbours.
- */
-TEST(libboids_utils, calculateCohesionVector_2) {
-    const boids::Boid        boid(0, 0.0, 0.0);
-    std::vector<boids::Boid> neighbours;
-    neighbours.push_back(boids::Boid(1, 1.0, 0.0));
-    neighbours.push_back(boids::Boid(2, -1.0, 0.0));
-
-    const QVector2D exp(0.0, 0.0);
-    const QVector2D res = boids::utils::calculateCohesionVector(boid, neighbours);
-
-    ASSERT_FLOAT_EQ(exp.x(), res.x());
-    ASSERT_FLOAT_EQ(exp.y(), res.y());
-}
-
-/**
- * @brief Test the cohesion velocity vector calculation for a boid with three neighbours.
- */
-TEST(libboids_utils, calculateCohesionVector_3) {
-    const boids::Boid        boid(0, 0.0, 0.0);
-    std::vector<boids::Boid> neighbours;
-    neighbours.push_back(boids::Boid(1, 1.0, 1.0));
-    neighbours.push_back(boids::Boid(2, 2.0, 1.0));
-    neighbours.push_back(boids::Boid(3, 3.0, 1.0));
-
-    const QVector2D res = boids::utils::calculateCohesionVector(boid, neighbours);
-
-    ASSERT_GE(res.x(), 0.0f);
-    ASSERT_GE(res.y(), 0.0f);
-
-    ASSERT_LE(res.x(), 3.0f);
-    ASSERT_LE(res.y(), 1.0f);
-}
-
 /**
  * @brief Test that when there is neighourhood of size zero, then the alignment
  * vector is also (0.0, 0.0).
@@ -591,6 +510,93 @@ TEST(libboids_utils, clipVectorMangitude_InvalidArgs) {
 }
 
 bool isApproxEqual(double a, double b, double epsilon = 1e-6) { return std::fabs(a - b) < epsilon; }
+
+TEST_CASE("Test the calculateCohesionVector() method", "[utils]") {
+    WHEN("There are no neighbours") {
+        const boids::Boid boid(0, 0.0, 0.0);
+        const auto        neighbours = std::vector<boids::Boid>();
+        const QRectF      bounds(0.0, 0.0, 1.0, 1.0);
+        const auto        result = boids::utils::calculateCohesionVector(boid, neighbours, bounds);
+
+        THEN("The output vector should be zero") {
+            REQUIRE(result.x() == 0.0);
+            REQUIRE(result.y() == 0.0);
+        }
+    }
+    WHEN("There is one neighbour Boid") {
+        const boids::Boid boid(0, 0.0, 0.0);
+        const auto        neighbours = std::vector<boids::Boid>({boids::Boid(1, 1.0, 0.0)});
+        const QRectF      bounds(0.0, 0.0, 1.0, 1.0);
+
+        THEN("The output vector should be zero") {
+            const auto result = boids::utils::calculateCohesionVector(boid, neighbours, bounds);
+            REQUIRE(result.x() >= 0.0);
+            REQUIRE(result.y() >= 0.0);
+        }
+    }
+    WHEN("There are two nighbours") {
+        const QRectF      bounds(-1.0, -1.0, 2.0, 2.0);
+        const boids::Boid boid(0, 0.0, 0.0);
+        const auto        neighbours =
+            std::vector<boids::Boid>({boids::Boid(1, 1.0, 0.0), boids::Boid(2, -1.0, 0.0)});
+
+        THEN("The output vector shold be exactly zero") {
+            const auto result = boids::utils::calculateCohesionVector(boid, neighbours, bounds);
+            REQUIRE(result.x() == 0.0);
+            REQUIRE(result.y() == 0.0);
+        }
+    }
+    WHEN("There are three neighbours") {
+        const QRectF      bounds(-4.0, -4.0, 8.0, 8.0);
+        const boids::Boid boid(0, 0.0, 0.0);
+        const auto        neighbours = std::vector<boids::Boid>(
+            {boids::Boid(1, 1.0, 1.0), boids::Boid(2, 2.0, 1.0), boids::Boid(3, 3.0, 1.0)});
+
+        const auto result = boids::utils::calculateCohesionVector(boid, neighbours, bounds);
+
+        THEN("The output vector x should be within set bounds") {
+            REQUIRE(result.x() >= 0.0);
+            REQUIRE(result.x() <= 3.0);
+            REQUIRE(result.y() >= 0.0);
+            REQUIRE(result.y() <= 1.0);
+        }
+    }
+    WHEN("There is one neighbour, wrapped around the X axis") {
+        const QRectF      bounds(0.0, 0.0, 1.0, 1.0);
+        const boids::Boid boid(0, 0.3, 0.0);
+        const auto        neighbours = std::vector<boids::Boid>({boids::Boid(1.0, 0.95, 0.0)});
+        const auto        result = boids::utils::calculateCohesionVector(boid, neighbours, bounds);
+
+        THEN("The vector should point backwards in the X axis") {
+            REQUIRE(result.x() < boid.getPosition().x());
+        }
+        THEN("The vector should be zero in the Y axis") { REQUIRE(result.y() == 0.0); }
+    }
+    WHEN("There is one neighbour, wrapped around the Y axis") {
+        const QRectF      bounds(0.0, 0.0, 1.0, 1.0);
+        const boids::Boid boid(0, 0.1, 0.3);
+        const auto        neighbours = std::vector<boids::Boid>({boids::Boid(1.0, 0.1, 0.95)});
+        const auto        result = boids::utils::calculateCohesionVector(boid, neighbours, bounds);
+
+        THEN("The vector should be zero in the X axis") { REQUIRE(result.x() == 0.0); }
+        THEN("The vector should be negative in the Y axis") {
+            REQUIRE(result.y() < boid.getPosition().y());
+        }
+    }
+    WHEN("There is one neighbour wrapped in both the X and Y axis") {
+        const QRectF      bounds(0.0, 0.0, 1.0, 1.0);
+        const boids::Boid boid(0, 0.3, 0.3);
+        const auto        neighbours = std::vector<boids::Boid>({boids::Boid(1.0, 0.95, 0.95)});
+        const auto        result = boids::utils::calculateCohesionVector(boid, neighbours, bounds);
+
+        THEN("The vector should be negative in the X axis") {
+            REQUIRE(result.x() < boid.getPosition().x());
+        }
+        THEN("The vector should be negative in the Y axis") {
+            REQUIRE(result.y() < boid.getPosition().y());
+        }
+    }
+}
 
 TEST_CASE("Test the distanceVectorBetweenPoint() method", "[utils]") {
     const QRectF bounds(0.0, 0.0, 1.0, 1.0);

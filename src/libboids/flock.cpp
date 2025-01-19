@@ -28,7 +28,8 @@ void updateBoids(std::vector<Boid>& boids, const std::vector<Boid>& flock,
 
         const QVector2D alignVector = boids::utils::calculateAlignmentVector(b, neighbours);
 
-        const QVector2D cohesionVector = boids::utils::calculateCohesionVector(b, neighbours);
+        const QVector2D cohesionVector =
+            boids::utils::calculateCohesionVector(b, neighbours, sceneBounds);
 
         const QVector2D repelVec =
             boids::utils::calculateSeparationVector(b, neighbours, cfg.repelMinDist);
