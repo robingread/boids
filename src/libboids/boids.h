@@ -102,11 +102,11 @@ class Boid {
     void setVelocity(const QVector2D& vel);
 
   private:
-    uint16_t  m_id;
-    QColor    m_color;
-    QPointF   m_position;
-    QVector2D m_velocity;
-    BoidType  m_type;
+    uint16_t  id_;
+    QColor    color_;
+    QPointF   position_;
+    QVector2D velocity_;
+    BoidType  type_;
 };
 
 }; // namespace boids
