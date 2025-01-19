@@ -2,6 +2,7 @@
 
 #include "boids.h"
 #include <QRectF>
+#include <QVector2D>
 #include <random>
 #include <vector>
 
@@ -76,6 +77,18 @@ float distanceBetweenBoids(const Boid& b1, const Boid& b2);
  * @return Euclidean distance.
  */
 float distanceBetweenBoids(const Boid& b1, const Boid& b2, const QRectF& bounds);
+
+/**
+ * @brief Calculate the vector between two points.
+ *
+ * The returned vector will be form p1 -> p2 nad takes into account the wrapped space.
+ *
+ * @param p1 First point.
+ * @param p2 Second point.
+ * @param bounds Scene bounds.
+ * @return Dispacement vector.
+ */
+QVector2D distanceVectorBetweenPoints(const QPointF& p1, const QPointF& bp2, const QRectF& bounds);
 
 template <typename T> T generateRandomValue(const T minValue, const T maxValue) {
     std::random_device               rd;

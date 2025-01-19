@@ -119,6 +119,12 @@ float distanceBetweenBoids(const Boid& b1, const Boid& b2, const QRectF& bounds)
     return std::sqrt(std::pow(dx, 2) + std::pow(dy, 2));
 }
 
+QVector2D distanceVectorBetweenPoints(const QPointF& p1, const QPointF& p2, const QRectF& bounds) {
+    const float dx = shortestDistanceInWrapedSpace(p1.x(), p2.x(), bounds.left(), bounds.right());
+    const float dy = shortestDistanceInWrapedSpace(p1.y(), p2.y(), bounds.top(), bounds.bottom());
+    return QVector2D(dx, dy);
+}
+
 QVector2D generateRandomVelocityVector(const float maxMagnitude) {
     const float dx = generateRandomValue<float>(-1.0f, 1.0f);
     const float dy = generateRandomValue<float>(-1.0f, 1.0f);

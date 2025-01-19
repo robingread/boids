@@ -1,4 +1,5 @@
 #include <boids.h>
+#include <catch2/catch.hpp>
 #include <gtest/gtest.h>
 #include <utils.h>
 
@@ -587,4 +588,23 @@ TEST(libboids_utils, clipVectorMangitude_InvalidArgs) {
     const float maxMag = 1.0f;
     QVector2D   vec(10.0f, 0.0f);
     ASSERT_THROW(boids::utils::clipVectorMangitude(vec, minMag, maxMag), std::invalid_argument);
+}
+
+bool isApproxEqual(double a, double b, double epsilon = 1e-6) { return std::fabs(a - b) < epsilon; }
+
+TEST_CASE("Test the distanceVectorBetweenPoint() method", "[utils]") {
+    const QRectF bounds(0.0, 0.0, 1.0, 1.0);
+
+    auto [p1, p2, expected] =
+        GENERATE(std::make_tuple(QPointF(0.0, 0.0), QPointF(0.0, 0.0), QVector2D(0.0, 0.0)),
+                 std::make_tuple(QPointF(0.0, 0.0), QPointF(0.1, 0.1), QVector2D(0.1, 0.1)),
+                 std::make_tuple(QPointF(0.1, 0.0), QPointF(0.9, 0.0), QVector2D(-0.2, 0.0)),
+                 std::make_tuple(QPointF(0.0, 0.1), QPointF(0.0, 0.9), QVector2D(0.0, -0.2)),
+                 std::make_tuple(QPointF(0.9, 0.0), QPointF(0.1, 0.0), QVector2D(0.2, 0.0)),
+                 std::make_tuple(QPointF(0.0, 0.9), QPointF(0.0, 0.1), QVector2D(0.0, 0.2)));
+
+    const auto result = boids::utils::distanceVectorBetweenPoints(p1, p2, bounds);
+
+    REQUIRE(isApproxEqual(expected.x(), result.x()));
+    REQUIRE(isApproxEqual(expected.y(), result.y()));
 }
