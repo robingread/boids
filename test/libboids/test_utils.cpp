@@ -3,262 +3,6 @@
 #include <gtest/gtest.h>
 #include <utils.h>
 
-/**
- * @brief Test that when there is neighourhood of size zero, then the alignment
- * vector is also (0.0, 0.0).
- */
-TEST(libboids_utils, calculateAlignmentVector_0) {
-    const boids::Boid              boid(0, 0.0, 0.0);
-    const std::vector<boids::Boid> neighbours;
-
-    const QVector2D exp(0.0, 0.0);
-    const QVector2D res = boids::utils::calculateAlignmentVector(boid, neighbours);
-
-    ASSERT_EQ(exp, res);
-}
-
-/**
- * @brief Test that when there is neighourhood of size one, then the alignment
- * vector is not zero.
- */
-TEST(libboids_utils, calculateAlignmentVector_1) {
-    const boids::Boid        boid(0, 0.0, 0.0);
-    std::vector<boids::Boid> neighbours;
-    neighbours.push_back(boids::Boid(1, 1.0, 1.0, 1.0, 0.0));
-
-    const QVector2D exp(1.0, 0.0);
-    const QVector2D res = boids::utils::calculateAlignmentVector(boid, neighbours);
-
-    ASSERT_GE(res.x(), 0.0f);
-    ASSERT_GE(res.y(), 0.0f);
-
-    ASSERT_LE(res.x(), 1.0f);
-    ASSERT_LE(res.y(), 1.0f);
-}
-
-/**
- * @brief Test that when there is neighourhood of size two, then the alignment
- * vector is not zero.
- */
-TEST(libboids_utils, calculateAlignmentVector_2) {
-    const boids::Boid        boid(0, 0.0, 0.0);
-    std::vector<boids::Boid> neighbours;
-    neighbours.push_back(boids::Boid(1, 1.0, 1.0, 1.0, 1.0));
-    neighbours.push_back(boids::Boid(2, 1.0, 1.0, -1.0, 1.0));
-
-    const QVector2D exp(0.0, 1.0);
-    const QVector2D res = boids::utils::calculateAlignmentVector(boid, neighbours);
-
-    ASSERT_FLOAT_EQ(exp.x(), res.x());
-    ASSERT_FLOAT_EQ(exp.y(), res.y());
-}
-
-/**
- * @brief Test that a boid with a single neightbour, outside of the min distance
- * has a force vector length that IS zero.
- */
-TEST(libboids_utils, calculateSeparationVector_0) {
-    const float                    minDist = 0.5f;
-    const boids::Boid              boid(0, 0.0f, 0.0f);
-    const std::vector<boids::Boid> neighbours;
-
-    const QVector2D res = boids::utils::calculateSeparationVector(boid, neighbours, minDist);
-    const QVector2D exp(0.0f, 0.0f);
-
-    ASSERT_EQ(exp, res);
-}
-
-/*
- * Test that a boid with a single neightbour, outside of the min distance
- * has a force vector length that IS zero.
- */
-TEST(libboids_utils, calculateSeparationVector_1) {
-    const float              minDist = 0.5f;
-    const boids::Boid        boid(0, 0.0f, 0.0f);
-    std::vector<boids::Boid> neighbours;
-    neighbours.push_back(boids::Boid(1, 1.0f, 0.0f));
-
-    const QVector2D res = boids::utils::calculateSeparationVector(boid, neighbours, minDist);
-    const QVector2D exp(0.0f, 0.0f);
-
-    ASSERT_FLOAT_EQ(exp.x(), res.x());
-    ASSERT_FLOAT_EQ(exp.y(), res.y());
-}
-
-/*
- * Test that a boid with a single neightbour, within of the min distance
- * has a force vector length that IS NOT zero.
- */
-TEST(libboids_utils, calculateSeparationVector_2) {
-    const float              minDist = 1.0f;
-    const boids::Boid        boid(0, 1.0f, 0.0f);
-    std::vector<boids::Boid> neighbours;
-    neighbours.push_back(boids::Boid(1, 1.0f, 0.1f));
-
-    const QVector2D res = boids::utils::calculateSeparationVector(boid, neighbours, minDist);
-
-    ASSERT_TRUE(res.length() > 0.0f);
-}
-
-/*
- * Test that a boid with a single neightbour, at exactly the same point
- * has a force vector magnitude equal to 1.0.
- */
-TEST(libboids_utils, calculateSeparationVector_3) {
-    const float              minDist = 1.0f;
-    const boids::Boid        boid(0, 0.0f, 0.0f);
-    std::vector<boids::Boid> neighbours;
-    neighbours.push_back(boids::Boid(1, 0.0f, 0.0f));
-
-    const QVector2D res = boids::utils::calculateSeparationVector(boid, neighbours, minDist);
-
-    // ASSERT_TRUE(res.length() <= 1.0f);
-    // ASSERT_TRUE(res.length() >= 0.95f);
-
-    ASSERT_LE(res.length(), 1.0f);
-    ASSERT_GE(res.length(), 0.95f);
-    std::cout << "Res length: " << res.length() << std::endl;
-}
-
-/*
- * Test that a boid with a neighbour either side results in a separation vector of
- * length zero because the forces from the neighbours cancel each other out.
- */
-TEST(libboids_utils, calculateSeparationVector_4) {
-    const float              minDist = 1.0f;
-    const boids::Boid        boid(0, 0.0f, 0.0f);
-    std::vector<boids::Boid> neighbours;
-    neighbours.push_back(boids::Boid(1, 0.5f, 0.0f));
-    neighbours.push_back(boids::Boid(2, -0.5f, 0.0f));
-
-    const QVector2D res = boids::utils::calculateSeparationVector(boid, neighbours, minDist);
-
-    ASSERT_TRUE(res.length() < 0.05f);
-    ASSERT_TRUE(res.length() >= 0.0f);
-}
-
-/*
- * Test that a boid with three neighbours, two either side and one behind
- * results in a forward pointing separation vector.
- */
-TEST(libboids_utils, calculateSeparationVector_5) {
-    const float              minDist = 2.0f;
-    const boids::Boid        boid(0, 0.0f, 0.0f);
-    std::vector<boids::Boid> neighbours;
-    neighbours.push_back(boids::Boid(1, -0.5f, 0.0f));
-    neighbours.push_back(boids::Boid(2, 0.0f, 0.5f));
-    neighbours.push_back(boids::Boid(3, 0.0f, -1.0f));
-
-    const QVector2D res = boids::utils::calculateSeparationVector(boid, neighbours, minDist);
-    const QVector2D exp(0.5f / 3.0f, 0.0f);
-
-    ASSERT_GE(res.x(), 0.0f);
-    ASSERT_GE(res.y(), 0.0f);
-}
-
-/*
- * Test that a boid with four neighbours all around results in a separation vector of
- * length zero because the forces from the neighbours cancel each other out.
- */
-TEST(libboids_utils, calculateSeparationVector_6) {
-    const float              minDist = 2.0f;
-    const boids::Boid        boid(0, 0.0f, 0.0f);
-    std::vector<boids::Boid> neighbours;
-    neighbours.push_back(boids::Boid(1, 1.0f, 0.0f));
-    neighbours.push_back(boids::Boid(2, 0.0f, 1.0f));
-    neighbours.push_back(boids::Boid(3, 0.0f, -1.0f));
-    neighbours.push_back(boids::Boid(4, -1.0f, 0.0f));
-
-    const QVector2D res = boids::utils::calculateSeparationVector(boid, neighbours, minDist);
-    const QVector2D exp(0.0f, 0.0f);
-
-    EXPECT_NEAR(exp.x(), res.x(), 0.01f);
-    EXPECT_NEAR(exp.y(), res.y(), 0.01f);
-}
-
-TEST(libboids_utils, distanceBetweenBoids_1) {
-    const boids::Boid b1(0, 0.0, 0.0);
-    const boids::Boid b2(1, 1.0, 0.0);
-
-    const float res = boids::utils::distanceBetweenBoids(b1, b2);
-    const float exp = 1.0f;
-
-    ASSERT_FLOAT_EQ(exp, res);
-}
-
-TEST(libboids_utils, distanceBetweenBoids_2) {
-    const boids::Boid b1(0, 1.0, 0.0);
-    const boids::Boid b2(1, 1.0, -5.0);
-
-    const float res = boids::utils::distanceBetweenBoids(b1, b2);
-    const float exp = 5.0f;
-
-    ASSERT_FLOAT_EQ(exp, res);
-}
-
-struct BoidDistanceData {
-    QRectF      bounds;
-    boids::Boid b1;
-    boids::Boid b2;
-    float       expected;
-};
-
-class DistanceBetweenBoidsTest : public ::testing::TestWithParam<BoidDistanceData> {};
-
-TEST_P(DistanceBetweenBoidsTest, test) {
-    const auto  params = GetParam();
-    const float res    = boids::utils::distanceBetweenBoids(params.b1, params.b2, params.bounds);
-    ASSERT_FLOAT_EQ(params.expected, res);
-}
-
-INSTANTIATE_TEST_SUITE_P(
-    utils, DistanceBetweenBoidsTest,
-    ::testing::Values(BoidDistanceData{QRectF(0.0f, 0.0f, 20.0f, 10.0f),
-                                       boids::Boid(0, 19.0f, 1.0f), boids::Boid(1, 1.0f, 1.0f),
-                                       2.0f},
-                      BoidDistanceData{QRectF(0.0f, 0.0f, 20.0f, 10.0f), boids::Boid(0, 1.0f, 2.0f),
-                                       boids::Boid(1, 1.0f, 9.0f), 3.0f},
-                      BoidDistanceData{QRectF(0.0f, 0.0f, 20.0f, 10.0f), boids::Boid(0, 1.0f, 4.0f),
-                                       boids::Boid(1, 1.0f, 5.0f), 1.0f}));
-
-// Float Test Fixture
-class GenerateRandomValueFloatTest : public ::testing::TestWithParam<std::tuple<float, float>> {};
-
-TEST_P(GenerateRandomValueFloatTest, GeneratesValueInRange) {
-    float a   = std::get<0>(GetParam());
-    float b   = std::get<1>(GetParam());
-    float res = boids::utils::generateRandomValue<float>(a, b);
-
-    ASSERT_TRUE(res > a);
-    ASSERT_TRUE(res <= b);
-}
-
-INSTANTIATE_TEST_SUITE_P(FloatRanges, GenerateRandomValueFloatTest,
-                         ::testing::Values(std::make_tuple(0.0f, 1.0f),
-                                           std::make_tuple(0.25f, 0.5f),
-                                           std::make_tuple(-1.5f, -1.0f)));
-
-// Int Test Fixture
-class GenerateRandomValueIntTest
-    : public ::testing::TestWithParam<std::tuple<int, int, std::size_t>> {};
-
-TEST_P(GenerateRandomValueIntTest, GeneratesValueInRange) {
-    int         a          = std::get<0>(GetParam());
-    int         b          = std::get<1>(GetParam());
-    std::size_t iterations = std::get<2>(GetParam());
-
-    for (std::size_t i = 0; i < iterations; ++i) {
-        int res = boids::utils::generateRandomValue<int>(a, b);
-        ASSERT_GE(res, a);
-        ASSERT_LE(res, b);
-    }
-}
-
-INSTANTIATE_TEST_SUITE_P(IntRanges, GenerateRandomValueIntTest,
-                         ::testing::Values(std::make_tuple(0, 10, 100),
-                                           std::make_tuple(-10, 0, 100),
-                                           std::make_tuple(0, 1, 100)));
-
 TEST(libboids_utils, generateRandomVelocityVector_1) {
     for (std::size_t i = 0; i < 100; ++i) {
         const float     maxVel = boids::utils::generateRandomValue<float>(1.0f, 10.0f);
@@ -266,100 +10,6 @@ TEST(libboids_utils, generateRandomVelocityVector_1) {
         ASSERT_TRUE(res.length() >= 0.0f);
         ASSERT_TRUE(res.length() <= maxVel);
     }
-}
-
-TEST(libboids_utils, getBoidNeighbourhood_1) {
-    const boids::Boid boid(0, 0.0f, 0.0f);
-    const QRectF      bounds(0.0f, 0.0f, 10.0f, 10.0f);
-    const float       minDist = 1.5f;
-
-    std::vector<boids::Boid> flock;
-    flock.push_back(boids::Boid(1, 1.0f, 0.0f));
-    flock.push_back(boids::Boid(2, 0.0f, 1.0f));
-    flock.push_back(boids::Boid(3, 2.0f, 0.0f));
-
-    std::vector<boids::Boid> neighbours =
-        boids::utils::getBoidNeighbourhood(boid, flock, minDist, bounds);
-
-    ASSERT_EQ(neighbours.size(), 2);
-    ASSERT_EQ(neighbours.at(0).getId(), 1);
-    ASSERT_EQ(neighbours.at(1).getId(), 2);
-}
-
-TEST(libboids_utils, getBoidNeighbourhood_2) {
-    const boids::Boid boid(0, 0.0f, 0.0f);
-    const QRectF      bounds(0.0f, 0.0f, 10.0f, 10.0f);
-    const float       minDist = 1.5f;
-
-    std::vector<boids::Boid> flock;
-    flock.push_back(boid);
-    flock.push_back(boids::Boid(1, 1.0f, 0.0f));
-    flock.push_back(boids::Boid(2, 0.0f, 1.0f));
-    flock.push_back(boids::Boid(3, 2.0f, 0.0f));
-
-    std::vector<boids::Boid> neighbours =
-        boids::utils::getBoidNeighbourhood(boid, flock, minDist, bounds);
-
-    ASSERT_EQ(neighbours.size(), 2);
-    ASSERT_EQ(neighbours.at(0).getId(), 1);
-    ASSERT_EQ(neighbours.at(1).getId(), 2);
-}
-
-/**
- * @brief Test the boids::utils::getBoidNeighbourhood() method where some of the boids span across
- * the scene boundary. This method tests that the scene is wrapped correctly both vertically and
- * horizontally.
- *
- */
-TEST(libboids_utils, getBoidNeighbourhood_checkSceneWrapping) {
-    const boids::Boid boid0(0, 0.1f, 0.1f);
-    const boids::Boid boid1(1, 0.9f, 0.1f);
-    const boids::Boid boid2(2, 0.1f, 0.9f);
-    const boids::Boid boid3(3, 0.9f, 0.9f);
-    const boids::Boid boid4(4, 0.5f, 0.5f); // This boid should not be part of the neighbourhood.
-    const QRectF      bounds(0.0f, 0.0f, 1.0f, 1.0f);
-    const float       minDist = 0.4;
-
-    std::vector<boids::Boid> flock;
-    flock.push_back(boid0);
-    flock.push_back(boid1);
-    flock.push_back(boid2);
-    flock.push_back(boid3);
-    flock.push_back(boid4);
-
-    std::vector<boids::Boid> neighbours =
-        boids::utils::getBoidNeighbourhood(boid0, flock, minDist, bounds);
-
-    ASSERT_EQ(neighbours.size(), 3);
-    ASSERT_EQ(neighbours.at(0).getId(), 1);
-    ASSERT_EQ(neighbours.at(1).getId(), 2);
-    ASSERT_EQ(neighbours.at(2).getId(), 3);
-}
-
-/**
- * @brief Test the getTotalNumBoids() method in the boids::utils namespace to check that
- * it returns the correct number of Boids in the input std::map. In this test, the input
- * map is empty.
- */
-TEST(libboids_utils, getTotalNumBoids_0) {
-    std::map<boids::BoidType, std::vector<boids::Boid>> boids = {};
-    const std::size_t                                   res = boids::utils::getTotalNumBoids(boids);
-    const std::size_t                                   exp = 0;
-    ASSERT_EQ(res, exp);
-}
-
-/**
- * @brief Test the getTotalNumBoids() method in the boids::utils namespace to check that
- * it returns the correct number of Boids in the input std::map.
- */
-TEST(libboids_utils, getTotalNumBoids_6) {
-    std::map<boids::BoidType, std::vector<boids::Boid>> boids;
-    boids[boids::BoidType::BOID]     = {boids::Boid(1, 1.0f, 2.0f), boids::Boid(2, 1.0f, 2.0f)};
-    boids[boids::BoidType::OBSTACLE] = {boids::Boid(3, 1.0f, 2.0f), boids::Boid(4, 1.0f, 2.0f)};
-    boids[boids::BoidType::PREDATOR] = {boids::Boid(5, 1.0f, 2.0f), boids::Boid(6, 1.0f, 2.0f)};
-    const std::size_t res            = boids::utils::getTotalNumBoids(boids);
-    const std::size_t exp            = 6;
-    ASSERT_EQ(res, exp);
 }
 
 /**
@@ -459,57 +109,47 @@ INSTANTIATE_TEST_SUITE_P(utils, WrapValueTest,
                                            WrapValueData{-0.1f, 0.0f, 1.0f, 0.9f},
                                            WrapValueData{0.0f, 0.0f, 1.0f, 0.0f}));
 
-/**
- * @brief Test that the clipVectorMagnitude() method correctly clips a vector
- * whose length is lower than the minimum value.
- */
-TEST(libboids_utils, clipVectorMangitude_UnderMin) {
-    const float     minMag = 0.2f;
-    const float     maxMag = 5.0f;
-    QVector2D       vec(-0.1f, 0.0f);
-    const QVector2D exp(-0.2f, 0.0f);
-    boids::utils::clipVectorMangitude(vec, minMag, maxMag);
-    ASSERT_EQ(vec, exp);
-}
-
-/**
- * @brief Test that the clipVectorMagnitude() method correctly clips a vector
- * whose length is greater than the maximum value.
- */
-TEST(libboids_utils, clipVectorMangitude_OverMax) {
-    const float     minMag = 0.2f;
-    const float     maxMag = 5.0f;
-    const QVector2D exp(5.0f, 0.0f);
-    QVector2D       vec(10.0f, 0.0f);
-    boids::utils::clipVectorMangitude(vec, minMag, maxMag);
-    ASSERT_EQ(vec, exp);
-}
-
-/**
- * @brief Test that the clipVectorMagnitude() method correctly clips a vector
- * whose length is less than the maximum value.
- */
-TEST(libboids_utils, clipVectorMangitude_UnderMax) {
-    const float     minMag = 0.2f;
-    const float     maxMag = 50.0f;
-    const QVector2D exp(10.0f, 0.0f);
-    QVector2D       vec(10.0f, 0.0f);
-    boids::utils::clipVectorMangitude(vec, minMag, maxMag);
-    ASSERT_EQ(vec, exp);
-}
-
-/**
- * @brief Test that the clipVectorMagnitude() method throws an exception if the min and max
- * magnitude values are the wrong way around.
- */
-TEST(libboids_utils, clipVectorMangitude_InvalidArgs) {
-    const float minMag = 2.0f;
-    const float maxMag = 1.0f;
-    QVector2D   vec(10.0f, 0.0f);
-    ASSERT_THROW(boids::utils::clipVectorMangitude(vec, minMag, maxMag), std::invalid_argument);
-}
-
 bool isApproxEqual(double a, double b, double epsilon = 1e-6) { return std::fabs(a - b) < epsilon; }
+
+TEST_CASE("Test the calculateAlignmentVector() method", "[utils]") {
+    WHEN("There are no neighbours") {
+        const boids::Boid              boid(0, 0.0, 0.0);
+        const std::vector<boids::Boid> neighbours;
+
+        const QVector2D exp(0.0, 0.0);
+        const QVector2D res = boids::utils::calculateAlignmentVector(boid, neighbours);
+
+        THEN("The alignment vector should be zero") { REQUIRE(exp == res); }
+    }
+    WHEN("The neighbourhood is of size one") {
+        const boids::Boid        boid(0, 0.0, 0.0);
+        std::vector<boids::Boid> neighbours;
+        neighbours.push_back(boids::Boid(1, 1.0, 1.0, 1.0, 0.0));
+
+        const QVector2D res = boids::utils::calculateAlignmentVector(boid, neighbours);
+
+        THEN("The resulting vector should be greater than 0.0") {
+            REQUIRE(res.x() >= 0.0);
+            REQUIRE(res.y() >= 0.0);
+        }
+
+        THEN("The resulting vector should be less than 1.0") {
+            REQUIRE(res.x() <= 1.0f);
+            REQUIRE(res.y() <= 1.0f);
+        }
+    }
+    WHEN("The neighbourhood size is two") {
+        const boids::Boid        boid(0, 0.0, 0.0);
+        std::vector<boids::Boid> neighbours;
+        neighbours.push_back(boids::Boid(1, 1.0, 1.0, 1.0, 1.0));
+        neighbours.push_back(boids::Boid(2, 1.0, 1.0, -1.0, 1.0));
+
+        const QVector2D exp(0.0, 1.0);
+        const QVector2D res = boids::utils::calculateAlignmentVector(boid, neighbours);
+
+        THEN("The alignment vector should be straight forward") { REQUIRE(exp == res); }
+    }
+}
 
 TEST_CASE("Test the calculateCohesionVector() method", "[utils]") {
     WHEN("There are no neighbours") {
@@ -598,6 +238,193 @@ TEST_CASE("Test the calculateCohesionVector() method", "[utils]") {
     }
 }
 
+TEST_CASE("Test the calculateSeparationVector() method", "[utils]") {
+    WHEN("A boid with a single neighbour outside the main radius") {
+        const QRectF                   bounds(0.0, 0.0, 1.0, 1.0);
+        const float                    minDist = 0.5f;
+        const boids::Boid              boid(0, 0.0f, 0.0f);
+        const std::vector<boids::Boid> neighbours;
+
+        const QVector2D result =
+            boids::utils::calculateSeparationVector(boid, neighbours, minDist, bounds);
+
+        THEN("The result vector should be (0.0, 0.0)") {
+            REQUIRE(result.x() == 0.0);
+            REQUIRE(result.y() == 0.0);
+        }
+    }
+    WHEN("A boid with a different single neighbour outside the main radius") {
+        const QRectF             bounds(0.0, 0.0, 2.0, 2.0);
+        const float              minDist = 0.5f;
+        const boids::Boid        boid(0, 0.0f, 0.0f);
+        std::vector<boids::Boid> neighbours;
+        neighbours.push_back(boids::Boid(1, 1.0f, 0.0f));
+
+        const QVector2D result =
+            boids::utils::calculateSeparationVector(boid, neighbours, minDist, bounds);
+
+        THEN("The result vector should be (0.0, 0.0)") {
+            REQUIRE(result.x() == 0.0);
+            REQUIRE(result.y() == 0.0);
+        }
+    }
+    WHEN("A boid with a single neighbour within the minimum radius") {
+        const QRectF             bounds(0.0, 0.0, 1.0, 1.0);
+        const float              minDist = 0.5f;
+        const boids::Boid        boid(0, 1.0f, 0.0f);
+        std::vector<boids::Boid> neighbours = {boids::Boid(1, 1.0f, 0.1f)};
+
+        const QVector2D result =
+            boids::utils::calculateSeparationVector(boid, neighbours, minDist, bounds);
+
+        THEN("The lenght of the vector should be greater than zero") {
+            REQUIRE(result.length() > 0.0);
+        }
+    }
+    WHEN("Test that a boid with a single neightbour, at exactly the same point has a force vector "
+         "magnitude equal to 1.0.") {
+        const QRectF             bounds(0.0, 0.0, 1.0, 1.0);
+        const float              minDist = 1.0f;
+        const boids::Boid        boid(0, 0.0f, 0.0f);
+        std::vector<boids::Boid> neighbours = {boids::Boid(1, 0.0f, 0.0f)};
+
+        const QVector2D result =
+            boids::utils::calculateSeparationVector(boid, neighbours, minDist, bounds);
+
+        THEN("The result vector should be equal to 1.0") { REQUIRE(result.length() == 1.0f); }
+    }
+    WHEN("Test that a boid with a neighbour either side results in a separation vector of length "
+         "zero because the forces from the neighbours cancel each other out.") {
+        const QRectF             bounds(0.0, 0.0, 1.0, 1.0);
+        const float              minDist = 1.0f;
+        const boids::Boid        boid(0, 0.0f, 0.0f);
+        std::vector<boids::Boid> neighbours;
+        neighbours.push_back(boids::Boid(1, 0.5f, 0.0f));
+        neighbours.push_back(boids::Boid(2, -0.5f, 0.0f));
+
+        const QVector2D result =
+            boids::utils::calculateSeparationVector(boid, neighbours, minDist, bounds);
+
+        THEN("The result vector should be nearly 0.0") {
+            REQUIRE(result.length() <= 0.05f);
+            REQUIRE(result.length() >= 0.0f);
+        }
+    }
+    WHEN("Test that a boid with three neighbours, two either side and one behind results in a "
+         "forward pointing separation vector.") {
+        const QRectF             bounds(-3.0, -3.0, 6.0, 6.0);
+        const float              minDist = 2.0f;
+        const boids::Boid        boid(0, 0.0f, 0.0f);
+        std::vector<boids::Boid> neighbours = {
+            boids::Boid(1, -0.5f, 0.0f), boids::Boid(2, 0.0f, 0.5f), boids::Boid(3, 0.0f, -1.0f)};
+
+        const QVector2D res =
+            boids::utils::calculateSeparationVector(boid, neighbours, minDist, bounds);
+
+        THEN("The resulting vector should be (0.0, 0.0)") {
+            REQUIRE(res.x() >= 0.0f);
+            REQUIRE(res.y() >= 0.0f);
+        }
+    }
+    WHEN("Test that a boid with four neighbours all around results in a separation vector of "
+         "length zero because the forces from the neighbours cancel each other out.") {
+        const QRectF             bounds(-5.0, 5.0, 10.0, 10.0);
+        const float              minDist = 2.0f;
+        const boids::Boid        boid(0, 0.0f, 0.0f);
+        std::vector<boids::Boid> neighbours = {
+            boids::Boid(1, 1.0f, 0.0f), boids::Boid(2, 0.0f, 1.0f), boids::Boid(3, 0.0f, -1.0f),
+            boids::Boid(4, -1.0f, 0.0f)};
+
+        const QVector2D res =
+            boids::utils::calculateSeparationVector(boid, neighbours, minDist, bounds);
+
+        THEN("") {
+            REQUIRE(isApproxEqual(res.x(), 0.0));
+            REQUIRE(isApproxEqual(res.y(), 0.0));
+        }
+    }
+}
+
+TEST_CASE("Test the clipVectorMagnitude() method", "[utils]") {
+    WHEN("The vector length is within the allowed bounds") {
+        const float minMag = 0.2f;
+        const float maxMag = 5.0f;
+        QVector2D   vec(-0.1f, 0.0f);
+        boids::utils::clipVectorMangitude(vec, minMag, maxMag);
+
+        THEN("The clipped vector X elemnt should be -0.2") { REQUIRE(vec.x() == -0.2f); }
+        THEN("The clipped vector Y elemnt should be 0.0") { REQUIRE(vec.y() == 0.0f); }
+    }
+    WHEN("The vector length is under the maximum value") {
+        const float     minMag = 0.2f;
+        const float     maxMag = 50.0f;
+        const QVector2D exp(10.0f, 0.0f);
+        QVector2D       vec(10.0f, 0.0f);
+        boids::utils::clipVectorMangitude(vec, minMag, maxMag);
+
+        THEN("The clipped vector X elemnt should be 10.0") { REQUIRE(vec.x() == 10.0f); }
+        THEN("The clipped vector Y elemnt should be 0.0") { REQUIRE(vec.y() == 0.0f); }
+    }
+    WHEN("The vector length is over the maximum value") {
+        const float minMag = 0.2f;
+        const float maxMag = 5.0f;
+        QVector2D   vec(10.0f, 0.0f);
+        boids::utils::clipVectorMangitude(vec, minMag, maxMag);
+
+        THEN("The clipped vector X elemnt should be 5.0") { REQUIRE(vec.x() == 5.0f); }
+        THEN("The clipped vector Y elemnt should be 0.0") { REQUIRE(vec.y() == 0.0f); }
+    }
+    WHEN("Calling the method when the min/max arguments are mixed up") {
+        const float minMag = 2.0f;
+        const float maxMag = 1.0f;
+        QVector2D   vec(10.0f, 0.0f);
+
+        THEN("An expection should be thrown") {
+            REQUIRE_THROWS(boids::utils::clipVectorMangitude(vec, minMag, maxMag));
+        }
+    }
+}
+
+TEST_CASE("Test the distanceBetweenBoids() method", "[utils]") {
+    WHEN("One boid is infront of the other") {
+        const boids::Boid b1(0, 0.0, 0.0);
+        const boids::Boid b2(1, 1.0, 0.0);
+
+        const float res = boids::utils::distanceBetweenBoids(b1, b2);
+
+        THEN("The distance should be 1.0") { REQUIRE(res == 1.0f); }
+    }
+    WHEN("One is to the side of the other") {
+        const boids::Boid b1(0, 1.0, 0.0);
+        const boids::Boid b2(1, 1.0, -5.0);
+
+        const float res = boids::utils::distanceBetweenBoids(b1, b2);
+
+        THEN("The distance should be 5.0") { REQUIRE(res == 5.0f); }
+    }
+    GIVEN("Boids are wrapped around the space") {
+        const QRectF bounds(0.0f, 0.0f, 20.0f, 10.0f);
+        WHEN("The boids are wrapped in the X axis") {
+            const boids::Boid b1(0, 19.0f, 1.0f);
+            const boids::Boid b2(1, 1.0f, 1.0f);
+            const float       dist = boids::utils::distanceBetweenBoids(b1, b2, bounds);
+            THEN("The distance should be 2.0") { REQUIRE(dist == 2.0f); }
+        }
+        WHEN("The boids are wrapped in the Y axis") {
+            const boids::Boid b1(0, 1.0f, 2.0f);
+            const boids::Boid b2(1, 1.0f, 9.0f);
+            const float       dist = boids::utils::distanceBetweenBoids(b1, b2, bounds);
+            THEN("The distance should be 3.0") { REQUIRE(dist == 3.0f); }
+        }
+        WHEN("The boids are not wrapped") {
+            const boids::Boid b1(0, 1.0f, 4.0f);
+            const boids::Boid b2(1, 1.0f, 5.0f);
+            const float       dist = boids::utils::distanceBetweenBoids(b1, b2, bounds);
+            THEN("The distance should be 1.0") { REQUIRE(dist == 1.0f); }
+        }
+    }
+}
+
 TEST_CASE("Test the distanceVectorBetweenPoint() method", "[utils]") {
     const QRectF bounds(0.0, 0.0, 1.0, 1.0);
 
@@ -613,4 +440,153 @@ TEST_CASE("Test the distanceVectorBetweenPoint() method", "[utils]") {
 
     REQUIRE(isApproxEqual(expected.x(), result.x()));
     REQUIRE(isApproxEqual(expected.y(), result.y()));
+}
+
+TEST_CASE("Test the generateRandomValue() method") {
+    GIVEN("The use fo the float type") {
+        WHEN("The min/max are 0.0 and 1.0") {
+            const float min   = 0.0f;
+            const float max   = 1.0f;
+            const float value = boids::utils::generateRandomValue<float>(min, max);
+            THEN("The value should be above the min") { REQUIRE(value > min); }
+            THEN("The value should be below the max") { REQUIRE(value <= max); }
+        }
+        WHEN("The min/max are 0.25 and 0.5") {
+            const float min   = 0.25f;
+            const float max   = 0.5f;
+            const float value = boids::utils::generateRandomValue<float>(min, max);
+            THEN("The value should be above the min") { REQUIRE(value > min); }
+            THEN("The value should be below the max") { REQUIRE(value <= max); }
+        }
+        WHEN("The min/max are -1.5 and -1.0") {
+            const float min   = -1.5f;
+            const float max   = -1.0f;
+            const float value = boids::utils::generateRandomValue<float>(min, max);
+            THEN("The value should be above the min") { REQUIRE(value > min); }
+            THEN("The value should be below the max") { REQUIRE(value <= max); }
+        }
+        WHEN("When the min value is larger than the max") {
+            const float min = 1.0f;
+            const float max = 0.0f;
+            THEN("There should be an exception thrown") {
+                REQUIRE_THROWS(boids::utils::generateRandomValue<float>(min, max));
+            }
+        }
+    }
+    GIVEN("The use of the int type") {
+        WHEN("The min/max are 0.0 and 1.0") {
+            const int min   = 0;
+            const int max   = 10;
+            const int value = boids::utils::generateRandomValue<int>(min, max);
+            THEN("The value should be above the min") { REQUIRE(value >= min); }
+            THEN("The value should be below the max") { REQUIRE(value <= max); }
+        }
+        WHEN("The min/max are 0.25 and 0.5") {
+            const int min   = -10;
+            const int max   = 0;
+            const int value = boids::utils::generateRandomValue<int>(min, max);
+            THEN("The value should be above the min") { REQUIRE(value >= min); }
+            THEN("The value should be below the max") { REQUIRE(value <= max); }
+        }
+        WHEN("The min/max are 0 and 1") {
+            const int min   = 0;
+            const int max   = 1;
+            const int value = boids::utils::generateRandomValue<int>(min, max);
+            THEN("The value should be above the min") { REQUIRE(value >= min); }
+            THEN("The value should be below the max") { REQUIRE(value <= max); }
+        }
+        WHEN("When the min value is larger than the max") {
+            const int min = 1;
+            const int max = 0;
+            THEN("There should be an exception thrown") {
+                REQUIRE_THROWS(boids::utils::generateRandomValue<int>(min, max));
+            }
+        }
+    }
+}
+
+TEST_CASE("Test the getBoidNeighbourhood() method", "[utils]") {
+    GIVEN("A flock of Boids") {
+        const QRectF bounds(0.0f, 0.0f, 10.0f, 10.0f);
+        const float  minDist = 1.5f;
+
+        const boids::Boid boid(0, 0.0f, 0.0f);
+
+        std::vector<boids::Boid> flock;
+        flock.push_back(boids::Boid(1, 1.0f, 0.0f));
+        flock.push_back(boids::Boid(2, 0.0f, 1.0f));
+        flock.push_back(boids::Boid(3, 2.0f, 0.0f));
+
+        WHEN("Calling the getBoidNeighbourhood() method") {
+            const std::vector<boids::Boid> neighbours =
+                boids::utils::getBoidNeighbourhood(boid, flock, minDist, bounds);
+
+            THEN("The vector size should be 2") { REQUIRE(neighbours.size() == 2); }
+            THEN("The neighbour IDs should be as expected") {
+                REQUIRE(neighbours.at(0).getId() == 1);
+                REQUIRE(neighbours.at(1).getId() == 2);
+            }
+        }
+
+        WHEN("Adding the boid itself, and calling the getBoidNeighbourhood() method") {
+            flock.push_back(boid);
+            const std::vector<boids::Boid> neighbours =
+                boids::utils::getBoidNeighbourhood(boid, flock, minDist, bounds);
+
+            THEN("The vector size should be 2") { REQUIRE(neighbours.size() == 2); }
+            THEN("The neighbour IDs should be as expected") {
+                REQUIRE(neighbours.at(0).getId() == 1);
+                REQUIRE(neighbours.at(1).getId() == 2);
+            }
+        }
+    }
+    GIVEN("A flock of boids that are wrapped around the space") {
+        const boids::Boid boid0(0, 0.1f, 0.1f);
+        const boids::Boid boid1(1, 0.9f, 0.1f);
+        const boids::Boid boid2(2, 0.1f, 0.9f);
+        const boids::Boid boid3(3, 0.9f, 0.9f);
+        const boids::Boid boid4(4, 0.5f,
+                                0.5f); // This boid should not be part of the neighbourhood.
+        const QRectF      bounds(0.0f, 0.0f, 1.0f, 1.0f);
+        const float       minDist = 0.4;
+
+        std::vector<boids::Boid> flock;
+        flock.push_back(boid0);
+        flock.push_back(boid1);
+        flock.push_back(boid2);
+        flock.push_back(boid3);
+        flock.push_back(boid4);
+
+        WHEN("Calling the getBoidNeighbourhood() method") {
+            const std::vector<boids::Boid> neighbours =
+                boids::utils::getBoidNeighbourhood(boid0, flock, minDist, bounds);
+
+            THEN("The vector size should be 3") { REQUIRE(neighbours.size() == 3); }
+            THEN("The neighbour IDs should be as expected") {
+                REQUIRE(neighbours.at(0).getId() == 1);
+                REQUIRE(neighbours.at(1).getId() == 2);
+                REQUIRE(neighbours.at(2).getId() == 3);
+            }
+        }
+    }
+}
+
+TEST_CASE("Test the getTotalNumBoids() method", "[utils]") {
+    GIVEN("An empty vector") {
+        std::map<boids::BoidType, std::vector<boids::Boid>> boids;
+        WHEN("Calling the getTotalNumBoids() method") {
+            const std::size_t res = boids::utils::getTotalNumBoids(boids);
+            THEN("The number og boids should be 0") { REQUIRE(res == 0); }
+        }
+    }
+    GIVEN("A Vector with a mix of Boid types") {
+        std::map<boids::BoidType, std::vector<boids::Boid>> boids;
+        boids[boids::BoidType::BOID]     = {boids::Boid(1, 1.0f, 2.0f), boids::Boid(2, 1.0f, 2.0f)};
+        boids[boids::BoidType::OBSTACLE] = {boids::Boid(3, 1.0f, 2.0f), boids::Boid(4, 1.0f, 2.0f)};
+        boids[boids::BoidType::PREDATOR] = {boids::Boid(5, 1.0f, 2.0f), boids::Boid(6, 1.0f, 2.0f)};
+        WHEN("Calling the getTotalNumBoids() method") {
+            const std::size_t res = boids::utils::getTotalNumBoids(boids);
+            THEN("The number og boids should be 6") { REQUIRE(res == 6); }
+        }
+    }
 }
