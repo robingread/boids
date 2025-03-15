@@ -89,10 +89,15 @@ float distanceBetweenBoids(const Boid& b1, const Boid& b2, const QRectF& bounds)
  * @param p2 Second point.
  * @param bounds Scene bounds.
  * @return Dispacement vector.
+ * @throws An std::invalid_arguent if the min value is greater than the max value.
  */
 QVector2D distanceVectorBetweenPoints(const QPointF& p1, const QPointF& bp2, const QRectF& bounds);
 
 template <typename T> T generateRandomValue(const T minValue, const T maxValue) {
+    if (minValue > maxValue) {
+        throw std::invalid_argument("The min value is greater than the max value");
+    }
+
     std::random_device               rd;
     std::mt19937                     gen(rd());
     std::uniform_real_distribution<> distr(minValue, maxValue);
