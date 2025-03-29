@@ -75,14 +75,18 @@ QColor calculateBoidColor(const Boid& boid, const std::vector<Boid>& neighbours)
 }
 
 QVector2D calculateSeparationVector(const Boid& boid, const std::vector<Boid>& neighbours,
-                                    const float minDist) {
+                                    const float minDist, const QRectF& bounds) {
     if (neighbours.size() == 0) {
         return QVector2D(0.0f, 0.0f);
     }
 
+    // FIXME: This entire method needs much better testing!
     QVector2D vec(0.0, 0.0);
     for (const Boid& n : neighbours) {
-        const float dist = distanceBetweenBoids(boid, n);
+        const QVector2D diff =
+            distanceVectorBetweenPoints(n.getPosition(), boid.getPosition(), bounds);
+
+        const float dist = diff.length();
 
         if ((dist > minDist))
             continue;
@@ -92,9 +96,8 @@ QVector2D calculateSeparationVector(const Boid& boid, const std::vector<Boid>& n
             continue;
         }
 
-        const float     w    = std::max(1.0f, dist - minDist);
-        const QVector2D diff = QVector2D(boid.getPosition() - n.getPosition()).normalized() / w;
-        vec += diff;
+        const float w = std::max(1.0f, dist - minDist);
+        vec += (diff.normalized() / w);
     }
 
     return vec;

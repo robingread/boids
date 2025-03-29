@@ -32,13 +32,13 @@ void updateBoids(std::vector<Boid>& boids, const std::vector<Boid>& flock,
             boids::utils::calculateCohesionVector(b, neighbours, sceneBounds);
 
         const QVector2D repelVec =
-            boids::utils::calculateSeparationVector(b, neighbours, cfg.repelMinDist);
+            boids::utils::calculateSeparationVector(b, neighbours, cfg.repelMinDist, sceneBounds);
 
-        const QVector2D obstacleVec =
-            boids::utils::calculateSeparationVector(b, obstacleNeighbours, cfg.repelMinDist * 2.0f);
+        const QVector2D obstacleVec = boids::utils::calculateSeparationVector(
+            b, obstacleNeighbours, cfg.repelMinDist * 2.0f, sceneBounds);
 
-        const QVector2D predatorVec =
-            boids::utils::calculateSeparationVector(b, predatorNeighbours, cfg.repelMinDist * 5.0f);
+        const QVector2D predatorVec = boids::utils::calculateSeparationVector(
+            b, predatorNeighbours, cfg.repelMinDist * 5.0f, sceneBounds);
 
         const QVector2D noiseVec = boids::utils::generateRandomVelocityVector(0.05f);
 

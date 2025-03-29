@@ -55,12 +55,13 @@ QColor calculateBoidColor(const Boid& boid, const std::vector<Boid>& neighbours)
  * separation force is greater with boids that are closer to each other.
  *
  * @param boid Boid to check calculate the cohesion vector for.
- * @param neighbours Neighbourhood around the Boid
+ * @param neighbours Neighbourhood around the Boid.
  * @param minDist Minimum distance to retain between Boids.
+ * @param bounds Scene bounds of the wrapped space.
  * @return Repelling vector.
  */
 QVector2D calculateSeparationVector(const Boid& boid, const std::vector<Boid>& neighbours,
-                                    const float minDist);
+                                    const float minDist, const QRectF& bounds);
 
 /**
  * @brief Calculate the euclidean distance between two Boids.
