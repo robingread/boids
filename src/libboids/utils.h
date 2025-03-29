@@ -2,6 +2,7 @@
 
 #include "boids.h"
 #include <QRectF>
+#include <QVector2D>
 #include <random>
 #include <vector>
 
@@ -31,15 +32,17 @@ QVector2D calculateAlignmentVector(const Boid& boid, const std::vector<Boid>& ne
  *
  * @param boid Boid to check calculate the cohesion vector for.
  * @param neighbours Neighbourhood around the Boid
+ * @param bounds Scene bounds of the wrapped space.
  * @return Vector towards the center of the neighbourhood.
  */
-QVector2D calculateCohesionVector(const Boid& boid, const std::vector<Boid>& neighbours);
+QVector2D calculateCohesionVector(const Boid& boid, const std::vector<Boid>& neighbours,
+                                  const QRectF& bounds);
 
 /**
  * @brief Calculaet the new color of a boids given the neighbourhood.
  *
  * @param boid Boid to calculate the color for.
- * @param neighbours Neighbourhood around the Boid..
+ * @param neighbours Neighbourhood around the Boid.
  * @return QColor New Boid color.
  */
 QColor calculateBoidColor(const Boid& boid, const std::vector<Boid>& neighbours);
@@ -52,12 +55,13 @@ QColor calculateBoidColor(const Boid& boid, const std::vector<Boid>& neighbours)
  * separation force is greater with boids that are closer to each other.
  *
  * @param boid Boid to check calculate the cohesion vector for.
- * @param neighbours Neighbourhood around the Boid
+ * @param neighbours Neighbourhood around the Boid.
  * @param minDist Minimum distance to retain between Boids.
+ * @param bounds Scene bounds of the wrapped space.
  * @return Repelling vector.
  */
 QVector2D calculateSeparationVector(const Boid& boid, const std::vector<Boid>& neighbours,
-                                    const float minDist);
+                                    const float minDist, const QRectF& bounds);
 
 /**
  * @brief Calculate the euclidean distance between two Boids.
@@ -77,7 +81,24 @@ float distanceBetweenBoids(const Boid& b1, const Boid& b2);
  */
 float distanceBetweenBoids(const Boid& b1, const Boid& b2, const QRectF& bounds);
 
+/**
+ * @brief Calculate the vector between two points.
+ *
+ * The returned vector will be form p1 -> p2 nad takes into account the wrapped space.
+ *
+ * @param p1 First point.
+ * @param p2 Second point.
+ * @param bounds Scene bounds.
+ * @return Dispacement vector.
+ * @throws An std::invalid_arguent if the min value is greater than the max value.
+ */
+QVector2D distanceVectorBetweenPoints(const QPointF& p1, const QPointF& bp2, const QRectF& bounds);
+
 template <typename T> T generateRandomValue(const T minValue, const T maxValue) {
+    if (minValue > maxValue) {
+        throw std::invalid_argument("The min value is greater than the max value");
+    }
+
     std::random_device               rd;
     std::mt19937                     gen(rd());
     std::uniform_real_distribution<> distr(minValue, maxValue);

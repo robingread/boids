@@ -20,7 +20,8 @@ QVector2D calculateAlignmentVector(const Boid& boid, const std::vector<Boid>& ne
     return vec;
 }
 
-QVector2D calculateCohesionVector(const Boid& boid, const std::vector<Boid>& neighbours) {
+QVector2D calculateCohesionVector(const Boid& boid, const std::vector<Boid>& neighbours,
+                                  const QRectF& bounds) {
     if (neighbours.size() == 0) {
         return QVector2D(0.0f, 0.0f);
     }
@@ -31,7 +32,8 @@ QVector2D calculateCohesionVector(const Boid& boid, const std::vector<Boid>& nei
     }
 
     vec /= float(neighbours.size());
-    QVector2D ret = vec - QVector2D(boid.getPosition());
+
+    QVector2D ret = distanceVectorBetweenPoints(boid.getPosition(), vec.toPointF(), bounds);
     ret.normalize();
     ret *= 0.25f;
     return ret;
@@ -73,14 +75,18 @@ QColor calculateBoidColor(const Boid& boid, const std::vector<Boid>& neighbours)
 }
 
 QVector2D calculateSeparationVector(const Boid& boid, const std::vector<Boid>& neighbours,
-                                    const float minDist) {
+                                    const float minDist, const QRectF& bounds) {
     if (neighbours.size() == 0) {
         return QVector2D(0.0f, 0.0f);
     }
 
+    // FIXME: This entire method needs much better testing!
     QVector2D vec(0.0, 0.0);
     for (const Boid& n : neighbours) {
-        const float dist = distanceBetweenBoids(boid, n);
+        const QVector2D diff =
+            distanceVectorBetweenPoints(n.getPosition(), boid.getPosition(), bounds);
+
+        const float dist = diff.length();
 
         if ((dist > minDist))
             continue;
@@ -90,9 +96,8 @@ QVector2D calculateSeparationVector(const Boid& boid, const std::vector<Boid>& n
             continue;
         }
 
-        const float     w    = std::max(1.0f, dist - minDist);
-        const QVector2D diff = QVector2D(boid.getPosition() - n.getPosition()).normalized() / w;
-        vec += diff;
+        const float w = std::max(1.0f, dist - minDist);
+        vec += (diff.normalized() / w);
     }
 
     return vec;
@@ -117,6 +122,12 @@ float distanceBetweenBoids(const Boid& b1, const Boid& b2, const QRectF& bounds)
         std::abs(shortestDistanceInWrapedSpace(p1.y(), p2.y(), bounds.top(), bounds.bottom()));
 
     return std::sqrt(std::pow(dx, 2) + std::pow(dy, 2));
+}
+
+QVector2D distanceVectorBetweenPoints(const QPointF& p1, const QPointF& p2, const QRectF& bounds) {
+    const float dx = shortestDistanceInWrapedSpace(p1.x(), p2.x(), bounds.left(), bounds.right());
+    const float dy = shortestDistanceInWrapedSpace(p1.y(), p2.y(), bounds.top(), bounds.bottom());
+    return QVector2D(dx, dy);
 }
 
 QVector2D generateRandomVelocityVector(const float maxMagnitude) {
