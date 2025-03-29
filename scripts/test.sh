@@ -18,7 +18,8 @@ pushd $BUILD_DIR
     # Generate the coverage report
     python3 -m fastcov \
         -d . \
-        --include /workspaces/boids/src /workspaces/boids/test \
+        --include src/ test/ \
+        --exclude /usr build/ \
         --lcov \
         -o filtered_coverage.info
 

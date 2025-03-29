@@ -14,19 +14,12 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
-      - name: Build Docker image
-        run: |
-          docker build \
-          --tag boids-dev-container \
-          --file .devcontainer/Dockerfile \
-          --target base \
-          .
+      - name: Build & Test
+        run: docker compose run ci
 
-      - name: Run unit-tests
-        run: |
-          docker run --rm \
-            -v ${{ github.workspace }}:/workspaces/boids \
-            -w /workspaces/boids \
-            -u root \
-            boids-dev-container \
-            bash -c "./scripts/build.sh && ./scripts/test.sh"
+      - name: Upload coverage report artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: ${{ github.workspace }}/build/coverage-report
+          if-no-files-found: error
