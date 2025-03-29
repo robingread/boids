@@ -16,3 +16,10 @@ jobs:
 
       - name: Build & Test
         run: docker compose run ci
+
+      - name: Upload coverage report artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: ${{ github.workspace }}/build/coverage-report
+          if-no-files-found: error
