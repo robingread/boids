@@ -16,8 +16,11 @@ pushd $BUILD_DIR
     ctest --verbose
     
     # Generate the coverage report
-    lcov --capture --directory . --output-file coverage.info
-    lcov --remove coverage.info '/usr/*' '*/test/*' --output-file filtered_coverage.info
-    lcov --list filtered_coverage.info
+    python3 -m fastcov \
+        -d . \
+        --exclude '/usr/*' '*/test/*' \
+        --lcov \
+        -o filtered_coverage.info
+
     genhtml filtered_coverage.info --output-directory coverage-report
 popd
