@@ -7,11 +7,16 @@ RUN apt-get update && apt-get install -y \
     catch2 \
     cmake \
     g++ \
-    lcov \
+    lcov \ 
     libgtest-dev \
+    python3-pip \
     qtbase5-dev \
     qttools5-dev-tools \
     && rm -rf /var/lib/apt/lists/*
+
+# Install Python based dependencies
+RUN pip3 install \
+    fastcov
 
 #########################
 # Build Development stage
@@ -27,7 +32,6 @@ RUN apt-get update && apt-get install -y \
     clang-format \
     gdb \
     git \
-    lcov \
     && rm -rf /var/lib/apt/lists/*
 
 # Create a non-root user
