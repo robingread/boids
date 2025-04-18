@@ -396,7 +396,7 @@ TEST_CASE("Test the distanceVectorBetweenPoint() method", "[utils]") {
     REQUIRE(isApproxEqual(expected.y(), result.y()));
 }
 
-TEST_CASE("Test the generateRandomValue() method") {
+TEST_CASE("Test the generateRandomValue() method", "[utils]") {
     GIVEN("The use of the float type") {
         WHEN("The min/max are 0.0 and 1.0") {
             const float min   = 0.0f;
