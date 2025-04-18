@@ -3,15 +3,6 @@
 #include <gtest/gtest.h>
 #include <utils.h>
 
-TEST(libboids_utils, generateRandomVelocityVector_1) {
-    for (std::size_t i = 0; i < 100; ++i) {
-        const float     maxVel = boids::utils::generateRandomValue<float>(1.0f, 10.0f);
-        const QVector2D res    = boids::utils::generateRandomVelocityVector(maxVel);
-        ASSERT_TRUE(res.length() >= 0.0f);
-        ASSERT_TRUE(res.length() <= maxVel);
-    }
-}
-
 bool isApproxEqual(double a, double b, double epsilon = 1e-6) { return std::fabs(a - b) < epsilon; }
 
 TEST_CASE("Test the calculateAlignmentVector() method", "[utils]") {
@@ -405,6 +396,15 @@ TEST_CASE("Test the generateRandomValue() method", "[utils]") {
                 REQUIRE_THROWS(boids::utils::generateRandomValue<int>(min, max));
             }
         }
+    }
+}
+
+TEST_CASE("Test the generateRandomVelocityVector() method", "[utils]") {
+    for (std::size_t i = 0; i < 100; ++i) {
+        const float     maxVel = boids::utils::generateRandomValue<float>(1.0f, 10.0f);
+        const QVector2D res    = boids::utils::generateRandomVelocityVector(maxVel);
+        REQUIRE(res.length() >= 0.0f);
+        REQUIRE(res.length() <= maxVel);
     }
 }
 
