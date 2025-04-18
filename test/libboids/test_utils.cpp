@@ -12,31 +12,6 @@ TEST(libboids_utils, generateRandomVelocityVector_1) {
     }
 }
 
-/**
- * Test the wrapValue() method.
- */
-struct WrapValueData {
-    float value;
-    float minValue;
-    float maxValue;
-    float expected;
-};
-
-class WrapValueTest : public ::testing::TestWithParam<WrapValueData> {};
-
-TEST_P(WrapValueTest, test) {
-    const auto  params = GetParam();
-    const float res    = boids::utils::wrapValue(params.value, params.minValue, params.maxValue);
-    ASSERT_FLOAT_EQ(res, params.expected);
-}
-
-INSTANTIATE_TEST_SUITE_P(utils, WrapValueTest,
-                         ::testing::Values(WrapValueData{1.1f, -1.0f, 1.0f, -0.9f},
-                                           WrapValueData{1.1f, 0.0f, 2.0f, 1.1f},
-                                           WrapValueData{5.1f, 1.0f, 5.0f, 1.1f},
-                                           WrapValueData{-0.1f, 0.0f, 1.0f, 0.9f},
-                                           WrapValueData{0.0f, 0.0f, 1.0f, 0.0f}));
-
 bool isApproxEqual(double a, double b, double epsilon = 1e-6) { return std::fabs(a - b) < epsilon; }
 
 TEST_CASE("Test the calculateAlignmentVector() method", "[utils]") {
@@ -650,6 +625,54 @@ TEST_CASE("Test the wrapBoidPosition() method", "[utils]") {
                 REQUIRE(boid.getPosition().x() == Approx(0.5).epsilon(epsilon));
                 REQUIRE(boid.getPosition().y() == Approx(0.5).epsilon(epsilon));
             }
+        }
+    }
+}
+
+TEST_CASE("Test the wrapValue() method", "[utils]") {
+    GIVEN("Min = -1.0, Max = 1.0") {
+        const float min_value = -1.0f;
+        const float max_value = 1.0f;
+
+        WHEN("The value is 1.1") {
+            const float value  = 1.1f;
+            const float result = boids::utils::wrapValue(value, min_value, max_value);
+            THEN("The result should be -0.9") { REQUIRE(result == Approx(-0.9f)); }
+        }
+
+        WHEN("The value is 0.1") {
+            const float value  = 0.1f;
+            const float result = boids::utils::wrapValue(value, min_value, max_value);
+            THEN("The result should be 0.1") { REQUIRE(result == Approx(0.1f)); }
+        }
+
+        WHEN("The value is 1.0") {
+            const float value  = 1.0f;
+            const float result = boids::utils::wrapValue(value, min_value, max_value);
+            THEN("The result should be -1.0") { REQUIRE(result == Approx(-1.0f)); }
+        }
+
+        WHEN("The value is -1.0") {
+            const float value  = -1.0f;
+            const float result = boids::utils::wrapValue(value, min_value, max_value);
+            THEN("The result should be -1.0") { REQUIRE(result == Approx(-1.0f)); }
+        }
+    }
+
+    GIVEN("Min = 0.0, Max = 2.0") {
+        const float min_value = 0.0f;
+        const float max_value = 2.0f;
+
+        WHEN("The value is 1.1") {
+            const float value  = 1.1f;
+            const float result = boids::utils::wrapValue(value, min_value, max_value);
+            THEN("The result should be 1.1") { REQUIRE(result == Approx(1.1f)); }
+        }
+
+        WHEN("The value is -0.1") {
+            const float value  = -0.1f;
+            const float result = boids::utils::wrapValue(value, min_value, max_value);
+            THEN("The result should be 1.9") { REQUIRE(result == Approx(1.9f)); }
         }
     }
 }
