@@ -13,29 +13,6 @@ TEST(libboids_utils, generateRandomVelocityVector_1) {
 }
 
 /**
- * Test the shortestDistanceInWrappedSpace() method
- */
-class DistanceTest
-    : public ::testing::TestWithParam<std::tuple<float, float, float, float, float>> {};
-
-TEST_P(DistanceTest, CalculatesShortestDistance) {
-    const float x1  = std::get<0>(GetParam());
-    const float x2  = std::get<1>(GetParam());
-    const float min = std::get<2>(GetParam());
-    const float max = std::get<3>(GetParam());
-    const float exp = std::get<4>(GetParam());
-
-    const float res = boids::utils::shortestDistanceInWrapedSpace(x1, x2, min, max);
-    ASSERT_FLOAT_EQ(exp, res);
-}
-
-INSTANTIATE_TEST_SUITE_P(utils, DistanceTest,
-                         ::testing::Values(std::make_tuple(-0.9f, 0.9f, -1.0f, 1.0f, -0.2f),
-                                           std::make_tuple(0.7f, 0.9f, -1.0f, 1.0f, 0.2f),
-                                           std::make_tuple(0.9f, 0.7f, -1.0f, 1.0f, -0.2f),
-                                           std::make_tuple(-0.2f, 0.2f, -10.0f, 1.0f, 0.4f)));
-
-/**
  * Test the wrapBoidPosition() method.
  */
 struct WrapBoidPositionData {
@@ -627,5 +604,43 @@ TEST_CASE("Test the scaleVector() method", "[utils]") {
                 REQUIRE(result.y() == Approx(-4.0f).epsilon(epsilon));
             }
         }
+    }
+}
+
+TEST_CASE("Test the shortestDistanceInWrappedSpace() method", "[utils]") {
+    const float space_min = -1.0f;
+    const float space_max = 1.0f;
+    const float epsilon   = 0.001;
+
+    WHEN("x1 = -0.9 and x2 = 0.9") {
+        const float x1 = -0.9f;
+        const float x2 = 0.9f;
+        const float result =
+            boids::utils::shortestDistanceInWrapedSpace(x1, x2, space_min, space_max);
+        THEN("The distance should be -0.2") { REQUIRE(result == Approx(-0.2).epsilon(epsilon)); }
+    }
+
+    WHEN("x1 = 0.7 and x2 = 0.9") {
+        const float x1 = 0.7f;
+        const float x2 = 0.9f;
+        const float result =
+            boids::utils::shortestDistanceInWrapedSpace(x1, x2, space_min, space_max);
+        THEN("The distance should be 0.2") { REQUIRE(result == Approx(0.2).epsilon(epsilon)); }
+    }
+
+    WHEN("x1 = 0.9 and x2 = 0.7") {
+        const float x1 = 0.9f;
+        const float x2 = 0.7f;
+        const float result =
+            boids::utils::shortestDistanceInWrapedSpace(x1, x2, space_min, space_max);
+        THEN("The distance should be -0.2") { REQUIRE(result == Approx(-0.2).epsilon(epsilon)); }
+    }
+
+    WHEN("x1 = 0.4 and x2 = 0.7") {
+        const float x1 = 0.4f;
+        const float x2 = 0.7f;
+        const float result =
+            boids::utils::shortestDistanceInWrapedSpace(x1, x2, space_min, space_max);
+        THEN("The distance should be 0.3") { REQUIRE(result == Approx(0.3).epsilon(epsilon)); }
     }
 }
