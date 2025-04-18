@@ -3,8 +3,6 @@
 #include <gtest/gtest.h>
 #include <utils.h>
 
-bool isApproxEqual(double a, double b, double epsilon = 1e-6) { return std::fabs(a - b) < epsilon; }
-
 TEST_CASE("Test the calculateAlignmentVector() method", "[utils]") {
     WHEN("There are no neighbours") {
         const boids::Boid              boid(0, 0.0, 0.0);
@@ -232,9 +230,9 @@ TEST_CASE("Test the calculateSeparationVector() method", "[utils]") {
         const QVector2D res =
             boids::utils::calculateSeparationVector(boid, neighbours, minDist, bounds);
 
-        THEN("") {
-            REQUIRE(isApproxEqual(res.x(), 0.0));
-            REQUIRE(isApproxEqual(res.y(), 0.0));
+        THEN("The vector values should be zero.") {
+            REQUIRE(res.x() == Approx(0.0));
+            REQUIRE(res.y() == Approx(0.0));
         }
     }
 }
@@ -332,8 +330,8 @@ TEST_CASE("Test the distanceVectorBetweenPoint() method", "[utils]") {
 
     const auto result = boids::utils::distanceVectorBetweenPoints(p1, p2, bounds);
 
-    REQUIRE(isApproxEqual(expected.x(), result.x()));
-    REQUIRE(isApproxEqual(expected.y(), result.y()));
+    REQUIRE(expected.x() == Approx(result.x()));
+    REQUIRE(expected.y() == Approx(result.y()));
 }
 
 TEST_CASE("Test the generateRandomValue() method", "[utils]") {
