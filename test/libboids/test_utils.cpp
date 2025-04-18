@@ -13,32 +13,6 @@ TEST(libboids_utils, generateRandomVelocityVector_1) {
 }
 
 /**
- * Test the wrapBoidPosition() method.
- */
-struct WrapBoidPositionData {
-    boids::Boid             boid;     // The boid to wrap.
-    QRectF                  rect;     // The scene rectangle
-    std::pair<float, float> expected; // Expected values in (x,y) format.
-};
-
-class WrapBoidPositionTest : public ::testing::TestWithParam<WrapBoidPositionData> {};
-
-TEST_P(WrapBoidPositionTest, WrapTest) {
-    auto params = GetParam();
-    boids::utils::wrapBoidPosition(params.boid, params.rect);
-    ASSERT_FLOAT_EQ(params.boid.getPosition().x(), params.expected.first);
-    ASSERT_FLOAT_EQ(params.boid.getPosition().y(), params.expected.second);
-}
-
-INSTANTIATE_TEST_SUITE_P(utils, WrapBoidPositionTest,
-                         ::testing::Values(WrapBoidPositionData{boids::Boid(0, 0.0f, 1.1f),
-                                                                QRectF(0.0f, 0.0f, 1.0f, 1.0f),
-                                                                std::make_pair(0.0f, 0.1f)},
-                                           WrapBoidPositionData{boids::Boid(0, -0.1f, 0.0f),
-                                                                QRectF(0.0f, 0.0f, 1.0f, 1.0f),
-                                                                std::make_pair(0.9f, 0.0f)}));
-
-/**
  * Test the wrapValue() method.
  */
 struct WrapValueData {
@@ -642,5 +616,40 @@ TEST_CASE("Test the shortestDistanceInWrappedSpace() method", "[utils]") {
         const float result =
             boids::utils::shortestDistanceInWrapedSpace(x1, x2, space_min, space_max);
         THEN("The distance should be 0.3") { REQUIRE(result == Approx(0.3).epsilon(epsilon)); }
+    }
+}
+
+TEST_CASE("Test the wrapBoidPosition() method", "[utils]") {
+    const QRectF space_rect(0.0f, 0.0f, 1.0f, 1.0f);
+    const float  epsilon = 0.001;
+    GIVEN("A boid at (0.0, 1.1)") {
+        boids::Boid boid(0, 0.0f, 1.1f);
+        WHEN("Calling the wrapBoidPosition() method") {
+            boids::utils::wrapBoidPosition(boid, space_rect);
+            THEN("The boid should be at position (0.0, 0.1)") {
+                REQUIRE(boid.getPosition().x() == Approx(0.0).epsilon(epsilon));
+                REQUIRE(boid.getPosition().y() == Approx(0.1).epsilon(epsilon));
+            }
+        }
+    }
+    GIVEN("A boid at (-0.1, 0.0)") {
+        boids::Boid boid(0, -0.1f, 0.0f);
+        WHEN("Calling the wrapBoidPosition() method") {
+            boids::utils::wrapBoidPosition(boid, space_rect);
+            THEN("The boid should be at position (0.9, 0.0)") {
+                REQUIRE(boid.getPosition().x() == Approx(0.9).epsilon(epsilon));
+                REQUIRE(boid.getPosition().y() == Approx(0.0).epsilon(epsilon));
+            }
+        }
+    }
+    GIVEN("A boid at (0.5, 0.5)") {
+        boids::Boid boid(0, 0.5f, 0.5f);
+        WHEN("Calling the wrapBoidPosition() method") {
+            boids::utils::wrapBoidPosition(boid, space_rect);
+            THEN("The boid should be at position (0.5, 0.5)") {
+                REQUIRE(boid.getPosition().x() == Approx(0.5).epsilon(epsilon));
+                REQUIRE(boid.getPosition().y() == Approx(0.5).epsilon(epsilon));
+            }
+        }
     }
 }
