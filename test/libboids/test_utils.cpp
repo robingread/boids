@@ -3,114 +3,6 @@
 #include <gtest/gtest.h>
 #include <utils.h>
 
-TEST(libboids_utils, generateRandomVelocityVector_1) {
-    for (std::size_t i = 0; i < 100; ++i) {
-        const float     maxVel = boids::utils::generateRandomValue<float>(1.0f, 10.0f);
-        const QVector2D res    = boids::utils::generateRandomVelocityVector(maxVel);
-        ASSERT_TRUE(res.length() >= 0.0f);
-        ASSERT_TRUE(res.length() <= maxVel);
-    }
-}
-
-/**
- * Test the scaleVector() method
- */
-struct ScaleVectorData {
-    QVector2D vector;
-    float     scalar;
-    QVector2D expected;
-};
-
-class ScaleVectorTest : public ::testing::TestWithParam<ScaleVectorData> {};
-
-TEST_P(ScaleVectorTest, test) {
-    const auto params = GetParam();
-    const auto res    = boids::utils::scaleVector(params.vector, params.scalar);
-    ASSERT_FLOAT_EQ(params.expected.x(), res.x());
-    ASSERT_FLOAT_EQ(params.expected.y(), res.y());
-}
-
-INSTANTIATE_TEST_SUITE_P(
-    utils, ScaleVectorTest,
-    ::testing::Values(ScaleVectorData{QVector2D(3.0f, 4.0f), 5.0f, QVector2D(3.0f, 4.0f)},
-                      ScaleVectorData{QVector2D(-3.0f, 0.0f), 10.0f, QVector2D(-10.0f, 0.0f)}));
-
-/**
- * Test the shortestDistanceInWrappedSpace() method
- */
-class DistanceTest
-    : public ::testing::TestWithParam<std::tuple<float, float, float, float, float>> {};
-
-TEST_P(DistanceTest, CalculatesShortestDistance) {
-    const float x1  = std::get<0>(GetParam());
-    const float x2  = std::get<1>(GetParam());
-    const float min = std::get<2>(GetParam());
-    const float max = std::get<3>(GetParam());
-    const float exp = std::get<4>(GetParam());
-
-    const float res = boids::utils::shortestDistanceInWrapedSpace(x1, x2, min, max);
-    ASSERT_FLOAT_EQ(exp, res);
-}
-
-INSTANTIATE_TEST_SUITE_P(utils, DistanceTest,
-                         ::testing::Values(std::make_tuple(-0.9f, 0.9f, -1.0f, 1.0f, -0.2f),
-                                           std::make_tuple(0.7f, 0.9f, -1.0f, 1.0f, 0.2f),
-                                           std::make_tuple(0.9f, 0.7f, -1.0f, 1.0f, -0.2f),
-                                           std::make_tuple(-0.2f, 0.2f, -10.0f, 1.0f, 0.4f)));
-
-/**
- * Test the wrapBoidPosition() method.
- */
-struct WrapBoidPositionData {
-    boids::Boid             boid;     // The boid to wrap.
-    QRectF                  rect;     // The scene rectangle
-    std::pair<float, float> expected; // Expected values in (x,y) format.
-};
-
-class WrapBoidPositionTest : public ::testing::TestWithParam<WrapBoidPositionData> {};
-
-TEST_P(WrapBoidPositionTest, WrapTest) {
-    auto params = GetParam();
-    boids::utils::wrapBoidPosition(params.boid, params.rect);
-    ASSERT_FLOAT_EQ(params.boid.getPosition().x(), params.expected.first);
-    ASSERT_FLOAT_EQ(params.boid.getPosition().y(), params.expected.second);
-}
-
-INSTANTIATE_TEST_SUITE_P(utils, WrapBoidPositionTest,
-                         ::testing::Values(WrapBoidPositionData{boids::Boid(0, 0.0f, 1.1f),
-                                                                QRectF(0.0f, 0.0f, 1.0f, 1.0f),
-                                                                std::make_pair(0.0f, 0.1f)},
-                                           WrapBoidPositionData{boids::Boid(0, -0.1f, 0.0f),
-                                                                QRectF(0.0f, 0.0f, 1.0f, 1.0f),
-                                                                std::make_pair(0.9f, 0.0f)}));
-
-/**
- * Test the wrapValue() method.
- */
-struct WrapValueData {
-    float value;
-    float minValue;
-    float maxValue;
-    float expected;
-};
-
-class WrapValueTest : public ::testing::TestWithParam<WrapValueData> {};
-
-TEST_P(WrapValueTest, test) {
-    const auto  params = GetParam();
-    const float res    = boids::utils::wrapValue(params.value, params.minValue, params.maxValue);
-    ASSERT_FLOAT_EQ(res, params.expected);
-}
-
-INSTANTIATE_TEST_SUITE_P(utils, WrapValueTest,
-                         ::testing::Values(WrapValueData{1.1f, -1.0f, 1.0f, -0.9f},
-                                           WrapValueData{1.1f, 0.0f, 2.0f, 1.1f},
-                                           WrapValueData{5.1f, 1.0f, 5.0f, 1.1f},
-                                           WrapValueData{-0.1f, 0.0f, 1.0f, 0.9f},
-                                           WrapValueData{0.0f, 0.0f, 1.0f, 0.0f}));
-
-bool isApproxEqual(double a, double b, double epsilon = 1e-6) { return std::fabs(a - b) < epsilon; }
-
 TEST_CASE("Test the calculateAlignmentVector() method", "[utils]") {
     WHEN("There are no neighbours") {
         const boids::Boid              boid(0, 0.0, 0.0);
@@ -180,7 +72,7 @@ TEST_CASE("Test the calculateCohesionVector() method", "[utils]") {
         const auto        neighbours =
             std::vector<boids::Boid>({boids::Boid(1, 1.0, 0.0), boids::Boid(2, -1.0, 0.0)});
 
-        THEN("The output vector shold be exactly zero") {
+        THEN("The output vector should be exactly zero") {
             const auto result = boids::utils::calculateCohesionVector(boid, neighbours, bounds);
             REQUIRE(result.x() == 0.0);
             REQUIRE(result.y() == 0.0);
@@ -277,11 +169,11 @@ TEST_CASE("Test the calculateSeparationVector() method", "[utils]") {
         const QVector2D result =
             boids::utils::calculateSeparationVector(boid, neighbours, minDist, bounds);
 
-        THEN("The lenght of the vector should be greater than zero") {
+        THEN("The length of the vector should be greater than zero") {
             REQUIRE(result.length() > 0.0);
         }
     }
-    WHEN("Test that a boid with a single neightbour, at exactly the same point has a force vector "
+    WHEN("Test that a boid with a single neighbour, at exactly the same point has a force vector "
          "magnitude equal to 1.0.") {
         const QRectF             bounds(0.0, 0.0, 1.0, 1.0);
         const float              minDist = 1.0f;
@@ -338,9 +230,9 @@ TEST_CASE("Test the calculateSeparationVector() method", "[utils]") {
         const QVector2D res =
             boids::utils::calculateSeparationVector(boid, neighbours, minDist, bounds);
 
-        THEN("") {
-            REQUIRE(isApproxEqual(res.x(), 0.0));
-            REQUIRE(isApproxEqual(res.y(), 0.0));
+        THEN("The vector values should be zero.") {
+            REQUIRE(res.x() == Approx(0.0));
+            REQUIRE(res.y() == Approx(0.0));
         }
     }
 }
@@ -352,8 +244,8 @@ TEST_CASE("Test the clipVectorMagnitude() method", "[utils]") {
         QVector2D   vec(-0.1f, 0.0f);
         boids::utils::clipVectorMangitude(vec, minMag, maxMag);
 
-        THEN("The clipped vector X elemnt should be -0.2") { REQUIRE(vec.x() == -0.2f); }
-        THEN("The clipped vector Y elemnt should be 0.0") { REQUIRE(vec.y() == 0.0f); }
+        THEN("The clipped vector X element should be -0.2") { REQUIRE(vec.x() == -0.2f); }
+        THEN("The clipped vector Y element should be 0.0") { REQUIRE(vec.y() == 0.0f); }
     }
     WHEN("The vector length is under the maximum value") {
         const float     minMag = 0.2f;
@@ -362,8 +254,8 @@ TEST_CASE("Test the clipVectorMagnitude() method", "[utils]") {
         QVector2D       vec(10.0f, 0.0f);
         boids::utils::clipVectorMangitude(vec, minMag, maxMag);
 
-        THEN("The clipped vector X elemnt should be 10.0") { REQUIRE(vec.x() == 10.0f); }
-        THEN("The clipped vector Y elemnt should be 0.0") { REQUIRE(vec.y() == 0.0f); }
+        THEN("The clipped vector X element should be 10.0") { REQUIRE(vec.x() == 10.0f); }
+        THEN("The clipped vector Y element should be 0.0") { REQUIRE(vec.y() == 0.0f); }
     }
     WHEN("The vector length is over the maximum value") {
         const float minMag = 0.2f;
@@ -371,22 +263,22 @@ TEST_CASE("Test the clipVectorMagnitude() method", "[utils]") {
         QVector2D   vec(10.0f, 0.0f);
         boids::utils::clipVectorMangitude(vec, minMag, maxMag);
 
-        THEN("The clipped vector X elemnt should be 5.0") { REQUIRE(vec.x() == 5.0f); }
-        THEN("The clipped vector Y elemnt should be 0.0") { REQUIRE(vec.y() == 0.0f); }
+        THEN("The clipped vector X element should be 5.0") { REQUIRE(vec.x() == 5.0f); }
+        THEN("The clipped vector Y element should be 0.0") { REQUIRE(vec.y() == 0.0f); }
     }
     WHEN("Calling the method when the min/max arguments are mixed up") {
         const float minMag = 2.0f;
         const float maxMag = 1.0f;
         QVector2D   vec(10.0f, 0.0f);
 
-        THEN("An expection should be thrown") {
+        THEN("An exception should be thrown") {
             REQUIRE_THROWS(boids::utils::clipVectorMangitude(vec, minMag, maxMag));
         }
     }
 }
 
 TEST_CASE("Test the distanceBetweenBoids() method", "[utils]") {
-    WHEN("One boid is infront of the other") {
+    WHEN("One boid is in front of the other") {
         const boids::Boid b1(0, 0.0, 0.0);
         const boids::Boid b2(1, 1.0, 0.0);
 
@@ -438,12 +330,12 @@ TEST_CASE("Test the distanceVectorBetweenPoint() method", "[utils]") {
 
     const auto result = boids::utils::distanceVectorBetweenPoints(p1, p2, bounds);
 
-    REQUIRE(isApproxEqual(expected.x(), result.x()));
-    REQUIRE(isApproxEqual(expected.y(), result.y()));
+    REQUIRE(expected.x() == Approx(result.x()));
+    REQUIRE(expected.y() == Approx(result.y()));
 }
 
-TEST_CASE("Test the generateRandomValue() method") {
-    GIVEN("The use fo the float type") {
+TEST_CASE("Test the generateRandomValue() method", "[utils]") {
+    GIVEN("The use of the float type") {
         WHEN("The min/max are 0.0 and 1.0") {
             const float min   = 0.0f;
             const float max   = 1.0f;
@@ -502,6 +394,15 @@ TEST_CASE("Test the generateRandomValue() method") {
                 REQUIRE_THROWS(boids::utils::generateRandomValue<int>(min, max));
             }
         }
+    }
+}
+
+TEST_CASE("Test the generateRandomVelocityVector() method", "[utils]") {
+    for (std::size_t i = 0; i < 100; ++i) {
+        const float     maxVel = boids::utils::generateRandomValue<float>(1.0f, 10.0f);
+        const QVector2D res    = boids::utils::generateRandomVelocityVector(maxVel);
+        REQUIRE(res.length() >= 0.0f);
+        REQUIRE(res.length() <= maxVel);
     }
 }
 
@@ -587,6 +488,189 @@ TEST_CASE("Test the getTotalNumBoids() method", "[utils]") {
         WHEN("Calling the getTotalNumBoids() method") {
             const std::size_t res = boids::utils::getTotalNumBoids(boids);
             THEN("The number og boids should be 6") { REQUIRE(res == 6); }
+        }
+    }
+}
+
+TEST_CASE("Test the scaleVector() method", "[utils]") {
+    GIVEN("A vector with positive values") {
+        const QVector2D vec(3.0f, 4.0f);
+
+        WHEN("Calling the scaleVector() method with a scalar of 5.0") {
+            const float scalar = 5.0f;
+            const auto  result = boids::utils::scaleVector(vec, scalar);
+
+            THEN("The vector should be unchanged") {
+                const float epsilon = 0.001f;
+                REQUIRE(result.x() == Approx(3.0f).epsilon(epsilon));
+                REQUIRE(result.y() == Approx(4.0f).epsilon(epsilon));
+            }
+        }
+    }
+
+    GIVEN("A vector with only a positive X value") {
+        const QVector2D vec(2.0f, 0.0f);
+
+        WHEN("Calling the scaleVector() method with a scalar of 1.0") {
+            const float scalar = 1.0f;
+            const auto  result = boids::utils::scaleVector(vec, scalar);
+
+            THEN("The vector values should be (1.0, 0.0)") {
+                const float epsilon = 0.001f;
+                REQUIRE(result.x() == Approx(scalar).epsilon(epsilon));
+                REQUIRE(result.y() == Approx(0.0f).epsilon(epsilon));
+            }
+        }
+    }
+
+    GIVEN("A vector with only a positive Y value") {
+        const QVector2D vec(0.0f, 4.0f);
+
+        WHEN("Calling the scaleVector() method with a scalar of 1.0") {
+            const float scalar = 1.0f;
+            const auto  result = boids::utils::scaleVector(vec, scalar);
+
+            THEN("The vector values should be (0.0, 1.0)") {
+                const float epsilon = 0.001f;
+                REQUIRE(result.x() == Approx(0.0f).epsilon(epsilon));
+                REQUIRE(result.y() == Approx(scalar).epsilon(epsilon));
+            }
+        }
+    }
+
+    GIVEN("A vector with negative values") {
+        const QVector2D vec(-3.0f, -4.0f);
+
+        WHEN("Calling the scaleVector() method with a scalar of 5.0") {
+            const float scalar = 5.0f;
+            const auto  result = boids::utils::scaleVector(vec, scalar);
+
+            THEN("The vector values should be (-3.0, -4.0)") {
+                const float epsilon = 0.001f;
+                REQUIRE(result.x() == Approx(-3.0f).epsilon(epsilon));
+                REQUIRE(result.y() == Approx(-4.0f).epsilon(epsilon));
+            }
+        }
+    }
+}
+
+TEST_CASE("Test the shortestDistanceInWrappedSpace() method", "[utils]") {
+    const float space_min = -1.0f;
+    const float space_max = 1.0f;
+    const float epsilon   = 0.001;
+
+    WHEN("x1 = -0.9 and x2 = 0.9") {
+        const float x1 = -0.9f;
+        const float x2 = 0.9f;
+        const float result =
+            boids::utils::shortestDistanceInWrapedSpace(x1, x2, space_min, space_max);
+        THEN("The distance should be -0.2") { REQUIRE(result == Approx(-0.2).epsilon(epsilon)); }
+    }
+
+    WHEN("x1 = 0.7 and x2 = 0.9") {
+        const float x1 = 0.7f;
+        const float x2 = 0.9f;
+        const float result =
+            boids::utils::shortestDistanceInWrapedSpace(x1, x2, space_min, space_max);
+        THEN("The distance should be 0.2") { REQUIRE(result == Approx(0.2).epsilon(epsilon)); }
+    }
+
+    WHEN("x1 = 0.9 and x2 = 0.7") {
+        const float x1 = 0.9f;
+        const float x2 = 0.7f;
+        const float result =
+            boids::utils::shortestDistanceInWrapedSpace(x1, x2, space_min, space_max);
+        THEN("The distance should be -0.2") { REQUIRE(result == Approx(-0.2).epsilon(epsilon)); }
+    }
+
+    WHEN("x1 = 0.4 and x2 = 0.7") {
+        const float x1 = 0.4f;
+        const float x2 = 0.7f;
+        const float result =
+            boids::utils::shortestDistanceInWrapedSpace(x1, x2, space_min, space_max);
+        THEN("The distance should be 0.3") { REQUIRE(result == Approx(0.3).epsilon(epsilon)); }
+    }
+}
+
+TEST_CASE("Test the wrapBoidPosition() method", "[utils]") {
+    const QRectF space_rect(0.0f, 0.0f, 1.0f, 1.0f);
+    const float  epsilon = 0.001;
+    GIVEN("A boid at (0.0, 1.1)") {
+        boids::Boid boid(0, 0.0f, 1.1f);
+        WHEN("Calling the wrapBoidPosition() method") {
+            boids::utils::wrapBoidPosition(boid, space_rect);
+            THEN("The boid should be at position (0.0, 0.1)") {
+                REQUIRE(boid.getPosition().x() == Approx(0.0).epsilon(epsilon));
+                REQUIRE(boid.getPosition().y() == Approx(0.1).epsilon(epsilon));
+            }
+        }
+    }
+    GIVEN("A boid at (-0.1, 0.0)") {
+        boids::Boid boid(0, -0.1f, 0.0f);
+        WHEN("Calling the wrapBoidPosition() method") {
+            boids::utils::wrapBoidPosition(boid, space_rect);
+            THEN("The boid should be at position (0.9, 0.0)") {
+                REQUIRE(boid.getPosition().x() == Approx(0.9).epsilon(epsilon));
+                REQUIRE(boid.getPosition().y() == Approx(0.0).epsilon(epsilon));
+            }
+        }
+    }
+    GIVEN("A boid at (0.5, 0.5)") {
+        boids::Boid boid(0, 0.5f, 0.5f);
+        WHEN("Calling the wrapBoidPosition() method") {
+            boids::utils::wrapBoidPosition(boid, space_rect);
+            THEN("The boid should be at position (0.5, 0.5)") {
+                REQUIRE(boid.getPosition().x() == Approx(0.5).epsilon(epsilon));
+                REQUIRE(boid.getPosition().y() == Approx(0.5).epsilon(epsilon));
+            }
+        }
+    }
+}
+
+TEST_CASE("Test the wrapValue() method", "[utils]") {
+    GIVEN("Min = -1.0, Max = 1.0") {
+        const float min_value = -1.0f;
+        const float max_value = 1.0f;
+
+        WHEN("The value is 1.1") {
+            const float value  = 1.1f;
+            const float result = boids::utils::wrapValue(value, min_value, max_value);
+            THEN("The result should be -0.9") { REQUIRE(result == Approx(-0.9f)); }
+        }
+
+        WHEN("The value is 0.1") {
+            const float value  = 0.1f;
+            const float result = boids::utils::wrapValue(value, min_value, max_value);
+            THEN("The result should be 0.1") { REQUIRE(result == Approx(0.1f)); }
+        }
+
+        WHEN("The value is 1.0") {
+            const float value  = 1.0f;
+            const float result = boids::utils::wrapValue(value, min_value, max_value);
+            THEN("The result should be -1.0") { REQUIRE(result == Approx(-1.0f)); }
+        }
+
+        WHEN("The value is -1.0") {
+            const float value  = -1.0f;
+            const float result = boids::utils::wrapValue(value, min_value, max_value);
+            THEN("The result should be -1.0") { REQUIRE(result == Approx(-1.0f)); }
+        }
+    }
+
+    GIVEN("Min = 0.0, Max = 2.0") {
+        const float min_value = 0.0f;
+        const float max_value = 2.0f;
+
+        WHEN("The value is 1.1") {
+            const float value  = 1.1f;
+            const float result = boids::utils::wrapValue(value, min_value, max_value);
+            THEN("The result should be 1.1") { REQUIRE(result == Approx(1.1f)); }
+        }
+
+        WHEN("The value is -0.1") {
+            const float value  = -0.1f;
+            const float result = boids::utils::wrapValue(value, min_value, max_value);
+            THEN("The result should be 1.9") { REQUIRE(result == Approx(1.9f)); }
         }
     }
 }
