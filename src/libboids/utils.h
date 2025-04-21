@@ -26,8 +26,8 @@ QVector2D calculateAlignmentVector(const Boid& boid, const std::vector<Boid>& ne
 /**
  * @brief Calculate the vector that pulls a Boid towards the center of the neighbourood.
  *
- * This vector is calculated by calculting the center point of the neighbourhood,
- * substracting the boid position from this, normalising the vector and giving it a small magnitude
+ * This vector is calculated by calculating the center point of the neighbourhood,
+ * subtracting the boid position from this, normalising the vector and giving it a small magnitude
  * to gently pull the boids towards the center of the neighbourhood.
  *
  * @param boid Boid to check calculate the cohesion vector for.
@@ -47,7 +47,7 @@ QVector2D calculateCohesionVector(const Boid& boid, const std::vector<Boid>& nei
  */
 QColor calculateBoidColor(const Boid& boid, const std::vector<Boid>& neighbours);
 /**
- * @brief Calculate the vector that repels a given Boids from the other boids wihtin
+ * @brief Calculate the vector that repels a given Boids from the other boids within
  * the neighbourhood to maintain a minimum distance between them.
  *
  * The separation vector is calculated by calculating the difference between the boid and each
@@ -84,7 +84,7 @@ float distanceBetweenBoids(const Boid& b1, const Boid& b2, const QRectF& bounds)
 /**
  * @brief Calculate the vector between two points.
  *
- * The returned vector will be form p1 -> p2 nad takes into account the wrapped space.
+ * The returned vector will be from p1 -> p2 nad takes into account the wrapped space.
  *
  * @param p1 First point.
  * @param p2 Second point.
