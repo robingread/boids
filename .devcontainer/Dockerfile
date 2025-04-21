@@ -7,7 +7,7 @@ RUN apt-get update && apt-get install -y \
     catch2 \
     cmake \
     g++ \
-    lcov \ 
+    lcov \
     libgtest-dev \
     python3-pip \
     qtbase5-dev \

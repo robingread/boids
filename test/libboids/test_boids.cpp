@@ -44,7 +44,7 @@ TEST_F(BasicBoidInit, test_getType) {
 }
 
 /**
- * @brief Test that the initial velcoity of the Boid is (0.0, 0.0).
+ * @brief Test that the initial velocity of the Boid is (0.0, 0.0).
  */
 TEST_F(BasicBoidInit, test_getVelocity) {
     const QVector2D exp(0.0, 0.0);

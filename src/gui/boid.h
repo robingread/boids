@@ -17,7 +17,7 @@ class Boid : public QGraphicsItem {
     void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget) override;
 
     /**
-     * @brief Set the colour fo the Boid object.
+     * @brief Set the colour of the Boid object.
      * @param color The QColor to set.
      */
     void setColor(const QColor& color);
@@ -48,7 +48,7 @@ class Obstacle : public Boid {
 
 /**
  * @brief The Predator class is used to render Predators in the GUI. It inherits from the
- * Boid class, which itself is a QGraphicsItem. The main differece from the Boid class is
+ * Boid class, which itself is a QGraphicsItem. The main difference from the Boid class is
  * that it has an alternative implementation for the paint() method.
  */
 class Predator : public Boid {
