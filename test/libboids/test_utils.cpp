@@ -111,9 +111,7 @@ TEST_CASE("Test the calculateCohesionVector() method", "[utils]") {
         const auto        result = boids::utils::calculateCohesionVector(boid, neighbours, bounds);
 
         THEN("The vector should be zero in the X axis") { REQUIRE(result.x() == 0.0); }
-        THEN("The vector should be negative in the Y axis") {
-            REQUIRE(result.y() < boid.getPosition().y());
-        }
+        THEN("The vector should be negative in the Y axis") { REQUIRE(result.y() < 0.0); }
     }
     WHEN("There is one neighbour wrapped in both the X and Y axis") {
         const QRectF      bounds(0.0, 0.0, 1.0, 1.0);
@@ -121,11 +119,46 @@ TEST_CASE("Test the calculateCohesionVector() method", "[utils]") {
         const auto        neighbours = std::vector<boids::Boid>({boids::Boid(1.0, 0.95, 0.95)});
         const auto        result = boids::utils::calculateCohesionVector(boid, neighbours, bounds);
 
-        THEN("The vector should be negative in the X axis") {
-            REQUIRE(result.x() < boid.getPosition().x());
+        THEN("The vector should be negative in the X axis") { REQUIRE(result.x() < 0.0); }
+        THEN("The vector should be negative in the Y axis") { REQUIRE(result.y() < 0.0); }
+    }
+
+    GIVEN("A Boid at the very top of the space : (X = 0.5, Y = 0.05)") {
+        const QRectF      bounds(0.0, 0.0, 1.0, 1.0);
+        const boids::Boid boid(0, 0.5f, 0.05f);
+
+        WHEN("There are two boids at the very bottom of the space") {
+            const auto neighbours =
+                std::vector<boids::Boid>({boids::Boid(1, 0.45, 0.95), boids::Boid(2, 0.55, 0.95)});
+
+            const auto result = boids::utils::calculateCohesionVector(boid, neighbours, bounds);
+
+            THEN("The resulting X component should be zero") { REQUIRE(result.x() == Approx(0.0)); }
+            THEN("The resulting Y component should be negative") { REQUIRE(result.y() < 0.0); }
         }
-        THEN("The vector should be negative in the Y axis") {
-            REQUIRE(result.y() < boid.getPosition().y());
+
+        WHEN("There are two boids just below the target boid") {
+            const auto neighbours =
+                std::vector<boids::Boid>({boids::Boid(1, 0.45, 0.1), boids::Boid(2, 0.55, 0.1)});
+
+            const auto result = boids::utils::calculateCohesionVector(boid, neighbours, bounds);
+
+            THEN("The resulting X component should be zero") { REQUIRE(result.x() == Approx(0.0)); }
+            THEN("The resulting Y component should be positive") { REQUIRE(result.y() > 0.0); }
+        }
+
+        WHEN("One neighbour is co-located and the other is at the very bottom of the space") {
+            const auto neighbours =
+                std::vector<boids::Boid>({boids::Boid(1, 0.5, 0.05), boids::Boid(2, 0.5, 0.95)});
+
+            const auto result = boids::utils::calculateCohesionVector(boid, neighbours, bounds);
+
+            THEN("The cohesion vector X component should be zero") {
+                REQUIRE(result.x() == Approx(0.0));
+            }
+            THEN("The cohesion vector Y component should be negative") {
+                REQUIRE(result.y() < 0.0);
+            }
         }
     }
 }

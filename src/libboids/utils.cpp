@@ -28,15 +28,13 @@ QVector2D calculateCohesionVector(const Boid& boid, const std::vector<Boid>& nei
 
     QVector2D vec(0.0, 0.0);
     for (const Boid& n : neighbours) {
-        vec += QVector2D(n.getPosition());
+        vec += distanceVectorBetweenPoints(boid.getPosition(), n.getPosition(), bounds);
     }
 
     vec /= float(neighbours.size());
-
-    QVector2D ret = distanceVectorBetweenPoints(boid.getPosition(), vec.toPointF(), bounds);
-    ret.normalize();
-    ret *= 0.25f;
-    return ret;
+    vec.normalize();
+    vec *= 0.25f;
+    return vec;
 }
 
 QColor calculateBoidColor(const Boid& boid, const std::vector<Boid>& neighbours) {
