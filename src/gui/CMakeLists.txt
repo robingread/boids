@@ -15,7 +15,7 @@ add_library(libboids_gui SHARED ${SOURCES} ${HEADERS})
 target_link_libraries(libboids_gui Qt5::Core Qt5::Widgets Qt5::Gui libboids)
 
 # Specify where the public headers are located
-target_include_directories(libboids_gui PUBLIC 
+target_include_directories(libboids_gui PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
     $<INSTALL_INTERFACE:include>  # For consumers after install
 )

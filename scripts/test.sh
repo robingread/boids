@@ -14,7 +14,7 @@ pushd $BUILD_DIR
     # Run the test suite
     export QT_QPA_PLATFORM=offscreen
     ctest --verbose
-    
+
     # Generate the coverage report
     python3 -m fastcov \
         -d . \

@@ -21,7 +21,7 @@ class DisplayGraphicsView : public QGraphicsView {
 
     /**
      * @brief Render a standard Boid.
-     * @param pos Postion of the Boid.
+     * @param pos Position of the Boid.
      * @param angle Heading of the Boid.
      */
     void renderBoid(const uint16_t& id, const QPointF& pos, const float& angle,
@@ -30,7 +30,7 @@ class DisplayGraphicsView : public QGraphicsView {
     /**
      * @brief Render a circle with a given radius around a point.
      * @param pos Center of the circle (in pixels).
-     * @param radius Radius of the cirlce (in pixels).
+     * @param radius Radius of the circle (in pixels).
      */
     void renderCircle(const QPointF& pos, const float& radius);
 
@@ -42,7 +42,7 @@ class DisplayGraphicsView : public QGraphicsView {
 
     /**
      * @brief Render a Predator Boid.
-     * @param pos Postion of the Boid.
+     * @param pos Position of the Boid.
      * @param angle Heading of the Boid.
      */
     void renderPredator(const uint16_t& id, const QPointF& pos, const float& angle);

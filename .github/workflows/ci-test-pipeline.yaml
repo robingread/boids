@@ -5,5 +5,8 @@ on:
     branches: ["**"]
 
 jobs:
+  pre_commit_check:
+    uses: ./.github/workflows/pre-commit-check-workflow.yaml
+
   build_and_test:
     uses: ./.github/workflows/build-test-workflow.yaml

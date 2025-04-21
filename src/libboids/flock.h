@@ -12,8 +12,8 @@ class Flock {
 
     /**
      * @brief Add a boid of a given type to the Flock, at a given coordinate.
-     * @param x X cooridnate.
-     * @param y Y cooridnate.
+     * @param x X coordinate.
+     * @param y Y coordinate.
      * @param type Type of boids, defaults to BoidType::BOID.
      * @return Unique ID for the new boid.
      */
@@ -40,7 +40,7 @@ class Flock {
 
     /**
      * @brief Get the std::map of boids
-     * @return The std::map containing all the differet types of boids.
+     * @return The std::map containing all the different types of boids.
      */
     std::map<BoidType, std::vector<Boid>> getBoids() const;
 

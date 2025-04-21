@@ -10,11 +10,11 @@
 namespace ui {
 
 /**
- * @brief The ConfigGroup class is a GUI related clas created for conveniance. It creates a
+ * @brief The ConfigGroup class is a GUI related clas created for convenience. It creates a
  * QGroupBox with a vertical layout containing Sliders that manage individual parts of a
  * boids::Config object.
  *
- * All the sliders are stored internally, and the current configuration can be retreived by calling
+ * All the sliders are stored internally, and the current configuration can be retrieved by calling
  * the `getConfig()` method.
  */
 class ConfigGroup : public QWidget {
