@@ -28,6 +28,7 @@
                 "ms-vscode.cpptools",
                 "ms-vscode.cpptools-extension-pack",
                 "ms-vscode.cpptools-themes",
+                "streetsidesoftware.code-spell-checker",
                 "wayou.vscode-todo-highlight",
                 "xaver.clang-format"
             ]
