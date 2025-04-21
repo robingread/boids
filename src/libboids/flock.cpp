@@ -35,7 +35,7 @@ void updateBoids(std::vector<Boid>& boids, const std::vector<Boid>& flock,
             boids::utils::calculateSeparationVector(b, neighbours, cfg.repelMinDist, sceneBounds);
 
         const QVector2D obstacleVec = boids::utils::calculateSeparationVector(
-            b, obstacleNeighbours, cfg.repelMinDist * 2.0f, sceneBounds);
+            b, obstacleNeighbours, cfg.repelMinDist * 1.0f, sceneBounds);
 
         const QVector2D predatorVec = boids::utils::calculateSeparationVector(
             b, predatorNeighbours, cfg.repelMinDist * 5.0f, sceneBounds);
