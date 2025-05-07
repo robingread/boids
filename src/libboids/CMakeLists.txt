@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 project(libboids LANGUAGES CXX)
 
+find_package(Eigen3 REQUIRED)
 find_package(Qt5 REQUIRED COMPONENTS Core Widgets Gui)
 
 include_directories(${Qt5Core_INCLUDE_DIRS} ${Qt5Gui_INCLUDE_DIRS})
@@ -11,7 +12,11 @@ add_library(libboids SHARED
     flock.cpp
     utils.cpp
 )
-target_link_libraries(libboids Qt5::Core Qt5::Widgets Qt5::Gui)
+target_link_libraries(libboids
+    Eigen3::Eigen
+    Qt5::Core
+    Qt5::Widgets
+    Qt5::Gui)
 
 # Specify where the public headers are located
 target_include_directories(libboids PUBLIC
