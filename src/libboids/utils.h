@@ -39,7 +39,7 @@ QVector2D calculateCohesionVector(const Boid& boid, const std::vector<Boid>& nei
                                   const QRectF& bounds);
 
 /**
- * @brief Calculaet the new color of a boids given the neighbourhood.
+ * @brief Calculate the new color of a boids given the neighbourhood.
  *
  * @param boid Boid to calculate the color for.
  * @param neighbours Neighbourhood around the Boid.
@@ -89,8 +89,8 @@ float distanceBetweenBoids(const Boid& b1, const Boid& b2, const QRectF& bounds)
  * @param p1 First point.
  * @param p2 Second point.
  * @param bounds Scene bounds.
- * @return Dispacement vector.
- * @throws An std::invalid_arguent if the min value is greater than the max value.
+ * @return Displacement vector.
+ * @throws An std::invalid_argument if the min value is greater than the max value.
  */
 QVector2D distanceVectorBetweenPoints(const QPointF& p1, const QPointF& bp2, const QRectF& bounds);
 
@@ -106,8 +106,8 @@ template <typename T> T generateRandomValue(const T minValue, const T maxValue) 
 }
 
 /**
- * @brief Generate a random 2D vector with a maximum allowed madnitude.
- * @param maxMagnitude Maximum allowed length/madnitude.
+ * @brief Generate a random 2D vector with a maximum allowed magnitude.
+ * @param maxMagnitude Maximum allowed length/magnitude.
  * @return Generated vector.
  */
 QVector2D generateRandomVelocityVector(const float maxMagnitude);
@@ -134,7 +134,7 @@ std::size_t getTotalNumBoids(const std::map<BoidType, std::vector<Boid>>& boids)
 
 /**
  * @brief Get a QVector scaled by a given value.
- * @param vec Vector to sclae.
+ * @param vec Vector to scale.
  * @param scalar Scalar value.
  * @return QVector2D scaled.
  */
@@ -151,8 +151,8 @@ QVector2D scaleVector(const QVector2D& vec, const float& scalar);
  * @param max Maximum value in the wrapped space/dimension.
  * @return Shortest distance.
  */
-float shortestDistanceInWrapedSpace(const float& v1, const float& v2, const float& min,
-                                    const float& max);
+float shortestDistanceInWrappedSpace(const float& v1, const float& v2, const float& min,
+                                     const float& max);
 
 /**
  * @brief Wrap the position of a boid within a defined simulation area.
@@ -171,7 +171,7 @@ float wrapValue(const float& value, const float& minValue, const float& maxValue
  * @param maxMagnitude Maximum magnitude/length value of the vector.
  * @throws std::invalid_argument If the minimum value is greater than the maximum.
  */
-void clipVectorMangitude(QVector2D& vec, const float& minMagnitude, const float& maxMagnitude);
+void clipVectorMagnitude(QVector2D& vec, const float& minMagnitude, const float& maxMagnitude);
 
 } // namespace utils
 }; // namespace boids

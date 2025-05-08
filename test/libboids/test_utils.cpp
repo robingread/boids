@@ -275,7 +275,7 @@ TEST_CASE("Test the clipVectorMagnitude() method", "[utils]") {
         const float minMag = 0.2f;
         const float maxMag = 5.0f;
         QVector2D   vec(-0.1f, 0.0f);
-        boids::utils::clipVectorMangitude(vec, minMag, maxMag);
+        boids::utils::clipVectorMagnitude(vec, minMag, maxMag);
 
         THEN("The clipped vector X element should be -0.2") { REQUIRE(vec.x() == -0.2f); }
         THEN("The clipped vector Y element should be 0.0") { REQUIRE(vec.y() == 0.0f); }
@@ -285,7 +285,7 @@ TEST_CASE("Test the clipVectorMagnitude() method", "[utils]") {
         const float     maxMag = 50.0f;
         const QVector2D exp(10.0f, 0.0f);
         QVector2D       vec(10.0f, 0.0f);
-        boids::utils::clipVectorMangitude(vec, minMag, maxMag);
+        boids::utils::clipVectorMagnitude(vec, minMag, maxMag);
 
         THEN("The clipped vector X element should be 10.0") { REQUIRE(vec.x() == 10.0f); }
         THEN("The clipped vector Y element should be 0.0") { REQUIRE(vec.y() == 0.0f); }
@@ -294,7 +294,7 @@ TEST_CASE("Test the clipVectorMagnitude() method", "[utils]") {
         const float minMag = 0.2f;
         const float maxMag = 5.0f;
         QVector2D   vec(10.0f, 0.0f);
-        boids::utils::clipVectorMangitude(vec, minMag, maxMag);
+        boids::utils::clipVectorMagnitude(vec, minMag, maxMag);
 
         THEN("The clipped vector X element should be 5.0") { REQUIRE(vec.x() == 5.0f); }
         THEN("The clipped vector Y element should be 0.0") { REQUIRE(vec.y() == 0.0f); }
@@ -305,7 +305,7 @@ TEST_CASE("Test the clipVectorMagnitude() method", "[utils]") {
         QVector2D   vec(10.0f, 0.0f);
 
         THEN("An exception should be thrown") {
-            REQUIRE_THROWS(boids::utils::clipVectorMangitude(vec, minMag, maxMag));
+            REQUIRE_THROWS(boids::utils::clipVectorMagnitude(vec, minMag, maxMag));
         }
     }
 }
@@ -596,7 +596,7 @@ TEST_CASE("Test the shortestDistanceInWrappedSpace() method", "[utils]") {
         const float x1 = -0.9f;
         const float x2 = 0.9f;
         const float result =
-            boids::utils::shortestDistanceInWrapedSpace(x1, x2, space_min, space_max);
+            boids::utils::shortestDistanceInWrappedSpace(x1, x2, space_min, space_max);
         THEN("The distance should be -0.2") { REQUIRE(result == Approx(-0.2).epsilon(epsilon)); }
     }
 
@@ -604,7 +604,7 @@ TEST_CASE("Test the shortestDistanceInWrappedSpace() method", "[utils]") {
         const float x1 = 0.7f;
         const float x2 = 0.9f;
         const float result =
-            boids::utils::shortestDistanceInWrapedSpace(x1, x2, space_min, space_max);
+            boids::utils::shortestDistanceInWrappedSpace(x1, x2, space_min, space_max);
         THEN("The distance should be 0.2") { REQUIRE(result == Approx(0.2).epsilon(epsilon)); }
     }
 
@@ -612,7 +612,7 @@ TEST_CASE("Test the shortestDistanceInWrappedSpace() method", "[utils]") {
         const float x1 = 0.9f;
         const float x2 = 0.7f;
         const float result =
-            boids::utils::shortestDistanceInWrapedSpace(x1, x2, space_min, space_max);
+            boids::utils::shortestDistanceInWrappedSpace(x1, x2, space_min, space_max);
         THEN("The distance should be -0.2") { REQUIRE(result == Approx(-0.2).epsilon(epsilon)); }
     }
 
@@ -620,7 +620,7 @@ TEST_CASE("Test the shortestDistanceInWrappedSpace() method", "[utils]") {
         const float x1 = 0.4f;
         const float x2 = 0.7f;
         const float result =
-            boids::utils::shortestDistanceInWrapedSpace(x1, x2, space_min, space_max);
+            boids::utils::shortestDistanceInWrappedSpace(x1, x2, space_min, space_max);
         THEN("The distance should be 0.3") { REQUIRE(result == Approx(0.3).epsilon(epsilon)); }
     }
 }

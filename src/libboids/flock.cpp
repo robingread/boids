@@ -52,7 +52,7 @@ void updateBoids(std::vector<Boid>& boids, const std::vector<Boid>& flock,
         v += (predatorVec * cfg.predatorRepelScale);
         v += (noiseVec * 1.0f);
 
-        boids::utils::clipVectorMangitude(v, 0.1f, cfg.maxVelocity);
+        boids::utils::clipVectorMagnitude(v, 0.1f, cfg.maxVelocity);
 
         b.setPosition(QPointF(p.x() + v.x(), p.y() + v.y()));
         utils::wrapBoidPosition(b, sceneBounds);

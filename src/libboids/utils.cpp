@@ -53,7 +53,7 @@ QColor calculateBoidColor(const Boid& boid, const std::vector<Boid>& neighbours)
 
         const float h1      = boidColor.hsvHue();
         const float h2      = n.getColor().hue();
-        const float hueDiff = shortestDistanceInWrapedSpace(h2, h1, 0.0f, 359.0f);
+        const float hueDiff = shortestDistanceInWrappedSpace(h2, h1, 0.0f, 359.0f);
         h += (hueDiff / dist);
     }
     h /= neighbours.size();
@@ -115,16 +115,16 @@ float distanceBetweenBoids(const Boid& b1, const Boid& b2, const QRectF& bounds)
     const auto p2 = b2.getPosition();
 
     const float dx =
-        std::abs(shortestDistanceInWrapedSpace(p1.x(), p2.x(), bounds.left(), bounds.right()));
+        std::abs(shortestDistanceInWrappedSpace(p1.x(), p2.x(), bounds.left(), bounds.right()));
     const float dy =
-        std::abs(shortestDistanceInWrapedSpace(p1.y(), p2.y(), bounds.top(), bounds.bottom()));
+        std::abs(shortestDistanceInWrappedSpace(p1.y(), p2.y(), bounds.top(), bounds.bottom()));
 
     return std::sqrt(std::pow(dx, 2) + std::pow(dy, 2));
 }
 
 QVector2D distanceVectorBetweenPoints(const QPointF& p1, const QPointF& p2, const QRectF& bounds) {
-    const float dx = shortestDistanceInWrapedSpace(p1.x(), p2.x(), bounds.left(), bounds.right());
-    const float dy = shortestDistanceInWrapedSpace(p1.y(), p2.y(), bounds.top(), bounds.bottom());
+    const float dx = shortestDistanceInWrappedSpace(p1.x(), p2.x(), bounds.left(), bounds.right());
+    const float dy = shortestDistanceInWrappedSpace(p1.y(), p2.y(), bounds.top(), bounds.bottom());
     return QVector2D(dx, dy);
 }
 
@@ -161,8 +161,8 @@ QVector2D scaleVector(const QVector2D& vec, const float& scalar) {
     return vec.normalized() * scalar;
 }
 
-float shortestDistanceInWrapedSpace(const float& v1, const float& v2, const float& min,
-                                    const float& max) {
+float shortestDistanceInWrappedSpace(const float& v1, const float& v2, const float& min,
+                                     const float& max) {
     // Standard difference
     const float a = v2 - v1;
 
@@ -191,7 +191,7 @@ float wrapValue(const float& value, const float& minValue, const float& maxValue
     }
 }
 
-void clipVectorMangitude(QVector2D& vec, const float& minMagnitude, const float& maxMagnitude) {
+void clipVectorMagnitude(QVector2D& vec, const float& minMagnitude, const float& maxMagnitude) {
 
     if (minMagnitude > maxMagnitude)
         throw std::invalid_argument("Minimum value is greater than the maximum.");
