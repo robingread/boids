@@ -7,6 +7,9 @@
     "[c]": {
         "editor.defaultFormatter": "xaver.clang-format"
     },
+    "todo-tree.highlights.defaultHighlight": {
+        "type": "none",
+    },
     "files.associations": {
         "any": "cpp",
         "array": "cpp",
