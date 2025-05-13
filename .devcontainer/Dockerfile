@@ -8,6 +8,7 @@ RUN apt-get update && apt-get install -y \
     cmake \
     g++ \
     lcov \
+    libeigen3-dev \
     libgtest-dev \
     python3-pip \
     qtbase5-dev \
