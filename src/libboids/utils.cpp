@@ -123,9 +123,17 @@ float distanceBetweenBoids(const Boid& b1, const Boid& b2, const QRectF& bounds)
 }
 
 QVector2D distanceVectorBetweenPoints(const QPointF& p1, const QPointF& p2, const QRectF& bounds) {
+    const Eigen::Vector2d v1(p1.x(), p1.y());
+    const Eigen::Vector2d v2(p2.x(), p2.y());
+    const auto            vec = vectorBetweenPoints(v1, v2, bounds);
+    return QVector2D(vec.x(), vec.y());
+}
+
+Eigen::Vector2d vectorBetweenPoints(const Eigen::Vector2d& p1, const Eigen::Vector2d& p2,
+                                    const QRectF& bounds) {
     const float dx = shortestDistanceInWrappedSpace(p1.x(), p2.x(), bounds.left(), bounds.right());
     const float dy = shortestDistanceInWrappedSpace(p1.y(), p2.y(), bounds.top(), bounds.bottom());
-    return QVector2D(dx, dy);
+    return Eigen::Vector2d(dx, dy);
 }
 
 QVector2D generateRandomVelocityVector(const float maxMagnitude) {
@@ -176,9 +184,10 @@ float shortestDistanceInWrappedSpace(const float& v1, const float& v2, const flo
 }
 
 void wrapBoidPosition(Boid& boid, const QRectF& rect) {
-    const float x = wrapValue(boid.getPosition().x(), rect.left(), rect.right());
-    const float y = wrapValue(boid.getPosition().y(), rect.top(), rect.bottom());
-    boid.setPosition(QPointF(x, y));
+    const auto            position = boid.getPosition();
+    const Eigen::Vector2d vec(position.x(), position.y());
+    const Eigen::Vector2d wrapped = wrapVector2d(vec, rect);
+    boid.setPosition(QPointF(wrapped.x(), wrapped.y()));
 }
 
 float wrapValue(const float& value, const float& minValue, const float& maxValue) {
@@ -189,6 +198,12 @@ float wrapValue(const float& value, const float& minValue, const float& maxValue
     } else {
         return maxValue + std::fmod(r, range);
     }
+}
+
+Eigen::Vector2d wrapVector2d(const Eigen::Vector2d& vector, const QRectF& bounds) {
+    const auto x = wrapValue(vector.x(), bounds.left(), bounds.right());
+    const auto y = wrapValue(vector.y(), bounds.top(), bounds.bottom());
+    return Eigen::Vector2d(x, y);
 }
 
 void clipVectorMagnitude(QVector2D& vec, const float& minMagnitude, const float& maxMagnitude) {

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "boids.h"
+#include <Eigen/Core>
 #include <QRectF>
 #include <QVector2D>
 #include <random>
@@ -94,6 +95,19 @@ float distanceBetweenBoids(const Boid& b1, const Boid& b2, const QRectF& bounds)
  */
 QVector2D distanceVectorBetweenPoints(const QPointF& p1, const QPointF& bp2, const QRectF& bounds);
 
+/**
+ * @brief Get the vector between two points taking the bounds of the space into account.
+ *
+ * The returned vector will be from p1 -> p2 nad takes into account the wrapped space.
+ *
+ * @param p1 First vector
+ * @param p2 Second vector
+ * @param bounds Scene bounds
+ * @return Vector between points.
+ */
+Eigen::Vector2d vectorBetweenPoints(const Eigen::Vector2d& p1, const Eigen::Vector2d& p2,
+                                    const QRectF& bounds);
+
 template <typename T> T generateRandomValue(const T minValue, const T maxValue) {
     if (minValue > maxValue) {
         throw std::invalid_argument("The min value is greater than the max value");
@@ -162,6 +176,14 @@ float shortestDistanceInWrappedSpace(const float& v1, const float& v2, const flo
 void wrapBoidPosition(Boid& boid, const QRectF& rect);
 
 float wrapValue(const float& value, const float& minValue, const float& maxValue);
+
+/**
+ * @brief Wrap a 2D vector within a defined boundary space.
+ * @param vector The vector/position to wrap.
+ * @param bounds The bounds of the space.
+ * @return Wrapped vector/position.
+ */
+Eigen::Vector2d wrapVector2d(const Eigen::Vector2d& vector, const QRectF& bounds);
 
 /**
  * @brief Clip the length of a vector so that it falls within an allowed minimum/maximum range. This
