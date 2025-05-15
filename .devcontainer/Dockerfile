@@ -45,3 +45,34 @@ RUN groupadd --gid $USER_GID $USERNAME \
     && rm -rf /var/lib/apt/lists/*
 
 USER ${USERNAME}
+
+##########################
+# Build Production Stage #
+##########################
+FROM base AS prod
+
+# Get all the files needed to compile
+WORKDIR /workspaces/boids
+COPY CMakeLists.txt .
+COPY src/ src/
+COPY test/ test/
+
+# Compile and install
+RUN mkdir build && \
+    cd build && \
+    cmake \
+        -DCMAKE_INSTALL_PREFIX=/opt/boids \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DBUILD_TESTS=OFF \
+        -DCODE_COVERAGE=OFF \
+        .. && \
+    make -j8 && \
+    make install
+
+# Cleanup
+WORKDIR /
+RUN rm -rf /workspaces
+
+# Set the main run command
+COPY docker/assets/entrypoint.sh /
+ENTRYPOINT [ "/entrypoint.sh" ]
