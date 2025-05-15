@@ -18,6 +18,7 @@ DisplayGraphicsView::DisplayGraphicsView(QWidget* parent) : QGraphicsView(parent
     m_scene = new QGraphicsScene();
     this->setSceneRect(0, 0, this->width(), this->height());
     this->setScene(m_scene);
+    this->setAlignment(Qt::AlignLeft | Qt::AlignTop);
 
     m_displayItems.clear();
 
