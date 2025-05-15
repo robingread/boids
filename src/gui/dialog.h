@@ -29,6 +29,29 @@ class Dialog : public QMainWindow {
 
   private slots:
     void onConfigChanged();
+
+    /**
+     * @brief Add multiple boids to the simulation.
+     *
+     * These boids will be created at random positions within the current display scene.
+     *
+     * @param count The number of boids to create.
+     */
+    void addBoids(const std::size_t count);
+
+    /**
+     * @brief Create/add a of a specific type at a specific location.
+     *
+     * This handles creating boids based on mouse clicks on screen.
+     *
+     * @param pos Position to create the boid at in the QGraphicsView scene rect.
+     * @param type The type of Boid to create.
+     */
     void createBoid(const QPointF& pos, const boids::BoidType& type = boids::BoidType::BOID);
+
+    /**
+     * @brief Clear all the boids of a given type.
+     * @param types The types of boids to clear.
+     */
     void clearBoids(const std::vector<boids::BoidType>& types);
 };
