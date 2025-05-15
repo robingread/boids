@@ -4,7 +4,13 @@ find_package(Qt5 REQUIRED COMPONENTS Core Widgets Gui Test)
 
 file(GLOB_RECURSE SOURCES "*.cpp")
 
-add_executable(test_example ${SOURCES})
+add_executable(test_example
+    gui/test_slider.cpp
+    libboids/test_boids.cpp
+    libboids/test_flock.cpp
+    libboids/test_utils.cpp
+    main.cpp
+)
 target_link_libraries(test_example
     Catch2::Catch2
     Qt5::Core

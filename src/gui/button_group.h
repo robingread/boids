@@ -30,13 +30,29 @@ class ButtonGroup : public QWidget {
     ButtonGroup(QWidget* parent = nullptr);
 
   private:
+    // The main vertical layout structure
     QVBoxLayout* m_layout;
+
+    // Buttons for clearing boids
     QPushButton* m_clearAll;
     QPushButton* m_clearBoids;
     QPushButton* m_clearObs;
     QPushButton* m_clearPred;
 
+    // Buttons for adding more boids
+    QHBoxLayout* add_boids_button_layout_;
+    QPushButton* add_boids_1_;
+    QPushButton* add_boids_2_;
+    QPushButton* add_boids_3_;
+
   signals:
+    /**
+     * @brief Add a number of boids the simulation.
+     *
+     * @param count The number of boids to add.
+     */
+    void addBoids(const std::size_t count);
+
     /**
      * @brief Signal emitted when the "Clear Boids" button is pressed.
      *
@@ -47,6 +63,21 @@ class ButtonGroup : public QWidget {
     void clearBoids(const std::vector<boids::BoidType>& types);
 
   private slots:
+    /**
+     * @brief Slot triggered when the first "Add Boids" button is pressed.
+     */
+    void onAddBoids1();
+
+    /**
+     * @brief Slot triggered when the second "Add Boids" button is pressed.
+     */
+    void onAddBoids2();
+
+    /**
+     * @brief Slot triggered when the third "Add Boids" button is pressed.
+     */
+    void onAddBoids3();
+
     /**
      * @brief Slot triggered when the "Clear All" button is pressed.
      *

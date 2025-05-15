@@ -5,9 +5,12 @@ find_package(Qt5 REQUIRED COMPONENTS Core Widgets Gui)
 
 include_directories(${Qt5Core_INCLUDE_DIRS} ${Qt5Gui_INCLUDE_DIRS})
 
-file(GLOB SOURCES "*.cpp")
 file(GLOB HEADERS "*.h")
-add_library(libboids SHARED ${SOURCES})
+add_library(libboids SHARED
+    boids.cpp
+    flock.cpp
+    utils.cpp
+)
 target_link_libraries(libboids Qt5::Core Qt5::Widgets Qt5::Gui)
 
 # Specify where the public headers are located
