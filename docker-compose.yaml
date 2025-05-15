@@ -1,5 +1,3 @@
-version: "3.9"
-
 services:
   ci:
     image: boids:ci
@@ -15,3 +13,17 @@ services:
       - ./CMakeLists.txt:/workspace/CMakeLists.txt:ro
     working_dir: /workspace
     command: bash -c "./scripts/build.sh && ./scripts/test.sh"
+
+  prod:
+    container_name: boids
+    image: boids:prod
+    build:
+      dockerfile: .devcontainer/Dockerfile
+      context: .
+      target: prod
+    environment:
+      - DISPLAY=${DISPLAY}
+      - XAUTHORITY=/tmp/.Xauthority
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+      - ${XAUTHORITY:-/dev/null}:/tmp/.Xauthority:ro
